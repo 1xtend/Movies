@@ -7,6 +7,10 @@
     <button type="button" mat-icon-button>
       <mat-icon>search</mat-icon>
     </button>
+
+    <button type="button" mat-icon-button (click)="toggleSidebar.emit()">
+      <mat-icon>menu</mat-icon>
+    </button>
   </mat-toolbar-row>
   <mat-toolbar-row>
     <app-search></app-search>
