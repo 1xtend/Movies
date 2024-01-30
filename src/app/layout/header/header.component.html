@@ -1,1 +1,14 @@
-<p>header works!</p>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <a routerLink="/home" class="logo" mat-button>Movies</a>
+
+    <span class="spacer"></span>
+
+    <button type="button" mat-icon-button>
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row>
+    <app-search></app-search>
+  </mat-toolbar-row>
+</mat-toolbar>

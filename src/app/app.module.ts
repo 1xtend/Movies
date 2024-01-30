@@ -7,6 +7,7 @@ import { MaterialModule } from './material.module';
 import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { AppRoutingModule } from './app-routing.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent],
@@ -15,8 +16,9 @@ import { AppRoutingModule } from './app-routing.module';
     BrowserAnimationsModule,
     MaterialModule,
     AppRoutingModule,
+    SharedModule,
   ],
-  exports: [MaterialModule],
+  exports: [SharedModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
