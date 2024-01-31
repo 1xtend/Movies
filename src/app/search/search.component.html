@@ -1,1 +1,17 @@
-<p>search works!</p>
+<section class="search" *ngIf="shows$ | async as shows; else noShows">
+  <h1>Search</h1>
+
+  <div class="search-grid">
+    <ul>
+      <li *ngFor="let show of shows.results">{{ show.title }}</li>
+    </ul>
+  </div>
+</section>
+
+<ng-template #noShows>
+  <mat-card>
+    <mat-card-content>
+      <mat-card-title>Start your search</mat-card-title>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

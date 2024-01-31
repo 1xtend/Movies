@@ -3,6 +3,7 @@ import { SharedService } from './../../services/shared.service';
 import { Component, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -15,7 +16,7 @@ export class SearchFieldComponent
 {
   searchControl = new FormControl<string>('');
 
-  constructor(private sharedService: SharedService) {
+  constructor(private sharedService: SharedService, private router: Router) {
     super();
   }
 
@@ -34,6 +35,10 @@ export class SearchFieldComponent
         if (query) {
           this.sharedService.setSearchSubject(query);
           console.log(query);
+        }
+
+        if (this.router.url !== '/search') {
+          this.router.navigate(['search']);
         }
       });
   }
