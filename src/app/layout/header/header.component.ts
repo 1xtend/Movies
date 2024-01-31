@@ -7,4 +7,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class HeaderComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
+
+  show: boolean = false;
+
+  showSearchInput() {
+    this.show = !this.show;
+  }
 }

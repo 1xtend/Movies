@@ -9,9 +9,10 @@ import { FooterComponent } from './layout/footer/footer.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './home/home.component';
+import { SidebarComponent } from './layout/sidebar/sidebar.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent, HomeComponent],
+  declarations: [AppComponent, HeaderComponent, FooterComponent, HomeComponent, SidebarComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
