@@ -14,7 +14,6 @@ export class ShowsService {
     return this.http.get(`/search/movie`, {
       params: {
         query,
-        api_key: environment.apiKey,
       },
     });
   }

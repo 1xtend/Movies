@@ -4,6 +4,7 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
+  HttpParams,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environment/environment';
@@ -18,12 +19,19 @@ export class ShowsInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     console.log('Intercepted');
 
+    const url =
+      request.url.indexOf('http://') === -1 &&
+      request.url.indexOf('https://') === -1
+        ? environment.apiUrl + request.url
+        : request.url;
+
+    const params = request.params.has('api_key')
+      ? undefined
+      : request.params.set('api_key', environment.apiKey);
+
     request = request.clone({
-      url:
-        request.url.indexOf('http://') === -1 &&
-        request.url.indexOf('https://') === -1
-          ? environment.apiUrl + request.url
-          : request.url,
+      url,
+      params,
     });
 
     console.log(request.urlWithParams);
