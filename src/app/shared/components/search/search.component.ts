@@ -17,6 +17,10 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initSearch();
+  }
+
+  private initSearch() {
     this.searchControl.valueChanges
       .pipe(
         debounceTime(500),
