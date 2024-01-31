@@ -6,10 +6,13 @@ import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 
 @Component({
   selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss'],
+  templateUrl: './search-field.component.html',
+  styleUrls: ['./search-field.component.scss'],
 })
-export class SearchComponent extends UnsubscribeAbstract implements OnInit {
+export class SearchFieldComponent
+  extends UnsubscribeAbstract
+  implements OnInit
+{
   searchControl = new FormControl<string>('');
 
   constructor(private sharedService: SharedService) {

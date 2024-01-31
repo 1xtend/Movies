@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environment/environment';
 import { IShowsRequest } from '../models/shows-request.interface';
 import { Observable } from 'rxjs';
 
@@ -10,10 +9,11 @@ import { Observable } from 'rxjs';
 export class ShowsService {
   constructor(private http: HttpClient) {}
 
-  searchShows(query: string): Observable<IShowsRequest> {
+  searchShows(query: string, page: number = 1): Observable<IShowsRequest> {
     return this.http.get<IShowsRequest>(`/search/movie`, {
       params: {
         query,
+        page,
       },
     });
   }
