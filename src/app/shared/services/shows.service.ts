@@ -10,7 +10,12 @@ export class ShowsService {
 
   constructor(private http: HttpClient) {}
 
-  searchShows(q: string) {
-    this.http.get(`${this.apiUrl}`);
+  searchShows(query: string) {
+    return this.http.get(`/search/movie`, {
+      params: {
+        query,
+        api_key: environment.apiKey,
+      },
+    });
   }
 }

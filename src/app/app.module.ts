@@ -10,7 +10,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './home/home.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ShowsInterceptor } from './shared/interceptors/shows.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,5 +31,12 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   exports: [SharedModule],
   bootstrap: [AppComponent],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ShowsInterceptor,
+      multi: true,
+    },
+  ],
 })
 export class AppModule {}
