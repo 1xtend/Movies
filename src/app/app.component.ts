@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   constructor(private showsService: ShowsService) {}
 
   ngOnInit(): void {
-    this.showsService.searchShows('batman').subscribe((res) => {
+    this.showsService.searchShows('svaty').subscribe((res) => {
       console.log(res);
     });
   }
