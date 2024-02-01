@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
-  private searchSubject = new Subject<string>();
+  private searchSubject = new BehaviorSubject<string>('');
   search$ = this.searchSubject.asObservable();
 
   setSearchSubject(text: string): void {

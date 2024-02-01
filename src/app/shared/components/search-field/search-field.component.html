@@ -2,4 +2,14 @@
   <mat-label>Search</mat-label>
 
   <input type="search" matInput [formControl]="searchControl" />
+
+  <button
+    *ngIf="searchControl.value"
+    matSuffix
+    mat-icon-button
+    aria-label="Clear"
+    (click)="searchControl.reset()"
+  >
+    <mat-icon color="primary">close</mat-icon>
+  </button>
 </mat-form-field>

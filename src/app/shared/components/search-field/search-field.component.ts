@@ -1,22 +1,28 @@
 import { FormControl } from '@angular/forms';
 import { SharedService } from './../../services/shared.service';
-import { Component, OnInit } from '@angular/core';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { debounceTime, distinctUntilChanged, from, takeUntil } from 'rxjs';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search-field.component.html',
   styleUrls: ['./search-field.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchFieldComponent
   extends UnsubscribeAbstract
   implements OnInit
 {
   searchControl = new FormControl<string>('');
+  private query = '';
 
-  constructor(private sharedService: SharedService, private router: Router) {
+  constructor(
+    private sharedService: SharedService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {
     super();
   }
 
@@ -32,14 +38,24 @@ export class SearchFieldComponent
         takeUntil(this.ngUnsubscribe$)
       )
       .subscribe((query) => {
-        if (query) {
-          this.sharedService.setSearchSubject(query);
-          console.log(query);
+        if (!query) {
+          return;
         }
 
-        if (this.router.url !== '/search') {
-          this.router.navigate(['search']);
-        }
+        this.query = query;
+
+        this.sharedService.setSearchSubject(query);
+        this.addParams();
       });
+  }
+
+  private addParams() {
+    const params: Params = {
+      q: this.query,
+    };
+
+    this.router.navigate(['search'], {
+      queryParams: params,
+    });
   }
 }
