@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const Material = [
   MatToolbarModule,
@@ -17,6 +18,7 @@ const Material = [
   MatFormFieldModule,
   MatSidenavModule,
   MatCardModule,
+  MatProgressBarModule,
 ];
 
 @NgModule({

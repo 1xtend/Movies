@@ -3,7 +3,7 @@ import { SharedService } from './../../services/shared.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, from, takeUntil } from 'rxjs';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -18,11 +18,7 @@ export class SearchFieldComponent
   searchControl = new FormControl<string>('');
   private query = '';
 
-  constructor(
-    private sharedService: SharedService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
+  constructor(private sharedService: SharedService, private router: Router) {
     super();
   }
 

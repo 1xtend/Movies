@@ -1,23 +1,23 @@
+import { LoadingService } from './../services/loading.service';
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpParams,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, finalize } from 'rxjs';
 import { environment } from 'src/environment/environment';
 
 @Injectable()
 export class ShowsInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(private loadingService: LoadingService) {}
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    console.log('Intercepted');
+    this.loadingService.setLoading(true);
 
     const url =
       request.url.indexOf('http://') === -1 &&
@@ -36,6 +36,10 @@ export class ShowsInterceptor implements HttpInterceptor {
 
     console.log(request.urlWithParams);
 
-    return next.handle(request);
+    return next.handle(request).pipe(
+      finalize(() => {
+        this.loadingService.setLoading(false);
+      })
+    );
   }
 }
