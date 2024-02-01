@@ -1,0 +1,26 @@
+<mat-card *ngIf="show" class="card">
+  <button mat-icon-button type="button" class="card__options" color="accent">
+    <mat-icon>pending</mat-icon>
+  </button>
+
+  <a mat-card-image routerLink="/" *ngIf="show.poster_path">
+    <img
+      [src]="imageUrl + show.poster_path"
+      [alt]="show.title"
+      class="card__image"
+    />
+  </a>
+
+  <mat-card-content>
+    <div class="card__vote">
+      <mat-icon color="accent">star</mat-icon>
+      {{ show.vote_average }}
+    </div>
+
+    <mat-card-title-group>
+      <mat-card-title class="card__title">
+        <a routerLink="/" class="card__title-link">{{ show.title }}</a>
+      </mat-card-title>
+    </mat-card-title-group>
+  </mat-card-content>
+</mat-card>

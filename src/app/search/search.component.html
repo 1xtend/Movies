@@ -1,17 +1,21 @@
-<section class="search" *ngIf="shows$ | async as shows; else noShows">
+<section class="search" *ngIf="shows && shows.total_results > 0; else noShows">
   <h1>Search</h1>
 
   <div class="search-grid">
-    <ul>
-      <li *ngFor="let show of shows.results">{{ show.title }}</li>
-    </ul>
+    <app-show-card
+      *ngFor="let show of shows.results"
+      [show]="show"
+      class="show-card"
+    ></app-show-card>
   </div>
 </section>
 
 <ng-template #noShows>
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-content>
-      <mat-card-title>Start your search</mat-card-title>
+      <mat-card-title>
+        There are no movies that matched your query.
+      </mat-card-title>
     </mat-card-content>
   </mat-card>
 </ng-template>

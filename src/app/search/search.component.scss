@@ -1,0 +1,13 @@
+.search-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.show-card {
+  display: block;
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}
