@@ -6,9 +6,15 @@ import { SearchFieldComponent } from './components/search-field/search-field.com
 import { LoaderComponent } from './components/loader/loader.component';
 import { ShowCardComponent } from './components/show-card/show-card.component';
 import { RouterModule } from '@angular/router';
+import { ShowDialogComponent } from './components/show-dialog/show-dialog.component';
 
 @NgModule({
-  declarations: [SearchFieldComponent, LoaderComponent, ShowCardComponent],
+  declarations: [
+    SearchFieldComponent,
+    LoaderComponent,
+    ShowCardComponent,
+    ShowDialogComponent,
+  ],
   imports: [
     CommonModule,
     MaterialModule,
@@ -16,6 +22,11 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     RouterModule,
   ],
-  exports: [SearchFieldComponent, LoaderComponent, ShowCardComponent],
+  exports: [
+    SearchFieldComponent,
+    LoaderComponent,
+    ShowCardComponent,
+    ShowDialogComponent,
+  ],
 })
 export class SharedModule {}

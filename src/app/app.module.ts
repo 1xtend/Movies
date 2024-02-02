@@ -29,7 +29,7 @@ import { ShowsInterceptor } from './shared/interceptors/shows.interceptor';
     SharedModule,
     HttpClientModule,
   ],
-  exports: [SharedModule],
+  exports: [SharedModule, MaterialModule],
   bootstrap: [AppComponent],
   providers: [
     {

@@ -4,7 +4,6 @@ import { EMPTY, Subject, map, switchMap, take, takeUntil, tap } from 'rxjs';
 import { SharedService } from './../shared/services/shared.service';
 import { Component, OnInit } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { IShowsRequest } from '@app/shared/models/shows-request.interface';
 import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
@@ -12,6 +11,7 @@ import {
   Router,
 } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IShowsResponse } from '@app/shared/models/shows/shows-response.interface';
 
 @Component({
   selector: 'app-search',
@@ -19,7 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent extends UnsubscribeAbstract implements OnInit {
-  shows?: IShowsRequest;
+  shows?: IShowsResponse;
 
   constructor(
     private sharedService: SharedService,

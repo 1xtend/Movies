@@ -1,6 +1,6 @@
 import { IShow } from './show.interface';
 
-export interface IShowsRequest {
+export interface IShowsResponse {
   page: number;
   results: IShow[];
   total_pages: number;
