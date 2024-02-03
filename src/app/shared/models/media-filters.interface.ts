@@ -1,4 +1,4 @@
-import { MediaType } from './media.enum';
+import { MediaType } from './media.type';
 
 export interface IMediaFilters {
   query: string;

@@ -1,6 +1,7 @@
 import { LoadingService } from './../shared/services/loading.service';
 import { MediaService } from '../shared/services/media.service';
 import {
+  BehaviorSubject,
   EMPTY,
   Observable,
   Subject,
@@ -13,14 +14,15 @@ import {
 import { SharedService } from './../shared/services/shared.service';
 import { Component, OnInit } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { ActivatedRoute } from '@angular/router';
-import { MediaType } from '@app/shared/models/media.enum';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MediaType } from '@app/shared/models/media.type';
 import { FormControl } from '@angular/forms';
 import { IMediaFilters } from '@app/shared/models/media-filters.interface';
 import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
 import { IMovieResponse } from '@app/shared/models/movie/movie-response.interface';
 import { ITVResponse } from '@app/shared/models/tv/tv-response.interface';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-search',
@@ -28,15 +30,21 @@ import { ITVResponse } from '@app/shared/models/tv/tv-response.interface';
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent extends UnsubscribeAbstract implements OnInit {
-  // response?: IShowsResponse | IPeopleResponse;
-  movies?: IMovieResponse;
-  tvs?: ITVResponse;
-  people?: IPeopleResponse;
+  private responseSubject = new Subject<
+    Partial<{
+      movies: IMovieResponse;
+      tvs: ITVResponse;
+      people: IPeopleResponse;
+    }>
+  >();
+  response$ = this.responseSubject.asObservable();
 
-  private currentMediaType: MediaType = MediaType.TV;
+  currentMediaType: MediaType = 'tv';
   mediaTypeControl = new FormControl<MediaType>(this.currentMediaType, {
     nonNullable: true,
   });
+
+  readonly pageSize = 20;
 
   private filters: IMediaFilters = {
     query: '',
@@ -46,14 +54,19 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   constructor(
     private sharedService: SharedService,
     private mediaService: MediaService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {
     super();
   }
 
   ngOnInit(): void {
+    this.sharedService.setMediaFilters(this.filters);
+
     this.searchChanges();
     this.mediaTypeChanges();
+    this.filtersChanges();
+    this.setQuery();
   }
 
   private searchChanges(): void {
@@ -63,16 +76,19 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
         switchMap((query) => {
           const params = this.activatedRoute.snapshot.queryParams;
 
-          this.filters.query = query || params['q'];
-          this.filters.page = params['page'] || 1;
+          this.filters = {
+            query: query || params['q'],
+            page: params['page'] || 1,
+          };
 
-          console.log(this.filters.query);
+          console.log(this.filters.query, this.filters.page);
 
           return this.fetchMedia();
         })
       )
       .subscribe((res) => {
         console.log('End search: ', res);
+        this.setQuery();
       });
   }
 
@@ -82,40 +98,84 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
         takeUntil(this.ngUnsubscribe$),
         switchMap((type) => {
           this.currentMediaType = type;
+          this.filters.page = 1;
 
           return this.fetchMedia();
         })
       )
-      .subscribe((res) => {});
+      .subscribe((res) => {
+        console.log(res);
+        this.setQuery();
+      });
+  }
+
+  private filtersChanges() {
+    this.sharedService.mediaFilters$
+      .pipe(
+        takeUntil(this.ngUnsubscribe$),
+        switchMap((filters) => {
+          this.filters = filters;
+
+          console.log('Filtered');
+          return this.fetchMedia();
+        })
+      )
+      .subscribe((res) => {
+        console.log('Filtered res: ', res);
+        this.setQuery();
+      });
+  }
+
+  handlePageEvent(event: PageEvent) {
+    this.filters.page = event.pageIndex + 1;
+    console.log(event);
+
+    this.fetchMedia().subscribe((res) => {
+      console.log(res);
+      this.setQuery();
+    });
   }
 
   private fetchMedia(): Observable<
     IMovieResponse | ITVResponse | IPeopleResponse
   > {
-    if (this.currentMediaType === MediaType.MOVIE) {
+    if (this.currentMediaType === 'movie') {
       return this.mediaService.searchMovie(this.filters).pipe(
         tap((res) => {
-          this.movies = res;
+          this.responseSubject.next({ movies: res });
         })
       );
     }
 
-    if (this.currentMediaType === MediaType.TV) {
+    if (this.currentMediaType === 'tv') {
       return this.mediaService.searchTV(this.filters).pipe(
         tap((res) => {
-          this.tvs = res;
+          this.responseSubject.next({ tvs: res });
         })
       );
     }
 
-    if (this.currentMediaType === MediaType.PERSON) {
+    if (this.currentMediaType === 'person') {
       return this.mediaService.searchPeople(this.filters).pipe(
         tap((res) => {
-          this.people = res;
+          this.responseSubject.next({ people: res });
         })
       );
     }
 
     return EMPTY;
+  }
+
+  private setQuery() {
+    const queryParams: Params = {
+      q: this.filters.query,
+      page: this.filters.page,
+    };
+
+    this.router.navigate(['search/', this.currentMediaType], {
+      queryParams,
+      replaceUrl: true,
+      preserveFragment: true,
+    });
   }
 }

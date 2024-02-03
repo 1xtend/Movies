@@ -43,5 +43,84 @@
     </mat-card>
   </aside>
 
-  <div class="search-content"></div>
+  <div class="search-content" *ngIf="response$ | async as response">
+    <div *ngIf="response.movies as movies">
+      <div *ngFor="let movie of movies.results">{{ movie.title }}</div>
+
+      <mat-paginator
+        [length]="movies.total_results"
+        [pageSize]="pageSize"
+        hidePageSize
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+        *ngIf="movies.total_pages > 1"
+      ></mat-paginator>
+    </div>
+
+    <div *ngIf="response.tvs as tvs">
+      <div *ngFor="let tv of tvs.results">{{ tv.name }}</div>
+
+      <mat-paginator
+        [length]="tvs.total_results"
+        [pageSize]="pageSize"
+        hidePageSize
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+        *ngIf="tvs.total_pages > 1"
+      ></mat-paginator>
+    </div>
+
+    <div *ngIf="response.people as people">
+      <div *ngFor="let person of people.results">{{ person.name }}</div>
+
+      <mat-paginator
+        [length]="people.total_results"
+        (page)="handlePageEvent($event)"
+        hidePageSize
+        [pageSize]="pageSize"
+        aria-label="Select page"
+        *ngIf="people.total_pages > 1"
+      ></mat-paginator>
+    </div>
+
+    <!-- <div
+      *ngIf="movies && movies.total_results > 0 && currentMediaType === 'movie'"
+    >
+      <div *ngFor="let movie of movies.results">{{ movie.title }}</div>
+
+      <mat-paginator
+        [length]="movies.total_pages"
+        [pageSize]="movies.results.length"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+      ></mat-paginator>
+    </div>
+    <div *ngIf="tvs && tvs.total_results > 0 && currentMediaType === 'tv'">
+      <div *ngFor="let tv of tvs.results">{{ tv.name }}</div>
+
+      <mat-paginator
+        [length]="tvs.total_pages"
+        [pageSize]="tvs.results.length"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+      ></mat-paginator>
+    </div>
+    <div
+      *ngIf="
+        people && people.total_results > 0 && currentMediaType === 'person'
+      "
+    >
+      <div *ngFor="let person of people.results">{{ person.name }}</div>
+
+      <mat-paginator
+        [length]="people.total_pages"
+        [pageSize]="people.results.length"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+      ></mat-paginator>
+    </div> -->
+  </div>
 </section>

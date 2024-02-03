@@ -13,6 +13,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 const Material = [
   MatToolbarModule,
@@ -27,6 +28,7 @@ const Material = [
   MatGridListModule,
   MatDialogModule,
   MatButtonToggleModule,
+  MatPaginatorModule
 ];
 
 @NgModule({
