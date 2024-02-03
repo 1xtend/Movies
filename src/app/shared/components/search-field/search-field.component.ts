@@ -48,9 +48,10 @@ export class SearchFieldComponent
   private addParams() {
     const params: Params = {
       q: this.query,
+      page: 1,
     };
 
-    this.router.navigate(['search'], {
+    this.router.navigate(['search', 'tv'], {
       queryParams: params,
     });
   }

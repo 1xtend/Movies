@@ -1,6 +1,4 @@
-import { ShowsService } from './shared/services/shows.service';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AppComponent implements OnInit {
   openDrawer: boolean = false;
 
-  constructor(private showsService: ShowsService) {}
+  constructor() {}
 
   ngOnInit(): void {}
 

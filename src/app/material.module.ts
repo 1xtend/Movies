@@ -12,6 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 const Material = [
   MatToolbarModule,
@@ -25,6 +26,7 @@ const Material = [
   MatSnackBarModule,
   MatGridListModule,
   MatDialogModule,
+  MatButtonToggleModule,
 ];
 
 @NgModule({

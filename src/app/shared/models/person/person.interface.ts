@@ -1,5 +1,3 @@
-import { IShowMediaType } from '../shows/show-media-type.interface';
-
 export interface IPerson {
   adult: boolean;
   gender: number;
@@ -9,5 +7,5 @@ export interface IPerson {
   original_name: string;
   popularity: string;
   profile_path: null | string;
-  known_for: IShowMediaType[];
+  // known_for: IShowMediaType[];
 }

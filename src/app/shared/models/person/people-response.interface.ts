@@ -1,8 +1,6 @@
+import { IResponse } from './../response.interface';
 import { IPerson } from './person.interface';
 
-export interface IPeopleResponse {
-  page: number;
+export interface IPeopleResponse extends IResponse {
   results: IPerson[];
-  total_pages: number;
-  total_results: number;
 }
