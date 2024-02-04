@@ -41,11 +41,11 @@ export class SearchFieldComponent
         this.query = query;
 
         this.sharedService.setSearchSubject(query);
-        this.addParams();
+        this.navigate();
       });
   }
 
-  private addParams() {
+  private navigate() {
     const params: Params = {
       q: this.query,
       page: 1,

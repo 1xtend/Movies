@@ -20,7 +20,7 @@
   </mat-card>
 </ng-template> -->
 
-<section class="search">
+<!-- <section class="search">
   <aside class="search-aside">
     <mat-card class="search-aside__card">
       <mat-card-header>
@@ -81,9 +81,9 @@
         aria-label="Select page"
         *ngIf="people.total_pages > 1"
       ></mat-paginator>
-    </div>
+    </div> -->
 
-    <!-- <div
+<!-- <div
       *ngIf="movies && movies.total_results > 0 && currentMediaType === 'movie'"
     >
       <div *ngFor="let movie of movies.results">{{ movie.title }}</div>
@@ -122,5 +122,80 @@
         aria-label="Select page"
       ></mat-paginator>
     </div> -->
+<!-- </div>
+</section> -->
+
+<section class="search">
+  <aside class="search-aside">
+    <mat-card class="search-aside__card">
+      <mat-card-header>
+        <mat-card-title class="search-aside__title"
+          >Search Results</mat-card-title
+        >
+      </mat-card-header>
+
+      <mat-card-actions>
+        <mat-button-toggle-group
+          vertical
+          class="search-aside__group"
+          [formControl]="mediaTypeControl"
+        >
+          <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
+          <mat-button-toggle value="movie">Movies</mat-button-toggle>
+          <mat-button-toggle value="person">People</mat-button-toggle>
+        </mat-button-toggle-group>
+      </mat-card-actions>
+    </mat-card>
+  </aside>
+
+  <div class="search-content" *ngIf="response$ | async as response">
+    <ng-container
+      *ngIf="
+        mediaType === 'tv' && response.tvs && response.tvs.total_results > 0
+      "
+    >
+      <div *ngFor="let tv of response.tvs.results">{{ tv.name }}</div>
+
+      <mat-paginator
+        [length]="response.tvs.total_results"
+        [pageSize]="pageSize"
+        (page)="handlePageEvent($event)"
+        [pageIndex]="filters.page - 1"
+      ></mat-paginator>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        mediaType === 'movie' &&
+        response.movies &&
+        response.movies.total_results > 0
+      "
+    >
+      <div *ngFor="let movie of response.movies.results">{{ movie.title }}</div>
+
+      <mat-paginator
+        [length]="response.movies.total_results"
+        [pageSize]="pageSize"
+        (page)="handlePageEvent($event)"
+        [pageIndex]="filters.page - 1"
+      ></mat-paginator>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        mediaType === 'person' &&
+        response.people &&
+        response.people.total_results > 0
+      "
+    >
+      <div *ngFor="let person of response.people.results">
+        {{ person.name }}
+      </div>
+
+      <mat-paginator
+        [length]="response.people.total_results"
+        [pageSize]="pageSize"
+        (page)="handlePageEvent($event)"
+        [pageIndex]="filters.page - 1"
+      ></mat-paginator>
+    </ng-container>
   </div>
 </section>

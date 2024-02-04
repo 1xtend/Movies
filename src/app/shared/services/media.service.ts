@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { IPeopleResponse } from '../models/person/people-response.interface';
 import { IMediaFilters } from '../models/media-filters.interface';
 import { MediaType } from '../models/media.type';
-import { ITVResponse } from '../models/tv/tv-response.interface';
-import { IMovieResponse } from '../models/movie/movie-response.interface';
+import { ITVsResponse } from '../models/tv/tvs-response.interface';
+import { IMoviesResponse } from '../models/movie/movies-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -56,12 +56,12 @@ export class MediaService {
     return this.search<IPeopleResponse>('person', filters);
   }
 
-  searchTV(filters: IMediaFilters): Observable<ITVResponse> {
-    return this.search<ITVResponse>('tv', filters);
+  searchTV(filters: IMediaFilters): Observable<ITVsResponse> {
+    return this.search<ITVsResponse>('tv', filters);
   }
 
-  searchMovie(filters: IMediaFilters): Observable<IMovieResponse> {
-    return this.search<IMovieResponse>('movie', filters);
+  searchMovie(filters: IMediaFilters): Observable<IMoviesResponse> {
+    return this.search<IMoviesResponse>('movie', filters);
   }
 
   private search<T>(type: MediaType, filters: IMediaFilters): Observable<T> {

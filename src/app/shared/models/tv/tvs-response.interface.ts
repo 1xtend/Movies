@@ -1,6 +1,6 @@
 import { IResponse } from '../response.interface';
 import { ITV } from './tv.interface';
 
-export interface ITVResponse extends IResponse {
+export interface ITVsResponse extends IResponse {
   results: ITV[];
 }
