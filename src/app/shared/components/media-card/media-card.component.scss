@@ -1,0 +1,29 @@
+.card {
+  &__image {
+    max-width: 100%;
+  }
+
+  &__title {
+    text-decoration: none;
+    color: inherit;
+    line-height: 1.2;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__vote {
+    display: flex;
+    align-items: center;
+    column-gap: 0.2rem;
+  }
+}

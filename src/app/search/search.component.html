@@ -152,9 +152,18 @@
   <ng-container *ngIf="res$ | async as res">
     <div class="search__content" *ngIf="res.tvs && res.tvs.total_results > 0">
       <div class="search__grid">
-        <div *ngFor="let tv of res.tvs.results" class="search__item">
+        <!-- <div *ngFor="let tv of res.tvs.results" class="search__item">
           {{ tv.name }}
-        </div>
+        </div> -->
+
+        <app-media-card
+          *ngFor="let tv of res.tvs.results"
+          [title]="tv.name"
+          [mediaType]="mediaType"
+          [imagePath]="tv.poster_path"
+          [voteAverage]="tv.vote_average"
+          [releaseDate]="tv.first_air_date"
+        ></app-media-card>
       </div>
 
       <mat-paginator
@@ -171,9 +180,14 @@
       *ngIf="res.movies && res.movies.total_results > 0"
     >
       <div class="search__grid">
-        <div *ngFor="let movie of res.movies.results" class="search__item">
-          {{ movie.title }}
-        </div>
+        <app-media-card
+          *ngFor="let movie of res.movies.results"
+          [title]="movie.title"
+          [mediaType]="mediaType"
+          [imagePath]="movie.poster_path"
+          [voteAverage]="movie.vote_average"
+          [releaseDate]="movie.release_date"
+        ></app-media-card>
       </div>
 
       <mat-paginator
@@ -189,9 +203,12 @@
       *ngIf="res.people && res.people.total_results > 0"
     >
       <div class="search__grid">
-        <div *ngFor="let person of res.people.results" class="search__item">
-          {{ person.name }}
-        </div>
+        <app-media-card
+          *ngFor="let person of res.people.results"
+          [title]="person.name"
+          [mediaType]="mediaType"
+          [imagePath]="person.profile_path"
+        ></app-media-card>
       </div>
 
       <mat-paginator

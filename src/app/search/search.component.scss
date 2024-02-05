@@ -24,6 +24,10 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
   }
 }
 

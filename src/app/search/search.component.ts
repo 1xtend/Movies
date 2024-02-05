@@ -62,6 +62,10 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   ngOnInit(): void {
     this.searchChanges();
     this.mediaTypeChanges();
+
+    this.resSubject.subscribe((res) => {
+      console.log(res);
+    });
   }
 
   private searchChanges(): void {

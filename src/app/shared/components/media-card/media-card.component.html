@@ -1,0 +1,44 @@
+<mat-card class="card" *ngIf="mediaType === 'person'; else show">
+  <a routerLink="/" *ngIf="imagePath">
+    <img
+      mat-card-image
+      [src]="imgUrl + imagePath"
+      [alt]="title"
+      class="card__image"
+    />
+  </a>
+
+  <mat-card-content class="card__content">
+    <mat-card-title>{{ title }}</mat-card-title>
+  </mat-card-content>
+
+  <mat-card-footer>
+    <span>{{ releaseDate | date : "y" }}</span>
+    <span><mat-icon color="accent">star</mat-icon> {{ voteAverage }}</span>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #show>
+  <mat-card class="card">
+    <a routerLink="/" *ngIf="imagePath">
+      <img
+        mat-card-image
+        [src]="imgUrl + imagePath"
+        [alt]="title"
+        class="card__image"
+      />
+    </a>
+
+    <mat-card-content class="card__content">
+      <a routerLink="/" mat-card-title class="card__title">{{ title }}</a>
+
+      <div class="card__bottom">
+        <span class="card__year">{{ releaseDate | date : "y" }}</span>
+        <span class="card__vote" *ngIf="voteAverage">
+          <mat-icon color="accent">star</mat-icon>
+          {{ voteAverage | round }}
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

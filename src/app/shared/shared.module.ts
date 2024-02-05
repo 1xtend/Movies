@@ -6,9 +6,17 @@ import { SearchFieldComponent } from './components/search-field/search-field.com
 import { LoaderComponent } from './components/loader/loader.component';
 import { RouterModule } from '@angular/router';
 import { ShowDialogComponent } from './components/show-dialog/show-dialog.component';
+import { MediaCardComponent } from './components/media-card/media-card.component';
+import { RoundPipe } from './pipes/round.pipe';
 
 @NgModule({
-  declarations: [SearchFieldComponent, LoaderComponent, ShowDialogComponent],
+  declarations: [
+    SearchFieldComponent,
+    LoaderComponent,
+    ShowDialogComponent,
+    MediaCardComponent,
+    RoundPipe,
+  ],
   imports: [
     CommonModule,
     MaterialModule,
@@ -16,6 +24,12 @@ import { ShowDialogComponent } from './components/show-dialog/show-dialog.compon
     ReactiveFormsModule,
     RouterModule,
   ],
-  exports: [SearchFieldComponent, LoaderComponent, ShowDialogComponent],
+  exports: [
+    SearchFieldComponent,
+    LoaderComponent,
+    ShowDialogComponent,
+    MediaCardComponent,
+    RoundPipe,
+  ],
 })
 export class SharedModule {}
