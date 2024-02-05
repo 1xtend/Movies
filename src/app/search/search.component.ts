@@ -3,6 +3,7 @@ import {
   EMPTY,
   Observable,
   Subject,
+  first,
   skip,
   switchMap,
   take,
@@ -28,14 +29,14 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent extends UnsubscribeAbstract implements OnInit {
-  private responseSubject = new Subject<
+  private resSubject = new Subject<
     Partial<{
       movies: IMoviesResponse;
       tvs: ITVsResponse;
       people: IPeopleResponse;
     }>
   >();
-  response$ = this.responseSubject.asObservable();
+  res$ = this.resSubject.asObservable();
 
   mediaType: MediaType = this.route.snapshot.params['media-type'];
   mediaTypeControl = new FormControl<MediaType | null>(this.mediaType, {
@@ -59,8 +60,8 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   ngOnInit(): void {
-    this.mediaTypeChanges();
     this.searchChanges();
+    this.mediaTypeChanges();
   }
 
   private searchChanges(): void {
@@ -72,7 +73,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
           this.filters = {
             query: query || queryParams['q'],
-            page: queryParams['page'] || 1,
+            page: query ? 1 : queryParams['page'],
           };
 
           return this.fetchMedia(this.filters);
@@ -117,7 +118,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     if (this.mediaType === 'movie') {
       return this.mediaService.searchMovie(filters).pipe(
         tap((res) => {
-          this.responseSubject.next({ movies: res });
+          this.resSubject.next({ movies: res });
         })
       );
     }
@@ -125,7 +126,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     if (this.mediaType === 'tv') {
       return this.mediaService.searchTV(filters).pipe(
         tap((res) => {
-          this.responseSubject.next({ tvs: res });
+          this.resSubject.next({ tvs: res });
         })
       );
     }
@@ -133,7 +134,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     if (this.mediaType === 'person') {
       return this.mediaService.searchPeople(filters).pipe(
         tap((res) => {
-          this.responseSubject.next({ people: res });
+          this.resSubject.next({ people: res });
         })
       );
     }
