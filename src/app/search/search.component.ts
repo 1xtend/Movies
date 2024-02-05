@@ -1,11 +1,9 @@
-import { LoadingService } from './../shared/services/loading.service';
 import { MediaService } from '../shared/services/media.service';
 import {
-  BehaviorSubject,
   EMPTY,
   Observable,
   Subject,
-  map,
+  skip,
   switchMap,
   take,
   takeUntil,
@@ -14,15 +12,15 @@ import {
 import { SharedService } from './../shared/services/shared.service';
 import { Component, OnInit } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { ActivatedRoute, Params, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { FormControl } from '@angular/forms';
 import { IMediaFilters } from '@app/shared/models/media-filters.interface';
 import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
-import { IPerson } from '@app/shared/models/person/person.interface';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { PageEvent } from '@angular/material/paginator';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-search',
@@ -40,7 +38,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   response$ = this.responseSubject.asObservable();
 
   mediaType: MediaType = this.route.snapshot.params['media-type'];
-  mediaTypeControl = new FormControl<MediaType>(this.mediaType, {
+  mediaTypeControl = new FormControl<MediaType | null>(this.mediaType, {
     nonNullable: true,
   });
 
@@ -61,8 +59,8 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   ngOnInit(): void {
-    this.searchChanges();
     this.mediaTypeChanges();
+    this.searchChanges();
   }
 
   private searchChanges(): void {
@@ -81,13 +79,12 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
         })
       )
       .subscribe((res) => {
-        console.log('Search changes: ', res);
-        // this.setQueryParams();
+        this.setQueryParams();
       });
   }
 
   private mediaTypeChanges() {
-    this.mediaTypeControl.valueChanges
+    this.sharedService.mediaType$
       .pipe(
         takeUntil(this.ngUnsubscribe$),
         switchMap((type) => {
@@ -98,10 +95,20 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
         })
       )
       .subscribe((res) => {
-        console.log('Media type changes: ', res);
-
         this.setQueryParams();
       });
+  }
+
+  handlePageEvent(e: PageEvent): void {
+    this.filters.page = e.pageIndex + 1;
+
+    this.fetchMedia(this.filters).subscribe((res) => {
+      this.setQueryParams();
+    });
+  }
+
+  handleTabEvent(e: MatButtonToggleChange) {
+    this.sharedService.setMediaTypeSubject(e.value);
   }
 
   private fetchMedia(
@@ -143,19 +150,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       replaceUrl: true,
       preserveFragment: true,
       relativeTo: this.route,
-    });
-
-    console.log('Set query params: ', this.router.url);
-  }
-
-  handlePageEvent(e: PageEvent): void {
-    console.log(e);
-
-    this.filters.page = e.pageIndex + 1;
-
-    this.fetchMedia(this.filters).subscribe((res) => {
-      this.setQueryParams();
-      console.log('Page event changes: ', res);
     });
   }
 }

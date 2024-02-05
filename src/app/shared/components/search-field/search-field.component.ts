@@ -1,9 +1,18 @@
+import { LoadingService } from './../../services/loading.service';
 import { FormControl } from '@angular/forms';
 import { SharedService } from './../../services/shared.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { debounceTime, distinctUntilChanged, from, takeUntil } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  from,
+  switchMap,
+  take,
+  takeUntil,
+} from 'rxjs';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MediaType } from '@app/shared/models/media.type';
 
 @Component({
   selector: 'app-search',
@@ -17,16 +26,21 @@ export class SearchFieldComponent
 {
   searchControl = new FormControl<string>('');
   private query = '';
+  private readonly mediaType: MediaType = 'tv';
 
-  constructor(private sharedService: SharedService, private router: Router) {
+  constructor(
+    private sharedService: SharedService,
+    private router: Router,
+    private loadingService: LoadingService
+  ) {
     super();
   }
 
   ngOnInit(): void {
-    this.initSearch();
+    this.searchChanges();
   }
 
-  private initSearch() {
+  private searchChanges(): void {
     this.searchControl.valueChanges
       .pipe(
         debounceTime(500),
@@ -39,20 +53,22 @@ export class SearchFieldComponent
         }
 
         this.query = query;
-
         this.sharedService.setSearchSubject(query);
-        this.navigate();
+
+        this.loadingService.setLoading(true);
+
+        if (!this.router.url.includes('search')) {
+          this.navigate();
+        }
       });
   }
 
-  private navigate() {
-    const params: Params = {
-      q: this.query,
-      page: 1,
-    };
-
-    this.router.navigate(['search', 'tv'], {
-      queryParams: params,
+  private navigate(): void {
+    this.router.navigate(['/search', this.mediaType], {
+      queryParams: {
+        q: this.query,
+        page: 1,
+      },
     });
   }
 }
