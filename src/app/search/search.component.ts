@@ -105,6 +105,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
   handlePageEvent(e: PageEvent): void {
     this.filters.page = e.pageIndex + 1;
+    this.sharedService.scrollToTop();
 
     this.fetchMedia().subscribe((res) => {
       this.setQueryParams();
