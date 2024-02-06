@@ -1,130 +1,3 @@
-<!-- <section class="search" *ngIf="shows && shows.total_results > 0; else noShows">
-  <h1>Search</h1>
-
-  <div class="search-grid">
-    <app-show-card
-      *ngFor="let show of shows.results"
-      [show]="show"
-      class="show-card"
-    ></app-show-card>
-  </div>
-</section> -->
-
-<!-- <ng-template #noShows>
-  <mat-card appearance="outlined">
-    <mat-card-content>
-      <mat-card-title>
-        There are no movies that matched your query.
-      </mat-card-title>
-    </mat-card-content>
-  </mat-card>
-</ng-template> -->
-
-<!-- <section class="search">
-  <aside class="search-aside">
-    <mat-card class="search-aside__card">
-      <mat-card-header>
-        <mat-card-title class="search-aside__title"
-          >Search Results</mat-card-title
-        >
-      </mat-card-header>
-
-      <mat-card-actions>
-        <mat-button-toggle-group
-          vertical
-          class="search-aside__group"
-          [formControl]="mediaTypeControl"
-        >
-          <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
-          <mat-button-toggle value="movie">Movies</mat-button-toggle>
-          <mat-button-toggle value="person">People</mat-button-toggle>
-        </mat-button-toggle-group>
-      </mat-card-actions>
-    </mat-card>
-  </aside>
-
-  <div class="search-content" *ngIf="res$ | async as res">
-    <div *ngIf="res.movies as movies">
-      <div *ngFor="let movie of movies.results">{{ movie.title }}</div>
-
-      <mat-paginator
-        [length]="movies.total_results"
-        [pageSize]="pageSize"
-        hidePageSize
-        (page)="handlePageEvent($event)"
-        aria-label="Select page"
-        *ngIf="movies.total_pages > 1"
-      ></mat-paginator>
-    </div>
-
-    <div *ngIf="res.tvs as tvs">
-      <div *ngFor="let tv of tvs.results">{{ tv.name }}</div>
-
-      <mat-paginator
-        [length]="tvs.total_results"
-        [pageSize]="pageSize"
-        hidePageSize
-        (page)="handlePageEvent($event)"
-        aria-label="Select page"
-        *ngIf="tvs.total_pages > 1"
-      ></mat-paginator>
-    </div>
-
-    <div *ngIf="res.people as people">
-      <div *ngFor="let person of people.results">{{ person.name }}</div>
-
-      <mat-paginator
-        [length]="people.total_results"
-        (page)="handlePageEvent($event)"
-        hidePageSize
-        [pageSize]="pageSize"
-        aria-label="Select page"
-        *ngIf="people.total_pages > 1"
-      ></mat-paginator>
-    </div> -->
-
-<!-- <div
-      *ngIf="movies && movies.total_results > 0 && currentMediaType === 'movie'"
-    >
-      <div *ngFor="let movie of movies.results">{{ movie.title }}</div>
-
-      <mat-paginator
-        [length]="movies.total_pages"
-        [pageSize]="movies.results.length"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        (page)="handlePageEvent($event)"
-        aria-label="Select page"
-      ></mat-paginator>
-    </div>
-    <div *ngIf="tvs && tvs.total_results > 0 && currentMediaType === 'tv'">
-      <div *ngFor="let tv of tvs.results">{{ tv.name }}</div>
-
-      <mat-paginator
-        [length]="tvs.total_pages"
-        [pageSize]="tvs.results.length"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        (page)="handlePageEvent($event)"
-        aria-label="Select page"
-      ></mat-paginator>
-    </div>
-    <div
-      *ngIf="
-        people && people.total_results > 0 && currentMediaType === 'person'
-      "
-    >
-      <div *ngFor="let person of people.results">{{ person.name }}</div>
-
-      <mat-paginator
-        [length]="people.total_pages"
-        [pageSize]="people.results.length"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        (page)="handlePageEvent($event)"
-        aria-label="Select page"
-      ></mat-paginator>
-    </div> -->
-<!-- </div>
-</section> -->
-
 <section class="search">
   <aside class="search-aside">
     <mat-card class="search-aside__card">
@@ -152,12 +25,8 @@
   <ng-container *ngIf="res$ | async as res">
     <div class="search__content" *ngIf="res.tvs && res.tvs.total_results > 0">
       <div class="search__grid">
-        <!-- <div *ngFor="let tv of res.tvs.results" class="search__item">
-          {{ tv.name }}
-        </div> -->
-
         <app-media-card
-          *ngFor="let tv of res.tvs.results"
+          *ngFor="let tv of res.tvs.results; trackBy: mediaTrackBy"
           [title]="tv.name"
           [mediaType]="mediaType"
           [imagePath]="tv.poster_path"
@@ -181,7 +50,7 @@
     >
       <div class="search__grid">
         <app-media-card
-          *ngFor="let movie of res.movies.results"
+          *ngFor="let movie of res.movies.results; trackBy: mediaTrackBy"
           [title]="movie.title"
           [mediaType]="mediaType"
           [imagePath]="movie.poster_path"
@@ -204,7 +73,7 @@
     >
       <div class="search__grid">
         <app-media-card
-          *ngFor="let person of res.people.results"
+          *ngFor="let person of res.people.results; trackBy: mediaTrackBy"
           [title]="person.name"
           [mediaType]="mediaType"
           [imagePath]="person.profile_path"
@@ -220,37 +89,4 @@
       ></mat-paginator>
     </div>
   </ng-container>
-  <!-- <div class="search__content">
-    <div class="search__grid" >
-      <div *ngFor="let tv of res.tvs.results" class="search__item">
-        {{ tv.name }}
-      </div>
-    </div>
-    <div
-      class="search__grid"
-      *ngIf="res.movies && res.movies.total_results > 0"
-    >
-      <div *ngFor="let movie of res.movies.results" class="search__item">
-        {{ movie.title }}
-      </div>
-    </div>
-    <div
-      class="search__grid"
-      *ngIf="res.people && res.people.total_results > 0"
-    >
-      <div *ngFor="let person of res.people.results" class="search__item">
-        {{ person.name }}
-      </div>
-    </div>
-
-    <mat-paginator
-      [length]="res."
-      [pageSize]="people.results.length"
-      [pageSizeOptions]="[5, 10, 25, 100]"
-      (page)="handlePageEvent($event)"
-      aria-label="Select page"
-    ></mat-paginator>
-
-   
-  </div> -->
 </section>

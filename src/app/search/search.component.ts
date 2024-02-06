@@ -22,6 +22,9 @@ import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interf
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { ITV } from '@app/shared/models/tv/tv.interface';
+import { IMovie } from '@app/shared/models/movie/movie.interface';
+import { IPerson } from '@app/shared/models/person/person.interface';
 
 @Component({
   selector: 'app-search',
@@ -62,10 +65,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   ngOnInit(): void {
     this.searchChanges();
     this.mediaTypeChanges();
-
-    this.resSubject.subscribe((res) => {
-      console.log(res);
-    });
   }
 
   private searchChanges(): void {
@@ -80,7 +79,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
             page: query ? 1 : queryParams['page'],
           };
 
-          return this.fetchMedia(this.filters);
+          return this.fetchMedia();
         })
       )
       .subscribe((res) => {
@@ -96,7 +95,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
           this.mediaType = type;
           this.filters.page = 1;
 
-          return this.fetchMedia(this.filters);
+          return this.fetchMedia();
         })
       )
       .subscribe((res) => {
@@ -107,7 +106,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   handlePageEvent(e: PageEvent): void {
     this.filters.page = e.pageIndex + 1;
 
-    this.fetchMedia(this.filters).subscribe((res) => {
+    this.fetchMedia().subscribe((res) => {
       this.setQueryParams();
     });
   }
@@ -116,11 +115,11 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.sharedService.setMediaTypeSubject(e.value);
   }
 
-  private fetchMedia(
-    filters: IMediaFilters
-  ): Observable<ITVsResponse | IMoviesResponse | IPeopleResponse> {
+  private fetchMedia(): Observable<
+    ITVsResponse | IMoviesResponse | IPeopleResponse
+  > {
     if (this.mediaType === 'movie') {
-      return this.mediaService.searchMovie(filters).pipe(
+      return this.mediaService.searchMovie(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ movies: res });
         })
@@ -128,7 +127,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     }
 
     if (this.mediaType === 'tv') {
-      return this.mediaService.searchTV(filters).pipe(
+      return this.mediaService.searchTV(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ tvs: res });
         })
@@ -136,7 +135,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     }
 
     if (this.mediaType === 'person') {
-      return this.mediaService.searchPeople(filters).pipe(
+      return this.mediaService.searchPeople(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ people: res });
         })
@@ -156,5 +155,9 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       preserveFragment: true,
       relativeTo: this.route,
     });
+  }
+
+  mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
+    return media.id;
   }
 }
