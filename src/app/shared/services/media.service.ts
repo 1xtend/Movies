@@ -13,44 +13,19 @@ import { IMoviesResponse } from '../models/movie/movies-response.interface';
 export class MediaService {
   constructor(private http: HttpClient) {}
 
-  // searchPeople(filters: IMediaFilters): Observable<IPeopleResponse> {
-  //   const params = new HttpParams({
-  //     fromObject: {
-  //       query: filters.query,
-  //       page: filters.page,
-  //     },
-  //   });
+  // Search
+  private search<T>(type: MediaType, filters: IMediaFilters): Observable<T> {
+    const params = new HttpParams({
+      fromObject: {
+        query: filters.query,
+        page: filters.page,
+      },
+    });
 
-  //   return this.http.get<IPeopleResponse>(`/search/${MediaType.PERSON}`, {
-  //     params,
-  //   });
-  // }
-
-  // searchTV(filters: IMediaFilters): Observable<ITVResponse> {
-  //   const params = new HttpParams({
-  //     fromObject: {
-  //       query: filters.query,
-  //       page: filters.page,
-  //     },
-  //   });
-
-  //   return this.http.get<ITVResponse>(`/search/${MediaType.TV}`, {
-  //     params,
-  //   });
-  // }
-
-  // searchMovie(filters: IMediaFilters): Observable<IMovieResponse> {
-  //   const params = new HttpParams({
-  //     fromObject: {
-  //       query: filters.query,
-  //       page: filters.page,
-  //     },
-  //   });
-
-  //   return this.http.get<IMovieResponse>(`/search/${MediaType.MOVIE}`, {
-  //     params,
-  //   });
-  // }
+    return this.http.get<T>(`/search/${type}`, {
+      params,
+    });
+  }
 
   searchPeople(filters: IMediaFilters): Observable<IPeopleResponse> {
     return this.search<IPeopleResponse>('person', filters);
@@ -64,16 +39,20 @@ export class MediaService {
     return this.search<IMoviesResponse>('movie', filters);
   }
 
-  private search<T>(type: MediaType, filters: IMediaFilters): Observable<T> {
-    const params = new HttpParams({
-      fromObject: {
-        query: filters.query,
-        page: filters.page,
-      },
-    });
+  // Details
+  private getDetails<T>(type: MediaType, id: number): Observable<T> {
+    return this.http.get<T>(`/${type}/${id}`);
+  }
 
-    return this.http.get<T>(`/search/${type}`, {
-      params,
-    });
+  getTVDetails(id: number) {
+    return this.getDetails('tv', id);
+  }
+
+  getMovieDetails(id: number) {
+    return this.getDetails('movie', id);
+  }
+
+  getPersonDetails(id: number) {
+    return this.getDetails('person', id);
   }
 }
