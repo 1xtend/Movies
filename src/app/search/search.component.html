@@ -37,6 +37,7 @@
       </div>
 
       <mat-paginator
+        *ngIf="res.tvs.total_pages > 1"
         [length]="res.tvs.total_results"
         [pageSize]="pageSize"
         (page)="handlePageEvent($event)"
@@ -62,6 +63,7 @@
       </div>
 
       <mat-paginator
+        *ngIf="res.movies.total_pages > 1"
         [length]="res.movies.total_results"
         [pageSize]="pageSize"
         (page)="handlePageEvent($event)"
@@ -84,6 +86,7 @@
       </div>
 
       <mat-paginator
+        *ngIf="res.people.total_pages > 1"
         [length]="res.people.total_results"
         [pageSize]="pageSize"
         (page)="handlePageEvent($event)"
@@ -92,4 +95,10 @@
       ></mat-paginator>
     </div>
   </ng-container>
+
+  <mat-card *ngIf="noResult">
+    <mat-card-content>
+      <mat-card-title>There are no results for this request</mat-card-title>
+    </mat-card-content>
+  </mat-card>
 </section>

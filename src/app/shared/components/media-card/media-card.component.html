@@ -15,13 +15,13 @@
   </a>
 
   <mat-card-content class="card__content">
-    <mat-card-title>{{ title }}</mat-card-title>
+    <a
+      [routerLink]="['/details', mediaType, id]"
+      mat-card-title
+      class="card__title"
+      >{{ title }}</a
+    >
   </mat-card-content>
-
-  <mat-card-footer>
-    <span>{{ releaseDate | date : "y" }}</span>
-    <span><mat-icon color="accent">star</mat-icon> {{ voteAverage }}</span>
-  </mat-card-footer>
 </mat-card>
 
 <ng-template #show>
@@ -46,7 +46,12 @@
     </a>
 
     <mat-card-content class="card__content">
-      <a routerLink="/" mat-card-title class="card__title">{{ title }}</a>
+      <a
+        [routerLink]="['/details', mediaType, id]"
+        mat-card-title
+        class="card__title"
+        >{{ title }}</a
+      >
 
       <div class="card__bottom">
         <span class="card__year">{{ releaseDate | date : "y" }}</span>

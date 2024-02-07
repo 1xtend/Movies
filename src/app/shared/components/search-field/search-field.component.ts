@@ -6,6 +6,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   from,
+  map,
   switchMap,
   take,
   takeUntil,
@@ -43,6 +44,7 @@ export class SearchFieldComponent
   private searchChanges(): void {
     this.searchControl.valueChanges
       .pipe(
+        map((query) => query?.trim()),
         debounceTime(500),
         distinctUntilChanged(),
         takeUntil(this.ngUnsubscribe$)

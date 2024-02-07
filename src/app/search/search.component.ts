@@ -54,6 +54,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   };
 
   readonly pageSize = 20;
+  noResult: boolean = false;
 
   constructor(
     private sharedService: SharedService,
@@ -95,6 +96,12 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
         })
       )
       .subscribe((res) => {
+        if (!res || !res.total_results) {
+          this.noResult = true;
+        } else {
+          this.noResult = false;
+        }
+
         this.sharedService.scrollToTop();
       });
   }
