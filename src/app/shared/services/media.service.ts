@@ -6,6 +6,9 @@ import { MediaType } from '../models/media.type';
 import { ISearchPeopleResponse } from '../models/person/people-response.interface';
 import { ISearchTVsResponse } from '../models/tv/tvs-response.interface';
 import { ISearchMoviesResponse } from '../models/movie/movies-response.interface';
+import { IDetailsTV } from '../models/tv/tv.interface';
+import { IDetailsMovie } from '../models/movie/movie.interface';
+import { IDetailsPerson } from '../models/person/person.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -44,15 +47,15 @@ export class MediaService {
     return this.http.get<T>(`/${type}/${id}`);
   }
 
-  getTVDetails(id: number) {
-    return this.getDetails('tv', id);
+  getTVDetails(id: number): Observable<IDetailsTV> {
+    return this.getDetails<IDetailsTV>('tv', id);
   }
 
-  getMovieDetails(id: number) {
-    return this.getDetails('movie', id);
+  getMovieDetails(id: number): Observable<IDetailsMovie> {
+    return this.getDetails<IDetailsMovie>('movie', id);
   }
 
-  getPersonDetails(id: number) {
-    return this.getDetails('person', id);
+  getPersonDetails(id: number): Observable<IDetailsPerson> {
+    return this.getDetails<IDetailsPerson>('person', id);
   }
 }

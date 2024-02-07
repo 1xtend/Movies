@@ -1,1 +1,28 @@
-<p>media-details works!</p>
+<section *ngIf="res$ | async as res">
+  <h1>Details</h1>
+
+  <ng-container *ngIf="res.movie as movie">
+    <img
+      *ngIf="movie.poster_path"
+      [src]="imageUrl + movie.poster_path"
+      [alt]="movie.title"
+    />
+    <div>{{ movie.title }}</div>
+  </ng-container>
+  <ng-container *ngIf="res.tv as tv">
+    <img
+      *ngIf="tv.poster_path"
+      [src]="imageUrl + tv.poster_path"
+      [alt]="tv.name"
+    />
+    <div>{{ tv.name }}</div>
+  </ng-container>
+  <ng-container *ngIf="res.person as person">
+    <img
+      *ngIf="person.profile_path"
+      [src]="imageUrl + person.profile_path"
+      [alt]="person.name"
+    />
+    <div>{{ person.name }}</div>
+  </ng-container>
+</section>

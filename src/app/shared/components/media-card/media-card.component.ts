@@ -9,7 +9,7 @@ import { environment } from 'src/environment/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaCardComponent {
-  readonly imgUrl = environment.apiImageUrl;
+  readonly imgUrl = environment.posterImageUrl;
 
   @Input() mediaType!: MediaType;
   @Input() imagePath: string | null = '';
