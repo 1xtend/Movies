@@ -1,11 +1,18 @@
 <mat-card class="card" *ngIf="mediaType === 'person'; else show">
-  <a routerLink="/" *ngIf="imagePath">
+  <a routerLink="/" class="card__image-link">
     <img
       mat-card-image
+      *ngIf="imagePath; else noImage"
       [src]="imgUrl + imagePath"
       [alt]="title"
       class="card__image"
     />
+
+    <ng-template #noImage>
+      <div class="card__blank-image">
+        <mat-icon>image</mat-icon>
+      </div>
+    </ng-template>
   </a>
 
   <mat-card-content class="card__content">
@@ -20,13 +27,23 @@
 
 <ng-template #show>
   <mat-card class="card">
-    <a routerLink="/" *ngIf="imagePath">
+    <a routerLink="/" class="card__image-link">
       <img
         mat-card-image
+        *ngIf="imagePath; else noImage"
         [src]="imgUrl + imagePath"
         [alt]="title"
         class="card__image"
       />
+
+      <ng-template #noImage>
+        <img
+          src="./assets/images/blank.png"
+          [alt]="title"
+          class="card__image"
+        />
+        <mat-icon>image</mat-icon>
+      </ng-template>
     </a>
 
     <mat-card-content class="card__content">
