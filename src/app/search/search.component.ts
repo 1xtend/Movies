@@ -19,14 +19,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { FormControl } from '@angular/forms';
 import { IMediaFilters } from '@app/shared/models/media-filters.interface';
-import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
-import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
-import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { ITV } from '@app/shared/models/tv/tv.interface';
-import { IMovie } from '@app/shared/models/movie/movie.interface';
-import { IPerson } from '@app/shared/models/person/person.interface';
+import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
+import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface';
+import { ISearchPeopleResponse } from '@app/shared/models/person/people-response.interface';
+import { ISearchTV } from '@app/shared/models/tv/tv.interface';
+import { ISearchMovie } from '@app/shared/models/movie/movie.interface';
+import { ISearchPerson } from '@app/shared/models/person/person.interface';
 
 @Component({
   selector: 'app-search',
@@ -36,9 +36,9 @@ import { IPerson } from '@app/shared/models/person/person.interface';
 export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   private resSubject = new Subject<
     Partial<{
-      movies: IMoviesResponse;
-      tvs: ITVsResponse;
-      people: IPeopleResponse;
+      movies: ISearchMoviesResponse;
+      tvs: ISearchTVsResponse;
+      people: ISearchPeopleResponse;
     }>
   >();
   res$ = this.resSubject.asObservable();
@@ -132,7 +132,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.setQueryParams(this.filters.query, page, this.mediaType);
   }
 
-  mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
+  mediaTrackBy(index: number, media: ISearchTV | ISearchMovie | ISearchPerson) {
     return media.id;
   }
 

@@ -1,11 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IPeopleResponse } from '../models/person/people-response.interface';
 import { IMediaFilters } from '../models/media-filters.interface';
 import { MediaType } from '../models/media.type';
-import { ITVsResponse } from '../models/tv/tvs-response.interface';
-import { IMoviesResponse } from '../models/movie/movies-response.interface';
+import { ISearchPeopleResponse } from '../models/person/people-response.interface';
+import { ISearchTVsResponse } from '../models/tv/tvs-response.interface';
+import { ISearchMoviesResponse } from '../models/movie/movies-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -27,16 +27,16 @@ export class MediaService {
     });
   }
 
-  searchPeople(filters: IMediaFilters): Observable<IPeopleResponse> {
-    return this.search<IPeopleResponse>('person', filters);
+  searchPeople(filters: IMediaFilters): Observable<ISearchPeopleResponse> {
+    return this.search<ISearchPeopleResponse>('person', filters);
   }
 
-  searchTV(filters: IMediaFilters): Observable<ITVsResponse> {
-    return this.search<ITVsResponse>('tv', filters);
+  searchTV(filters: IMediaFilters): Observable<ISearchTVsResponse> {
+    return this.search<ISearchTVsResponse>('tv', filters);
   }
 
-  searchMovie(filters: IMediaFilters): Observable<IMoviesResponse> {
-    return this.search<IMoviesResponse>('movie', filters);
+  searchMovie(filters: IMediaFilters): Observable<ISearchMoviesResponse> {
+    return this.search<ISearchMoviesResponse>('movie', filters);
   }
 
   // Details

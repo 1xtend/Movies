@@ -1,4 +1,4 @@
-export interface IPerson {
+export interface ISearchPerson {
   adult: boolean;
   gender: number;
   id: number;

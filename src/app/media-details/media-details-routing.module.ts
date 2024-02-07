@@ -7,21 +7,21 @@ const routes: Routes = [
     path: 'tv/:id',
     component: MediaDetailsComponent,
     data: {
-      page: 'tv',
+      mediaType: 'tv',
     },
   },
   {
     path: 'movie/:id',
     component: MediaDetailsComponent,
     data: {
-      page: 'movie',
+      mediaType: 'movie',
     },
   },
   {
     path: 'person/:id',
     component: MediaDetailsComponent,
     data: {
-      page: 'person',
+      mediaType: 'person',
     },
   },
 ];
