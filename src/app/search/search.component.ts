@@ -27,6 +27,8 @@ import { ISearchPeopleResponse } from '@app/shared/models/person/people-response
 import { ISearchTV } from '@app/shared/models/tv/tv.interface';
 import { ISearchMovie } from '@app/shared/models/movie/movie.interface';
 import { ISearchPerson } from '@app/shared/models/person/person.interface';
+import { HttpParams } from '@angular/common/http';
+import { ISearchParams } from '@app/shared/models/search-params.interface';
 
 @Component({
   selector: 'app-search',
@@ -51,6 +53,8 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   filters: IMediaFilters = {
     page: 1,
     query: '',
+    includeAdult: undefined,
+    year: undefined,
   };
 
   readonly pageSize = 20;
@@ -110,7 +114,12 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.sharedService.search$
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((query) => {
-        this.setQueryParams(query, 1, this.mediaType);
+        const filters: IMediaFilters = {
+          query,
+          page: 1,
+        };
+
+        this.setQueryParams(filters, this.mediaType);
       });
   }
 
@@ -118,7 +127,12 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.sharedService.mediaType$
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((type) => {
-        this.setQueryParams(this.filters.query, 1, type);
+        const filters: IMediaFilters = {
+          query: this.filters.query,
+          page: 1,
+        };
+
+        this.setQueryParams(filters, type);
       });
   }
 
@@ -127,9 +141,12 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   handlePageEvent(e: PageEvent): void {
-    const page = e.pageIndex + 1;
+    const filters: IMediaFilters = {
+      query: this.filters.query,
+      page: e.pageIndex + 1,
+    };
 
-    this.setQueryParams(this.filters.query, page, this.mediaType);
+    this.setQueryParams(filters, this.mediaType);
   }
 
   mediaTrackBy(index: number, media: ISearchTV | ISearchMovie | ISearchPerson) {
@@ -164,12 +181,22 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     return EMPTY;
   }
 
-  private setQueryParams(q: string, page: number, mediaType: MediaType): void {
+  private setQueryParams(filters: IMediaFilters, mediaType: MediaType): void {
+    const params: ISearchParams = {
+      q: filters.query,
+      page: filters.page,
+    };
+
+    if (filters.includeAdult !== undefined) {
+      params.include_adult = filters.includeAdult;
+    }
+
+    if (filters.year) {
+      params.year = filters.year;
+    }
+
     this.router.navigate(['/search', mediaType], {
-      queryParams: {
-        q,
-        page,
-      },
+      queryParams: params,
     });
   }
 }

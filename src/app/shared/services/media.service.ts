@@ -18,12 +18,20 @@ export class MediaService {
 
   // Search
   private search<T>(type: MediaType, filters: IMediaFilters): Observable<T> {
-    const params = new HttpParams({
+    let params = new HttpParams({
       fromObject: {
         query: filters.query,
         page: filters.page,
       },
     });
+
+    if (filters.includeAdult !== undefined) {
+      params = params.append('include_adult', filters.includeAdult);
+    }
+
+    if (filters.year) {
+      params = params.append('year', filters.year);
+    }
 
     return this.http.get<T>(`/search/${type}`, {
       params,

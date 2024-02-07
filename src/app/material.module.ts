@@ -14,6 +14,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const Material = [
   MatToolbarModule,
@@ -28,7 +29,8 @@ const Material = [
   MatGridListModule,
   MatDialogModule,
   MatButtonToggleModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatTooltipModule,
 ];
 
 @NgModule({
