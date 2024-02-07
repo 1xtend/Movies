@@ -2,10 +2,32 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MediaDetailsComponent } from './media-details.component';
 
-const routes: Routes = [{ path: '', component: MediaDetailsComponent }];
+const routes: Routes = [
+  {
+    path: 'tv/:id',
+    component: MediaDetailsComponent,
+    data: {
+      page: 'tv',
+    },
+  },
+  {
+    path: 'movie/:id',
+    component: MediaDetailsComponent,
+    data: {
+      page: 'movie',
+    },
+  },
+  {
+    path: 'person/:id',
+    component: MediaDetailsComponent,
+    data: {
+      page: 'person',
+    },
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class MediaDetailsRoutingModule { }
+export class MediaDetailsRoutingModule {}

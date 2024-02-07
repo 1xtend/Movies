@@ -1,5 +1,5 @@
 <mat-card class="card" *ngIf="mediaType === 'person'; else show">
-  <a routerLink="/" class="card__image-link">
+  <a [routerLink]="['/details', mediaType, id]" class="card__image-link">
     <img
       mat-card-image
       *ngIf="imagePath; else noImage"
@@ -27,7 +27,7 @@
 
 <ng-template #show>
   <mat-card class="card">
-    <a routerLink="/" class="card__image-link">
+    <a [routerLink]="['/details', mediaType, id]" class="card__image-link">
       <img
         mat-card-image
         *ngIf="imagePath; else noImage"
