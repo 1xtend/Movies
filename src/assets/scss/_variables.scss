@@ -1,0 +1,13 @@
+:root {
+  --header-height: 64px;
+}
+
+$header-height: var(--header-height);
+
+$breakpoint-SM: 600px;
+
+@media screen and (max-width: $breakpoint-SM) {
+  :root {
+    --header-height: 56px;
+  }
+}

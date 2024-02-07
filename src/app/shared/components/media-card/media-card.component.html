@@ -1,0 +1,65 @@
+<mat-card class="card" *ngIf="mediaType === 'person'; else show">
+  <a [routerLink]="['/details', mediaType, id]" class="card__image-link">
+    <img
+      mat-card-image
+      *ngIf="imagePath; else noImage"
+      [src]="imgUrl + imagePath"
+      [alt]="title"
+      class="card__image"
+    />
+
+    <ng-template #noImage>
+      <img src="./assets/images/blank.png" [alt]="title" class="card__image" />
+      <mat-icon>image</mat-icon>
+    </ng-template>
+  </a>
+
+  <mat-card-content class="card__content">
+    <a
+      [routerLink]="['/details', mediaType, id]"
+      mat-card-title
+      class="card__title"
+      >{{ title }}</a
+    >
+  </mat-card-content>
+</mat-card>
+
+<ng-template #show>
+  <mat-card class="card">
+    <a [routerLink]="['/details', mediaType, id]" class="card__image-link">
+      <img
+        mat-card-image
+        *ngIf="imagePath; else noImage"
+        [src]="imgUrl + imagePath"
+        [alt]="title"
+        class="card__image"
+      />
+
+      <ng-template #noImage>
+        <img
+          src="./assets/images/blank.png"
+          [alt]="title"
+          class="card__image"
+        />
+        <mat-icon>image</mat-icon>
+      </ng-template>
+    </a>
+
+    <mat-card-content class="card__content">
+      <a
+        [routerLink]="['/details', mediaType, id]"
+        mat-card-title
+        class="card__title"
+        >{{ title }}</a
+      >
+
+      <div class="card__bottom">
+        <span class="card__year">{{ releaseDate | date : "y" }}</span>
+        <span class="card__vote" *ngIf="voteAverage">
+          <mat-icon color="accent">star</mat-icon>
+          {{ voteAverage | round }}
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

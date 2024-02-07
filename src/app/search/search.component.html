@@ -1,0 +1,104 @@
+<section class="search">
+  <aside class="search-aside">
+    <mat-card class="search-aside__card">
+      <mat-card-header>
+        <mat-card-title class="search-aside__title"
+          >Search Results</mat-card-title
+        >
+      </mat-card-header>
+
+      <mat-card-actions>
+        <mat-button-toggle-group
+          vertical
+          class="search-aside__group"
+          [formControl]="mediaTypeControl"
+          (change)="handleTabEvent($event)"
+        >
+          <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
+          <mat-button-toggle value="movie">Movies</mat-button-toggle>
+          <mat-button-toggle value="person">People</mat-button-toggle>
+        </mat-button-toggle-group>
+      </mat-card-actions>
+    </mat-card>
+  </aside>
+
+  <ng-container *ngIf="res$ | async as res">
+    <div class="search__content" *ngIf="res.tvs && res.tvs.total_results > 0">
+      <div class="search__grid">
+        <app-media-card
+          *ngFor="let tv of res.tvs.results; trackBy: mediaTrackBy"
+          [title]="tv.name"
+          [mediaType]="mediaType"
+          [imagePath]="tv.poster_path"
+          [voteAverage]="tv.vote_average"
+          [releaseDate]="tv.first_air_date"
+          [id]="tv.id"
+        ></app-media-card>
+      </div>
+
+      <mat-paginator
+        *ngIf="res.tvs.total_pages > 1"
+        [length]="res.tvs.total_results"
+        [pageSize]="pageSize"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+        [pageIndex]="filters.page - 1"
+      ></mat-paginator>
+    </div>
+
+    <div
+      class="search__content"
+      *ngIf="res.movies && res.movies.total_results > 0"
+    >
+      <div class="search__grid">
+        <app-media-card
+          *ngFor="let movie of res.movies.results; trackBy: mediaTrackBy"
+          [title]="movie.title"
+          [mediaType]="mediaType"
+          [imagePath]="movie.poster_path"
+          [voteAverage]="movie.vote_average"
+          [releaseDate]="movie.release_date"
+          [id]="movie.id"
+        ></app-media-card>
+      </div>
+
+      <mat-paginator
+        *ngIf="res.movies.total_pages > 1"
+        [length]="res.movies.total_results"
+        [pageSize]="pageSize"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+        [pageIndex]="filters.page - 1"
+      ></mat-paginator>
+    </div>
+    <div
+      class="search__content"
+      *ngIf="res.people && res.people.total_results > 0"
+    >
+      <div class="search__grid">
+        <app-media-card
+          *ngFor="let person of res.people.results; trackBy: mediaTrackBy"
+          [title]="person.name"
+          [mediaType]="mediaType"
+          [imagePath]="person.profile_path"
+          [id]="person.id"
+        ></app-media-card>
+      </div>
+
+      <mat-paginator
+        *ngIf="res.people.total_pages > 1"
+        [length]="res.people.total_results"
+        [pageSize]="pageSize"
+        (page)="handlePageEvent($event)"
+        aria-label="Select page"
+        [pageIndex]="filters.page - 1"
+      ></mat-paginator>
+    </div>
+  </ng-container>
+
+  <mat-card *ngIf="noResult">
+    <mat-card-content>
+      <mat-card-title>There are no results for this request</mat-card-title>
+    </mat-card-content>
+  </mat-card>
+</section>

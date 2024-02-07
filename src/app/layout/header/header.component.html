@@ -1,1 +1,18 @@
-<p>header works!</p>
+<mat-toolbar color="primary" class="header">
+  <mat-toolbar-row>
+    <a routerLink="/" class="logo" mat-button>Movies</a>
+
+    <span class="spacer"></span>
+
+    <button type="button" mat-icon-button (click)="showSearchInput()">
+      <mat-icon>search</mat-icon>
+    </button>
+
+    <button type="button" mat-icon-button (click)="toggleSidebar.emit()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row *ngIf="show">
+    <app-search></app-search>
+  </mat-toolbar-row>
+</mat-toolbar>
