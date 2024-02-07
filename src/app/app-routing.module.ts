@@ -20,6 +20,11 @@ const routes: Routes = [
         (m) => m.MediaDetailsModule
       ),
   },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

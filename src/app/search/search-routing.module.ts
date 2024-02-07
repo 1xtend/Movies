@@ -4,12 +4,30 @@ import { SearchComponent } from './search.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'tv',
     component: SearchComponent,
+    data: {
+      type: 'tv',
+    },
   },
   {
-    path: ':media-type',
+    path: '',
+    redirectTo: 'tv',
+    pathMatch: 'full',
+  },
+  {
+    path: 'movie',
     component: SearchComponent,
+    data: {
+      type: 'movie',
+    },
+  },
+  {
+    path: 'person',
+    component: SearchComponent,
+    data: {
+      type: 'person',
+    },
   },
 ];
 

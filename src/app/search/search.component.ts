@@ -3,7 +3,9 @@ import {
   EMPTY,
   Observable,
   Subject,
+  combineLatest,
   first,
+  map,
   skip,
   switchMap,
   take,
@@ -41,14 +43,14 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   >();
   res$ = this.resSubject.asObservable();
 
-  mediaType: MediaType = this.route.snapshot.params['media-type'];
-  mediaTypeControl = new FormControl<MediaType | null>(this.mediaType, {
+  mediaType: MediaType = 'tv';
+  mediaTypeControl = new FormControl(this.mediaType, {
     nonNullable: true,
   });
 
   filters: IMediaFilters = {
-    query: '',
     page: 1,
+    query: '',
   };
 
   readonly pageSize = 20;
@@ -63,74 +65,83 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   ngOnInit(): void {
+    this.paramsChanges();
+
     this.searchChanges();
     this.mediaTypeChanges();
   }
 
-  private searchChanges(): void {
-    this.sharedService.search$
+  private paramsChanges(): void {
+    combineLatest({
+      data: this.route.data,
+      queryParams: this.route.queryParamMap,
+    })
       .pipe(
         takeUntil(this.ngUnsubscribe$),
-        switchMap((query) => {
-          const queryParams = this.route.snapshot.queryParams;
+        switchMap(({ data, queryParams }) => {
+          if (!queryParams.has('q')) {
+            return EMPTY;
+          }
 
           this.filters = {
-            query: query || queryParams['q'],
-            page: query ? 1 : queryParams['page'],
+            query: queryParams.get('q') || '',
+            page: Number(queryParams.get('page')) || 1,
           };
 
+          this.mediaType = data['type'];
+          this.mediaTypeControl.setValue(this.mediaType);
+
           return this.fetchMedia();
         })
       )
       .subscribe((res) => {
-        this.setQueryParams();
+        this.sharedService.scrollToTop();
       });
   }
 
-  private mediaTypeChanges() {
+  private searchChanges(): void {
+    this.sharedService.search$
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((query) => {
+        this.setQueryParams(query, 1, this.mediaType);
+      });
+  }
+
+  private mediaTypeChanges(): void {
     this.sharedService.mediaType$
-      .pipe(
-        takeUntil(this.ngUnsubscribe$),
-        switchMap((type) => {
-          this.mediaType = type;
-          this.filters.page = 1;
-
-          return this.fetchMedia();
-        })
-      )
-      .subscribe((res) => {
-        this.setQueryParams();
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((type) => {
+        this.setQueryParams(this.filters.query, 1, type);
       });
   }
 
-  handlePageEvent(e: PageEvent): void {
-    this.filters.page = e.pageIndex + 1;
-    this.sharedService.scrollToTop();
-
-    this.fetchMedia().subscribe((res) => {
-      this.setQueryParams();
-    });
-  }
-
-  handleTabEvent(e: MatButtonToggleChange) {
+  handleTabEvent(e: MatButtonToggleChange): void {
     this.sharedService.setMediaTypeSubject(e.value);
   }
 
-  private fetchMedia(): Observable<
-    ITVsResponse | IMoviesResponse | IPeopleResponse
-  > {
-    if (this.mediaType === 'movie') {
-      return this.mediaService.searchMovie(this.filters).pipe(
-        tap((res) => {
-          this.resSubject.next({ movies: res });
-        })
-      );
-    }
+  handlePageEvent(e: PageEvent): void {
+    const page = e.pageIndex + 1;
 
+    this.setQueryParams(this.filters.query, page, this.mediaType);
+  }
+
+  mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
+    return media.id;
+  }
+
+  private fetchMedia() {
     if (this.mediaType === 'tv') {
       return this.mediaService.searchTV(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ tvs: res });
+        })
+      );
+    }
+
+    if (this.mediaType === 'movie') {
+      return this.mediaService.searchMovie(this.filters).pipe(
+        tap((res) => {
+          this.resSubject.next({ movies: res });
         })
       );
     }
@@ -146,19 +157,12 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     return EMPTY;
   }
 
-  private setQueryParams() {
-    this.router.navigate(['/search', this.mediaType], {
+  private setQueryParams(q: string, page: number, mediaType: MediaType): void {
+    this.router.navigate(['/search', mediaType], {
       queryParams: {
-        q: this.filters.query,
-        page: this.filters.page,
+        q,
+        page,
       },
-      replaceUrl: true,
-      preserveFragment: true,
-      relativeTo: this.route,
     });
-  }
-
-  mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
-    return media.id;
   }
 }

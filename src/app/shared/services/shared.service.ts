@@ -9,7 +9,7 @@ import { ViewportScroller } from '@angular/common';
   providedIn: 'root',
 })
 export class SharedService {
-  private searchSubject = new BehaviorSubject<string>('');
+  private searchSubject = new Subject<string>();
   search$ = this.searchSubject.asObservable();
 
   private mediaFiltersSubject = new Subject<IMediaFilters>();

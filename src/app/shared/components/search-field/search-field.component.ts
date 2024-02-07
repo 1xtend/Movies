@@ -52,10 +52,10 @@ export class SearchFieldComponent
           return;
         }
 
+        this.loadingService.setLoading(true);
+
         this.query = query;
         this.sharedService.setSearchSubject(query);
-
-        this.loadingService.setLoading(true);
 
         if (!this.router.url.includes('search')) {
           this.navigate();
