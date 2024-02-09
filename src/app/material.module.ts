@@ -15,6 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const Material = [
   MatToolbarModule,
@@ -31,6 +32,7 @@ const Material = [
   MatButtonToggleModule,
   MatPaginatorModule,
   MatTooltipModule,
+  MatSlideToggleModule,
 ];
 
 @NgModule({

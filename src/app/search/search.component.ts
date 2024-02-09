@@ -46,7 +46,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   res$ = this.resSubject.asObservable();
 
   mediaType: MediaType = 'tv';
-  mediaTypeControl = new FormControl(this.mediaType, {
+  mediaTypeControl = new FormControl<MediaType>(this.mediaType, {
     nonNullable: true,
   });
 
@@ -91,6 +91,8 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
           this.filters = {
             query: queryParams.get('q') || '',
             page: Number(queryParams.get('page')) || 1,
+            includeAdult:
+              Boolean(queryParams.get('include_adult')) || undefined,
           };
 
           this.mediaType = data['type'];
@@ -128,7 +130,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((type) => {
         const filters: IMediaFilters = {
-          query: this.filters.query,
+          ...this.filters,
           page: 1,
         };
 
@@ -142,7 +144,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
   handlePageEvent(e: PageEvent): void {
     const filters: IMediaFilters = {
-      query: this.filters.query,
+      ...this.filters,
       page: e.pageIndex + 1,
     };
 

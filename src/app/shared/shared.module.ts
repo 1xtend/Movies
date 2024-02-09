@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { ShowDialogComponent } from './components/show-dialog/show-dialog.component';
 import { MediaCardComponent } from './components/media-card/media-card.component';
 import { RoundPipe } from './pipes/round.pipe';
+import { TimePipe } from './pipes/time.pipe';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { RoundPipe } from './pipes/round.pipe';
     ShowDialogComponent,
     MediaCardComponent,
     RoundPipe,
+    TimePipe,
   ],
   imports: [
     CommonModule,

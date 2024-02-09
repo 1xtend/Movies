@@ -1,28 +1,52 @@
-<section *ngIf="res$ | async as res">
-  <h1>Details</h1>
-
+<section class="details" *ngIf="res$ | async as res">
   <ng-container *ngIf="res.movie as movie">
-    <img
-      *ngIf="movie.poster_path"
-      [src]="imageUrl + movie.poster_path"
-      [alt]="movie.title"
-    />
-    <div>{{ movie.title }}</div>
-  </ng-container>
-  <ng-container *ngIf="res.tv as tv">
-    <img
-      *ngIf="tv.poster_path"
-      [src]="imageUrl + tv.poster_path"
-      [alt]="tv.name"
-    />
-    <div>{{ tv.name }}</div>
-  </ng-container>
-  <ng-container *ngIf="res.person as person">
-    <img
-      *ngIf="person.profile_path"
-      [src]="imageUrl + person.profile_path"
-      [alt]="person.name"
-    />
-    <div>{{ person.name }}</div>
+    <div class="details__image">
+      <img
+        *ngIf="movie.poster_path; else noImage"
+        [src]="imageUrl + movie.poster_path"
+        [alt]="movie.title"
+      />
+
+      <ng-template #noImage>
+        <img src="./assets/images/blank.png" [alt]="movie.title" />
+        <mat-icon>image</mat-icon>
+      </ng-template>
+    </div>
+
+    <div class="details__body">
+      <div class="details__header">
+        <h1 class="details__main-title">
+          {{ movie.title }}
+        </h1>
+
+        <div class="details__group">
+          <span class="details__date">
+            {{ movie.release_date | date : "shortDate" }}
+          </span>
+
+          <span class="details__divider">|</span>
+
+          <span *ngFor="let genre of movie.genres">
+            {{
+              movie.genres.indexOf(genre) === movie.genres.length - 1
+                ? genre.name
+                : genre.name + ","
+            }}
+          </span>
+
+          <span class="details__divider">|</span>
+
+          <span class="details__runtime">
+            {{ movie.runtime }}
+          </span>
+        </div>
+      </div>
+
+      <div class="details__content">
+        <h2 class="details__title">Overview</h2>
+
+        <p>{{ movie.overview }}</p>
+      </div>
+    </div>
   </ng-container>
 </section>
