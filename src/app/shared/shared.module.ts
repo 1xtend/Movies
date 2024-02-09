@@ -32,6 +32,7 @@ import { TimePipe } from './pipes/time.pipe';
     ShowDialogComponent,
     MediaCardComponent,
     RoundPipe,
+    TimePipe,
   ],
 })
 export class SharedModule {}
