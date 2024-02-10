@@ -2,7 +2,10 @@
   <app-movie-details
     *ngIf="res.movie as movie"
     [movie]="movie"
-    [backdropPath]="backdropPath"
     [posterPath]="posterPath"
-  ></app-movie-details>
+  >
+  </app-movie-details>
+
+  <app-tv-details *ngIf="res.tv as tv" [tv]="tv" [posterPath]="posterPath">
+  </app-tv-details>
 </ng-container>

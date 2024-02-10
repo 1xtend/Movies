@@ -1,3 +1,4 @@
+import { LoadingService } from './../shared/services/loading.service';
 import { MediaService } from '../shared/services/media.service';
 import {
   EMPTY,
@@ -68,7 +69,8 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     private mediaService: MediaService,
     private route: ActivatedRoute,
     private router: Router,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private loadingService: LoadingService
   ) {
     super();
   }
@@ -82,6 +84,8 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   private paramsChanges(): void {
+    this.loadingService.setLoading(true);
+
     combineLatest({
       data: this.route.data,
       queryParams: this.route.queryParamMap,

@@ -10,5 +10,4 @@ import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
 export class MovieDetailsComponent {
   @Input() movie!: IDetailsMovie;
   @Input() posterPath!: string;
-  @Input() backdropPath!: string;
 }

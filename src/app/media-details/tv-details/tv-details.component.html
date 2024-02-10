@@ -1,0 +1,82 @@
+<section class="tv">
+  <div class="tv__poster">
+    <img
+      *ngIf="tv.poster_path; else noImage"
+      [src]="posterPath + tv.poster_path"
+      [alt]="tv.name"
+    />
+
+    <ng-template #noImage>
+      <img src="./assets/images/blank.png" [alt]="tv.name" />
+      <mat-icon>image</mat-icon>
+    </ng-template>
+  </div>
+
+  <div class="tv__content">
+    <div class="tv__group">
+      <h1 class="tv__main-title">
+        <a
+          *ngIf="tv.homepage; else noHomepage"
+          [href]="tv.homepage"
+          target="_blank"
+          rel="noreferrer noopener"
+          class="tv__main-title-link"
+          matTooltip="Go to homepage"
+        >
+          {{ tv.name }}
+        </a>
+
+        <ng-template #noHomepage>{{ tv.name }} </ng-template>
+
+        <span class="tv__year" *ngIf="tv.first_air_date && tv.last_air_date"
+          >({{ tv.first_air_date | date : "y" }}
+          -
+          {{ tv.last_air_date | date : "y" }})</span
+        >
+      </h1>
+
+      <span class="tv__subtitle" *ngIf="tv.tagline">{{ tv.tagline }}</span>
+    </div>
+
+    <div class="tv__group" *ngIf="tv.overview">
+      <h2 class="tv__title">Overview</h2>
+      <p>{{ tv.overview }}</p>
+    </div>
+
+    <div class="tv__group" *ngIf="tv.genres.length">
+      <h2 class="tv__title">Genres</h2>
+      <p>
+        <span *ngFor="let genre of tv.genres">
+          {{
+            tv.genres.indexOf(genre) === tv.genres.length - 1
+              ? genre.name
+              : genre.name + ", "
+          }}
+        </span>
+      </p>
+    </div>
+
+    <div class="tv__group tv-list">
+      <div class="tv-list__item" *ngIf="tv.first_air_date">
+        <h4 class="tv-list__title">First air date</h4>
+        <p class="tv-list__text">{{ tv.first_air_date | date : "MM/dd/y" }}</p>
+      </div>
+      <div class="tv-list__item" *ngIf="tv.last_air_date">
+        <h4 class="tv-list__title">Last air date</h4>
+        <p class="tv-list__text">{{ tv.last_air_date | date : "MM/dd/y" }}</p>
+      </div>
+      <div class="tv-list__item" *ngIf="tv.status">
+        <h4 class="tv-list__title">Status</h4>
+        <p class="tv-list__text">{{ tv.status }}</p>
+      </div>
+      <div class="tv-list__item" *ngIf="tv.number_of_episodes">
+        <h4 class="tv-list__title">Episodes</h4>
+        <p class="tv-list__text">{{ tv.number_of_episodes }}</p>
+      </div>
+      <div class="tv-list__item" *ngIf="tv.number_of_seasons">
+        <h4 class="tv-list__title">Seasons</h4>
+        <p class="tv-list__text">{{ tv.number_of_seasons }}</p>
+      </div>
+    </div>
+  </div>
+</section>
