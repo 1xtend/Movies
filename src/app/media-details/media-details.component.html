@@ -1,52 +1,8 @@
-<section class="details" *ngIf="res$ | async as res">
-  <ng-container *ngIf="res.movie as movie">
-    <div class="details__image">
-      <img
-        *ngIf="movie.poster_path; else noImage"
-        [src]="imageUrl + movie.poster_path"
-        [alt]="movie.title"
-      />
-
-      <ng-template #noImage>
-        <img src="./assets/images/blank.png" [alt]="movie.title" />
-        <mat-icon>image</mat-icon>
-      </ng-template>
-    </div>
-
-    <div class="details__body">
-      <div class="details__header">
-        <h1 class="details__main-title">
-          {{ movie.title }}
-        </h1>
-
-        <div class="details__group">
-          <span class="details__date">
-            {{ movie.release_date | date : "shortDate" }}
-          </span>
-
-          <span class="details__divider">|</span>
-
-          <span *ngFor="let genre of movie.genres">
-            {{
-              movie.genres.indexOf(genre) === movie.genres.length - 1
-                ? genre.name
-                : genre.name + ","
-            }}
-          </span>
-
-          <span class="details__divider">|</span>
-
-          <span class="details__runtime">
-            {{ movie.runtime | time }}
-          </span>
-        </div>
-      </div>
-
-      <div class="details__content">
-        <h2 class="details__title">Overview</h2>
-
-        <p>{{ movie.overview }}</p>
-      </div>
-    </div>
-  </ng-container>
-</section>
+<ng-container *ngIf="res$ | async as res">
+  <app-movie-details
+    *ngIf="res.movie as movie"
+    [movie]="movie"
+    [backdropPath]="backdropPath"
+    [posterPath]="posterPath"
+  ></app-movie-details>
+</ng-container>

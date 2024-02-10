@@ -16,6 +16,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const Material = [
   MatToolbarModule,
@@ -33,6 +34,7 @@ const Material = [
   MatPaginatorModule,
   MatTooltipModule,
   MatSlideToggleModule,
+  MatProgressSpinnerModule,
 ];
 
 @NgModule({

@@ -1,0 +1,62 @@
+<section class="movie">
+  <div class="movie__poster">
+    <img
+      *ngIf="movie.poster_path; else noImage"
+      [src]="posterPath + movie.poster_path"
+      [alt]="movie.title"
+    />
+
+    <ng-template #noImage>
+      <img src="./assets/images/blank.png" [alt]="movie.title" />
+      <mat-icon>image</mat-icon>
+    </ng-template>
+  </div>
+
+  <div class="movie__content">
+    <div class="movie__group">
+      <h1 class="movie__main-title">
+        <a
+          *ngIf="movie.homepage; else noHomepage"
+          [href]="movie.homepage"
+          target="_blank"
+          rel="noreferrer noopener"
+          class="movie__main-title-link"
+        >
+          {{ movie.title }}
+        </a>
+
+        <ng-template #noHomepage>{{ movie.title }} </ng-template>
+
+        <span class="movie__year">({{ movie.release_date | date : "y" }})</span>
+      </h1>
+
+      <span class="movie__subtitle">{{ movie.tagline }}</span>
+    </div>
+
+    <div class="movie__group">
+      <h2 class="movie__title">Overview</h2>
+      <p>{{ movie.overview }}</p>
+    </div>
+
+    <div class="movie__group movie-list">
+      <div class="movie-list__item">
+        <h4 class="movie-list__title">Release date</h4>
+        <p class="movie-list__text">
+          {{ movie.release_date | date : "MM/dd/y" }}
+        </p>
+      </div>
+      <div class="movie-list__item">
+        <h4 class="movie-list__title">Runtime</h4>
+        <p class="movie-list__text">{{ movie.runtime | time }}</p>
+      </div>
+      <div class="movie-list__item">
+        <h4 class="movie-list__title">Status</h4>
+        <p class="movie-list__text">{{ movie.status }}</p>
+      </div>
+      <div class="movie-list__item">
+        <h4 class="movie-list__title">Original title</h4>
+        <p class="movie-list__text">{{ movie.original_title }}</p>
+      </div>
+    </div>
+  </div>
+</section>

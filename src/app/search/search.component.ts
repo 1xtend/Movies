@@ -29,6 +29,7 @@ import { ISearchMovie } from '@app/shared/models/movie/movie.interface';
 import { ISearchPerson } from '@app/shared/models/person/person.interface';
 import { HttpParams } from '@angular/common/http';
 import { ISearchParams } from '@app/shared/models/search-params.interface';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-search',
@@ -60,11 +61,14 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   readonly pageSize = 20;
   noResult: boolean = false;
 
+  tabletView: boolean = false;
+
   constructor(
     private sharedService: SharedService,
     private mediaService: MediaService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private breakpointObserver: BreakpointObserver
   ) {
     super();
   }
@@ -74,6 +78,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
     this.searchChanges();
     this.mediaTypeChanges();
+    this.pageResize();
   }
 
   private paramsChanges(): void {
@@ -136,6 +141,13 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
         this.setQueryParams(filters, type);
       });
+  }
+
+  private pageResize(): void {
+    this.breakpointObserver.observe(['(max-width: 767px)']).subscribe((res) => {
+      console.log(res);
+      this.tabletView = res.breakpoints['(max-width: 767px)'];
+    });
   }
 
   handleTabEvent(e: MatButtonToggleChange): void {

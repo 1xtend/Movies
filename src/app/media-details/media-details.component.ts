@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
+import { IGenre } from '@app/shared/models/genre.interface';
 import { MediaType } from '@app/shared/models/media.type';
 import {
   IDetailsMovie,
@@ -25,18 +26,15 @@ export class MediaDetailsComponent
   implements OnInit
 {
   private resSubject = new Subject<
-    Partial<{
-      movie: IDetailsMovie;
-      tv: IDetailsTV;
-      person: IDetailsPerson;
-    }>
+    Partial<{ movie: IDetailsMovie; tv: IDetailsTV; person: IDetailsPerson }>
   >();
   res$ = this.resSubject.asObservable();
 
   private mediaType: MediaType = this.route.snapshot.data['mediaType'];
   private id: number = Number(this.route.snapshot.params['id']);
 
-  imageUrl = environment.originalImageUrl;
+  posterPath = environment.imagePaths.original;
+  backdropPath = environment.imagePaths.w1280Backdrop;
 
   constructor(
     private route: ActivatedRoute,
@@ -79,5 +77,9 @@ export class MediaDetailsComponent
     }
 
     return EMPTY;
+  }
+
+  trackByGenre(index: number, genre: IGenre): number {
+    return genre.id;
   }
 }
