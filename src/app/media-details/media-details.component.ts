@@ -1,17 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { IGenre } from '@app/shared/models/genre.interface';
 import { MediaType } from '@app/shared/models/media.type';
-import {
-  IDetailsMovie,
-  ISearchMovie,
-} from '@app/shared/models/movie/movie.interface';
-import {
-  IDetailsPerson,
-  ISearchPerson,
-} from '@app/shared/models/person/person.interface';
-import { IDetailsTV, ISearchTV } from '@app/shared/models/tv/tv.interface';
+import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
+import { IDetailsPerson } from '@app/shared/models/person/person.interface';
+import { IDetailsTV } from '@app/shared/models/tv/tv.interface';
 import { MediaService } from '@app/shared/services/media.service';
 import { EMPTY, Observable, Subject, tap } from 'rxjs';
 import { environment } from 'src/environment/environment';

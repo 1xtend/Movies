@@ -6,9 +6,9 @@ import { MediaType } from '../models/media.type';
 import { ISearchPeopleResponse } from '../models/person/people-response.interface';
 import { ISearchTVsResponse } from '../models/tv/tvs-response.interface';
 import { ISearchMoviesResponse } from '../models/movie/movies-response.interface';
-import { IDetailsTV } from '../models/tv/tv.interface';
-import { IDetailsMovie } from '../models/movie/movie.interface';
-import { IDetailsPerson } from '../models/person/person.interface';
+import { IDetailsTV, ITV } from '../models/tv/tv.interface';
+import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
+import { IDetailsPerson, IPerson } from '../models/person/person.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -65,5 +65,22 @@ export class MediaService {
 
   getPersonDetails(id: number): Observable<IDetailsPerson> {
     return this.getDetails<IDetailsPerson>('person', id);
+  }
+
+  // Popular
+  private getPopular<T>(mediaType: MediaType): Observable<T> {
+    return this.http.get<T>(`/${mediaType}/popular`);
+  }
+
+  getPopularMovies() {
+    return this.getPopular<IMovie>('movie');
+  }
+
+  getPopularTVs() {
+    return this.getPopular<ITV>('tv');
+  }
+
+  getPopularPeople() {
+    return this.getPopular<IPerson>('person');
   }
 }

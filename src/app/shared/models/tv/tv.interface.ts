@@ -3,7 +3,7 @@ import { INetwork } from '../network.interface';
 import { IProductionCountry } from '../production-country.interface';
 import { ISeason } from '../season.interface';
 
-export interface ISearchTV {
+export interface ITV {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];

@@ -2,7 +2,7 @@ import { IGenre } from '../genre.interface';
 import { INetwork } from '../network.interface';
 import { IProductionCountry } from '../production-country.interface';
 
-export interface ISearchMovie {
+export interface IMovie {
   adult: boolean;
   backdrop_path: string | null;
   genre_ids: number[];

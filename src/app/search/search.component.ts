@@ -25,9 +25,9 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { ISearchPeopleResponse } from '@app/shared/models/person/people-response.interface';
-import { ISearchTV } from '@app/shared/models/tv/tv.interface';
-import { ISearchMovie } from '@app/shared/models/movie/movie.interface';
-import { ISearchPerson } from '@app/shared/models/person/person.interface';
+import { ITV } from '@app/shared/models/tv/tv.interface';
+import { IMovie } from '@app/shared/models/movie/movie.interface';
+import { IPerson } from '@app/shared/models/person/person.interface';
 import { HttpParams } from '@angular/common/http';
 import { ISearchParams } from '@app/shared/models/search-params.interface';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -158,7 +158,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.setQueryParams(filters, this.mediaType);
   }
 
-  mediaTrackBy(index: number, media: ISearchTV | ISearchMovie | ISearchPerson) {
+  mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
     return media.id;
   }
 

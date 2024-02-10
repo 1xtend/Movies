@@ -53,13 +53,13 @@
       <div class="person-list__item" *ngIf="person.birthday">
         <h4 class="person-list__title">Birthday</h4>
         <p class="person-list__text">
-          {{ person.birthday | date : "MM/dd/y" }}
+          {{ person.birthday | date : "dd/MM/y" }}
         </p>
       </div>
       <div class="person-list__item" *ngIf="person.deathday">
         <h4 class="person-list__title">Deathday</h4>
         <p class="person-list__text">
-          {{ person.deathday | date : "MM/dd/y" }}
+          {{ person.deathday | date : "dd/MM/y" }}
         </p>
       </div>
       <div class="person-list__item" *ngIf="person.place_of_birth">

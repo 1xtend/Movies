@@ -11,7 +11,7 @@ import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './home/home.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { ShowsInterceptor } from './shared/interceptors/shows.interceptor';
+import { MediaInterceptor } from './shared/interceptors/http.interceptor';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,7 @@ import { ShowsInterceptor } from './shared/interceptors/shows.interceptor';
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: ShowsInterceptor,
+      useClass: MediaInterceptor,
       multi: true,
     },
   ],
