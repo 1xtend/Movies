@@ -35,6 +35,7 @@ export class MediaDetailsComponent
 
   posterPath = environment.imagePaths.original;
   backdropPath = environment.imagePaths.w1280Backdrop;
+  profilePath = environment.imagePaths.h632Profile;
 
   constructor(
     private route: ActivatedRoute,
@@ -77,9 +78,5 @@ export class MediaDetailsComponent
     }
 
     return EMPTY;
-  }
-
-  trackByGenre(index: number, genre: IGenre): number {
-    return genre.id;
   }
 }

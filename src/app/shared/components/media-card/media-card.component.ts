@@ -18,6 +18,6 @@ export class MediaCardComponent {
 
   readonly imgUrl =
     this.mediaType === 'person'
-      ? environment.imagePaths.h632Poster
+      ? environment.imagePaths.h632Profile
       : environment.imagePaths.w500Poster;
 }

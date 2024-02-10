@@ -7,9 +7,10 @@ import { SharedModule } from '@app/shared/shared.module';
 import { MaterialModule } from '@app/material.module';
 import { MovieDetailsComponent } from './movie-details/movie-details.component';
 import { TvDetailsComponent } from './tv-details/tv-details.component';
+import { PersonDetailsComponent } from './person-details/person-details.component';
 
 @NgModule({
-  declarations: [MediaDetailsComponent, MovieDetailsComponent, TvDetailsComponent],
+  declarations: [MediaDetailsComponent, MovieDetailsComponent, TvDetailsComponent, PersonDetailsComponent],
   imports: [
     CommonModule,
     MediaDetailsRoutingModule,

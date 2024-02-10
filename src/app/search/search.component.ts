@@ -69,7 +69,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     private mediaService: MediaService,
     private route: ActivatedRoute,
     private router: Router,
-    private breakpointObserver: BreakpointObserver,
     private loadingService: LoadingService
   ) {
     super();
@@ -80,7 +79,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
     this.searchChanges();
     this.mediaTypeChanges();
-    this.pageResize();
   }
 
   private paramsChanges(): void {
@@ -145,13 +143,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
         this.setQueryParams(filters, type);
       });
-  }
-
-  private pageResize(): void {
-    this.breakpointObserver.observe(['(max-width: 767px)']).subscribe((res) => {
-      console.log(res);
-      this.tabletView = res.breakpoints['(max-width: 767px)'];
-    });
   }
 
   handleTabEvent(e: MatButtonToggleChange): void {

@@ -1,0 +1,85 @@
+<section class="person">
+  <div class="person__poster">
+    <img
+      *ngIf="person.profile_path; else noImage"
+      [src]="profilePath + person.profile_path"
+      [alt]="person.name"
+    />
+
+    <ng-template #noImage>
+      <img src="./assets/images/blank.png" [alt]="person.name" />
+      <mat-icon>image</mat-icon>
+    </ng-template>
+  </div>
+
+  <div class="person__content">
+    <div class="person__group">
+      <h1 class="person__main-title">
+        <a
+          *ngIf="person.homepage; else noHomepage"
+          [href]="person.homepage"
+          target="_blank"
+          rel="noreferrer noopener"
+          class="person__main-title-link"
+          matTooltip="Go to homepage"
+        >
+          {{ person.name }}
+        </a>
+
+        <ng-template #noHomepage>{{ person.name }} </ng-template>
+      </h1>
+    </div>
+
+    <div class="person__group" *ngIf="person.biography">
+      <h2 class="person__title">Biography</h2>
+      <p>{{ person.biography }}</p>
+    </div>
+
+    <div class="person__group" *ngIf="person.also_known_as.length">
+      <h2 class="person__title">Alson known as</h2>
+      <p>
+        <span *ngFor="let value of person.also_known_as">
+          {{
+            person.also_known_as.indexOf(value) ===
+            person.also_known_as.length - 1
+              ? value
+              : value + "; "
+          }}
+        </span>
+      </p>
+    </div>
+
+    <div class="person__group person-list">
+      <div class="person-list__item" *ngIf="person.birthday">
+        <h4 class="person-list__title">Birthday</h4>
+        <p class="person-list__text">
+          {{ person.birthday | date : "MM/dd/y" }}
+        </p>
+      </div>
+      <div class="person-list__item" *ngIf="person.deathday">
+        <h4 class="person-list__title">Deathday</h4>
+        <p class="person-list__text">
+          {{ person.deathday | date : "MM/dd/y" }}
+        </p>
+      </div>
+      <div class="person-list__item" *ngIf="person.place_of_birth">
+        <h4 class="person-list__title">Place of birth</h4>
+        <p class="person-list__text">
+          {{ person.place_of_birth }}
+        </p>
+      </div>
+      <div class="person-list__item" *ngIf="person.gender">
+        <h4 class="person-list__title">Gender</h4>
+        <p class="person-list__text">
+          {{ person.gender === 1 ? "Female" : "Male" }}
+        </p>
+      </div>
+      <div class="person-list__item" *ngIf="person.known_for_department">
+        <h4 class="person-list__title">Known for department</h4>
+        <p class="person-list__text">
+          {{ person.known_for_department }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

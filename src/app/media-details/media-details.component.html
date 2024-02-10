@@ -3,9 +3,14 @@
     *ngIf="res.movie as movie"
     [movie]="movie"
     [posterPath]="posterPath"
-  >
-  </app-movie-details>
+  ></app-movie-details>
 
   <app-tv-details *ngIf="res.tv as tv" [tv]="tv" [posterPath]="posterPath">
   </app-tv-details>
+
+  <app-person-details
+    *ngIf="res.person as person"
+    [person]="person"
+    [profilePath]="profilePath"
+  ></app-person-details>
 </ng-container>
