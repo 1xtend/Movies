@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { IMediaFilters } from '../models/media-filters.interface';
+import { IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { ViewportScroller } from '@angular/common';
@@ -12,9 +12,6 @@ export class SharedService {
   private searchSubject = new Subject<string>();
   search$ = this.searchSubject.asObservable();
 
-  private mediaFiltersSubject = new Subject<IMediaFilters>();
-  mediaFilters$ = this.mediaFiltersSubject.asObservable();
-
   private mediaTypeSubject = new Subject<MediaType>();
   mediaType$ = this.mediaTypeSubject.asObservable();
 
@@ -22,10 +19,6 @@ export class SharedService {
 
   setSearchSubject(text: string): void {
     this.searchSubject.next(text);
-  }
-
-  setMediaFilters(filters: IMediaFilters): void {
-    this.mediaFiltersSubject.next(filters);
   }
 
   setMediaTypeSubject(type: MediaType): void {

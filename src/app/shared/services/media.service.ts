@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IMediaFilters } from '../models/media-filters.interface';
+import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { ISearchPeopleResponse } from '../models/person/people-response.interface';
 import { ISearchTVsResponse } from '../models/tv/tvs-response.interface';
@@ -20,18 +20,9 @@ export class MediaService {
   private search<T>(type: MediaType, filters: IMediaFilters): Observable<T> {
     let params = new HttpParams({
       fromObject: {
-        query: filters.query,
-        page: filters.page,
+        ...filters,
       },
     });
-
-    if (filters.includeAdult !== undefined) {
-      params = params.append('include_adult', filters.includeAdult);
-    }
-
-    if (filters.year) {
-      params = params.append('year', filters.year);
-    }
 
     return this.http.get<T>(`/search/${type}`, {
       params,
@@ -82,5 +73,33 @@ export class MediaService {
 
   getPopularPeople() {
     return this.getPopular<IPerson>('person');
+  }
+
+  // Discover
+
+  private discover<T>(
+    type: Exclude<MediaType, 'person'>,
+    filters: Partial<IDiscoverFilters>
+  ): Observable<T> {
+    let params = new HttpParams({
+      fromObject: {
+        ...filters,
+      },
+    });
+
+    return this.http.get<T>(`/discover/${type}`, {
+      params,
+    });
+  }
+
+  discoverMovies(
+    filters: Partial<IDiscoverFilters>
+  ): Observable<ISearchMoviesResponse> {
+    return this.discover<ISearchMoviesResponse>('movie', filters);
+  }
+  discoverTVs(
+    filters: Partial<IDiscoverFilters>
+  ): Observable<ISearchTVsResponse> {
+    return this.discover<ISearchTVsResponse>('tv', filters);
   }
 }

@@ -19,7 +19,7 @@ import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { FormControl } from '@angular/forms';
-import { IMediaFilters } from '@app/shared/models/media-filters.interface';
+import { IMediaFilters } from '@app/shared/models/filters.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
@@ -61,8 +61,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
   readonly pageSize = 20;
   noResult: boolean = false;
-
-  tabletView: boolean = false;
 
   constructor(
     private sharedService: SharedService,

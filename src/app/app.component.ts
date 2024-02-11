@@ -11,11 +11,7 @@ export class AppComponent implements OnInit {
 
   constructor(private mediaService: MediaService) {}
 
-  ngOnInit(): void {
-    this.mediaService.getPopularMovies().subscribe((res) => {
-      console.log(res);
-    });
-  }
+  ngOnInit(): void {}
 
   onToggle() {
     this.openDrawer = !this.openDrawer;

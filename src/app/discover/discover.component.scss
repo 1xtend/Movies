@@ -1,0 +1,35 @@
+.discover {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1rem;
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.discover-aside {
+  &__content {
+    width: 100%;
+  }
+
+  &__group {
+    @media (min-width: 769px) {
+      width: 100%;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}
