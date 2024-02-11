@@ -76,14 +76,14 @@ export class MediaService {
   }
 
   // Discover
-
   private discover<T>(
     type: Exclude<MediaType, 'person'>,
-    filters: Partial<IDiscoverFilters>
+    filters: IDiscoverFilters
   ): Observable<T> {
     let params = new HttpParams({
       fromObject: {
-        ...filters,
+        page: filters.page,
+        sort_by: filters.sort_by,
       },
     });
 
@@ -92,14 +92,10 @@ export class MediaService {
     });
   }
 
-  discoverMovies(
-    filters: Partial<IDiscoverFilters>
-  ): Observable<ISearchMoviesResponse> {
+  discoverMovies(filters: IDiscoverFilters): Observable<ISearchMoviesResponse> {
     return this.discover<ISearchMoviesResponse>('movie', filters);
   }
-  discoverTVs(
-    filters: Partial<IDiscoverFilters>
-  ): Observable<ISearchTVsResponse> {
+  discoverTVs(filters: IDiscoverFilters): Observable<ISearchTVsResponse> {
     return this.discover<ISearchTVsResponse>('tv', filters);
   }
 }

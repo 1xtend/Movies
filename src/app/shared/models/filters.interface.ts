@@ -10,6 +10,6 @@ export interface IMediaFilters {
 export interface IDiscoverFilters {
   page: number;
   sort_by: SortByType;
-  with_genres: string;
-  year: number;
+  with_genres?: string | undefined;
+  year?: number | undefined;
 }

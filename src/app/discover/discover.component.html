@@ -11,7 +11,7 @@
     </mat-card>
   </aside>
 
-  <!-- <ng-container *ngIf="res$ | async as res">
+  <ng-container *ngIf="res$ | async as res">
     <div class="discover__content" *ngIf="res.tvs && res.tvs.total_results > 0">
       <div class="discover__grid">
         <app-media-card
@@ -60,34 +60,11 @@
         [pageIndex]="filters.page - 1"
       ></mat-paginator>
     </div>
-    <div
-      class="discover__content"
-      *ngIf="res.people && res.people.total_results > 0"
-    >
-      <div class="discover__grid">
-        <app-media-card
-          *ngFor="let person of res.people.results; trackBy: mediaTrackBy"
-          [title]="person.name"
-          [mediaType]="mediaType"
-          [imagePath]="person.profile_path"
-          [id]="person.id"
-        ></app-media-card>
-      </div>
-
-      <mat-paginator
-        *ngIf="res.people.total_pages > 1"
-        [length]="res.people.total_results"
-        [pageSize]="pageSize"
-        (page)="handlePageEvent($event)"
-        aria-label="Select page"
-        [pageIndex]="filters.page - 1"
-      ></mat-paginator>
-    </div>
   </ng-container>
 
   <mat-card *ngIf="noResult">
     <mat-card-content>
       <mat-card-title>There are no results for this request</mat-card-title>
     </mat-card-content>
-  </mat-card> -->
+  </mat-card>
 </section>
