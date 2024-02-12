@@ -120,11 +120,11 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     filters: IDiscoverFilters,
     mediaType: MediaType
   ): void {
-    const params: IDiscoverFilters = filters;
+    const params: IDiscoverParams = {
+      ...filters,
+    };
 
-    this.router.navigate(['/discover', mediaType], {
-      queryParams: params,
-    });
+    this.sharedService.setParams(params, '/discover', mediaType);
   }
 
   mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {

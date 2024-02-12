@@ -176,8 +176,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       page: filters.page,
     };
 
-    this.router.navigate(['/search', mediaType], {
-      queryParams: params,
-    });
+    this.sharedService.setParams(params, '/search', mediaType);
   }
 }

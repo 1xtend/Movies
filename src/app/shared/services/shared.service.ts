@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { IMediaFilters } from '../models/filters.interface';
+import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { ViewportScroller } from '@angular/common';
+import { Router } from '@angular/router';
+import { HttpParams } from '@angular/common/http';
+import { IDiscoverParams, ISearchParams } from '../models/params.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +18,7 @@ export class SharedService {
   private mediaTypeSubject = new Subject<MediaType>();
   mediaType$ = this.mediaTypeSubject.asObservable();
 
-  constructor(private viewport: ViewportScroller) {}
+  constructor(private viewport: ViewportScroller, private router: Router) {}
 
   setSearchSubject(text: string): void {
     this.searchSubject.next(text);
@@ -27,5 +30,15 @@ export class SharedService {
 
   scrollToTop(): void {
     this.viewport.scrollToPosition([0, 0]);
+  }
+
+  setParams(
+    params: IDiscoverParams | ISearchParams,
+    path: string,
+    mediaType: MediaType
+  ): void {
+    this.router.navigate([path, mediaType], {
+      queryParams: params,
+    });
   }
 }
