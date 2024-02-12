@@ -9,6 +9,7 @@ import { ISearchMoviesResponse } from '../models/movie/movies-response.interface
 import { IDetailsTV, ITV } from '../models/tv/tv.interface';
 import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson, IPerson } from '../models/person/person.interface';
+import { IGenres } from '../models/genres.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -95,7 +96,13 @@ export class MediaService {
   discoverMovies(filters: IDiscoverFilters): Observable<ISearchMoviesResponse> {
     return this.discover<ISearchMoviesResponse>('movie', filters);
   }
+
   discoverTVs(filters: IDiscoverFilters): Observable<ISearchTVsResponse> {
     return this.discover<ISearchTVsResponse>('tv', filters);
+  }
+
+  // Genres
+  getGenres(type: Exclude<MediaType, 'person'>): Observable<IGenres> {
+    return this.http.get<IGenres>(`/genre/${type}/list`);
   }
 }

@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { IDiscoverFilters } from '@app/shared/models/filters.interface';
+import { IGenre } from '@app/shared/models/genre.interface';
 import { MediaType } from '@app/shared/models/media.type';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
@@ -14,7 +15,16 @@ import { ITV } from '@app/shared/models/tv/tv.interface';
 import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { MediaService } from '@app/shared/services/media.service';
 import { SharedService } from '@app/shared/services/shared.service';
-import { EMPTY, Subject, combineLatest, switchMap, takeUntil, tap } from 'rxjs';
+import {
+  EMPTY,
+  Observable,
+  Subject,
+  combineLatest,
+  of,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-discover',
@@ -29,7 +39,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     }>
   >();
   res$ = this.resSubject.asObservable();
-  mediaType: MediaType = 'tv';
+  mediaType: Exclude<MediaType, 'person'> = 'tv';
 
   filters: IDiscoverFilters = {
     page: 1,
@@ -37,6 +47,11 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   };
 
   noResult: boolean = false;
+
+  genres: { tv: IGenre[]; movie: IGenre[] } = {
+    tv: [],
+    movie: [],
+  };
 
   readonly pageSize = 20;
 
@@ -51,6 +66,8 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
   ngOnInit(): void {
     this.paramsChanges();
+
+    this.genresChanges();
   }
 
   private paramsChanges(): void {
@@ -87,7 +104,20 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
       });
   }
 
-  private fetchMedia() {
+  private genresChanges(): void {
+    const genresState = this.sharedService.genres;
+
+    if (genresState[this.mediaType].length) {
+      this.genres[this.mediaType] = genresState[this.mediaType];
+    } else {
+      this.mediaService.getGenres(this.mediaType).subscribe((res) => {
+        this.genres[this.mediaType] = res.genres;
+        this.sharedService.genres[this.mediaType] = res.genres;
+      });
+    }
+  }
+
+  private fetchMedia(): Observable<ISearchTVsResponse | ISearchMoviesResponse> {
     if (this.mediaType === 'tv') {
       return this.mediaService.discoverTVs(this.filters).pipe(
         tap((res) => {

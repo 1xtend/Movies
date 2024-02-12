@@ -1,3 +1,4 @@
+import { IGenre } from './../models/genre.interface';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
@@ -7,6 +8,7 @@ import { ViewportScroller } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
 import { IDiscoverParams, ISearchParams } from '../models/params.interface';
+import { IGenres } from '../models/genres.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,17 @@ export class SharedService {
   private mediaTypeSubject = new Subject<MediaType>();
   mediaType$ = this.mediaTypeSubject.asObservable();
 
+  private genresSubject = new Subject<IGenres>();
+  genres$ = this.genresSubject.asObservable();
+
+  tvGenres: IGenre[] = [];
+  movieGenres: IGenre[] = [];
+
+  genres: { tv: IGenre[]; movie: IGenre[] } = {
+    tv: [],
+    movie: [],
+  };
+
   constructor(private viewport: ViewportScroller, private router: Router) {}
 
   setSearchSubject(text: string): void {
@@ -26,6 +39,10 @@ export class SharedService {
 
   setMediaTypeSubject(type: MediaType): void {
     this.mediaTypeSubject.next(type);
+  }
+
+  setGenresSubject(genres: IGenres): void {
+    this.genresSubject.next(genres);
   }
 
   scrollToTop(): void {
