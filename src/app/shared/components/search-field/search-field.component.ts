@@ -25,19 +25,21 @@ export class SearchFieldComponent
   extends UnsubscribeAbstract
   implements OnInit
 {
-  searchControl = new FormControl<string>('');
   private query = '';
+  searchControl = new FormControl<string>(this.query);
   private readonly mediaType: MediaType = 'tv';
 
   constructor(
     private sharedService: SharedService,
     private router: Router,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private route: ActivatedRoute
   ) {
     super();
   }
 
   ngOnInit(): void {
+    this.setQuery();
     this.searchChanges();
   }
 
@@ -63,6 +65,14 @@ export class SearchFieldComponent
           this.navigate();
         }
       });
+  }
+
+  private setQuery(): void {
+    this.query = this.route.snapshot.queryParams['q'];
+
+    if (this.query) {
+      this.searchControl.setValue(this.query);
+    }
   }
 
   private navigate(): void {

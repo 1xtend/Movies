@@ -9,12 +9,15 @@ import { environment } from 'src/environment/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaCardComponent {
-  readonly imgUrl = environment.apiImageUrl;
-
   @Input() mediaType!: MediaType;
   @Input() imagePath: string | null = '';
   @Input() voteAverage? = 0;
   @Input() releaseDate? = '';
   @Input() title = '';
   @Input() id = 0;
+
+  readonly imgUrl =
+    this.mediaType === 'person'
+      ? environment.imagePaths.h632Profile
+      : environment.imagePaths.w500Poster;
 }

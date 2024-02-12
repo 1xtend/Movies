@@ -1,6 +1,6 @@
 import { IResponse } from './../response.interface';
-import { IPerson } from './person.interface';
+import { IDetailsPerson, IPerson } from './person.interface';
 
-export interface IPeopleResponse extends IResponse {
+export interface ISearchPeopleResponse extends IResponse {
   results: IPerson[];
 }

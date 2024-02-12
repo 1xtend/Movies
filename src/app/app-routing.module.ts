@@ -21,6 +21,11 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'discover',
+    loadChildren: () =>
+      import('./discover/discover.module').then((m) => m.DiscoverModule),
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full',

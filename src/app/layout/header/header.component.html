@@ -1,10 +1,20 @@
 <mat-toolbar color="primary" class="header">
   <mat-toolbar-row>
-    <a routerLink="/" class="logo" mat-button>Movies</a>
+    <a routerLink="/" class="logo" mat-button>VMTV</a>
 
     <span class="spacer"></span>
 
-    <button type="button" mat-icon-button (click)="showSearchInput()">
+    <a routerLink="/discover/movie" mat-button>Movies</a>
+    <a routerLink="/discover/tv" routerLinkActive="mat-accent" mat-button>
+      TV Shows
+    </a>
+
+    <button
+      type="button"
+      mat-icon-button
+      (click)="showSearchInput()"
+      matTooltip="Search"
+    >
       <mat-icon>search</mat-icon>
     </button>
 

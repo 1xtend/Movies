@@ -1,4 +1,4 @@
-.search {
+.discover {
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: 1rem;
@@ -18,7 +18,7 @@
   }
 }
 
-.search-aside {
+.discover-aside {
   &__content {
     width: 100%;
   }

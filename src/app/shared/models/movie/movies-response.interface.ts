@@ -1,6 +1,6 @@
 import { IResponse } from '../response.interface';
 import { IMovie } from './movie.interface';
 
-export interface IMoviesResponse extends IResponse {
+export interface ISearchMoviesResponse extends IResponse {
   results: IMovie[];
 }

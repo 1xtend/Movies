@@ -1,30 +1,19 @@
-<section class="search">
-  <aside class="search-aside">
-    <mat-card class="search-aside__card">
+<section class="discover">
+  <aside class="discover-aside">
+    <mat-card class="discover-aside__card">
       <mat-card-header>
-        <mat-card-title class="search-aside__title">
-          Search Results
+        <mat-card-title class="discover-aside__title">
+          Discover
         </mat-card-title>
       </mat-card-header>
 
-      <mat-card-content>
-        <mat-button-toggle-group
-          vertical
-          class="search-aside__group"
-          [formControl]="mediaTypeControl"
-          (change)="handleTabEvent($event)"
-        >
-          <mat-button-toggle value="tv">TV Shows</mat-button-toggle>
-          <mat-button-toggle value="movie">Movies</mat-button-toggle>
-          <mat-button-toggle value="person">People</mat-button-toggle>
-        </mat-button-toggle-group>
-      </mat-card-content>
+      <mat-card-content> </mat-card-content>
     </mat-card>
   </aside>
 
-  <ng-container *ngIf="res$ | async as res">
-    <div class="search__content" *ngIf="res.tvs && res.tvs.total_results > 0">
-      <div class="search__grid">
+  <!-- <ng-container *ngIf="res$ | async as res">
+    <div class="discover__content" *ngIf="res.tvs && res.tvs.total_results > 0">
+      <div class="discover__grid">
         <app-media-card
           *ngFor="let tv of res.tvs.results; trackBy: mediaTrackBy"
           [title]="tv.name"
@@ -47,10 +36,10 @@
     </div>
 
     <div
-      class="search__content"
+      class="discover__content"
       *ngIf="res.movies && res.movies.total_results > 0"
     >
-      <div class="search__grid">
+      <div class="discover__grid">
         <app-media-card
           *ngFor="let movie of res.movies.results; trackBy: mediaTrackBy"
           [title]="movie.title"
@@ -72,10 +61,10 @@
       ></mat-paginator>
     </div>
     <div
-      class="search__content"
+      class="discover__content"
       *ngIf="res.people && res.people.total_results > 0"
     >
-      <div class="search__grid">
+      <div class="discover__grid">
         <app-media-card
           *ngFor="let person of res.people.results; trackBy: mediaTrackBy"
           [title]="person.name"
@@ -100,5 +89,5 @@
     <mat-card-content>
       <mat-card-title>There are no results for this request</mat-card-title>
     </mat-card-content>
-  </mat-card>
+  </mat-card> -->
 </section>

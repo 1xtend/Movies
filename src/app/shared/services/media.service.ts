@@ -1,11 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IPeopleResponse } from '../models/person/people-response.interface';
-import { IMediaFilters } from '../models/media-filters.interface';
+import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
-import { ITVsResponse } from '../models/tv/tvs-response.interface';
-import { IMoviesResponse } from '../models/movie/movies-response.interface';
+import { ISearchPeopleResponse } from '../models/person/people-response.interface';
+import { ISearchTVsResponse } from '../models/tv/tvs-response.interface';
+import { ISearchMoviesResponse } from '../models/movie/movies-response.interface';
+import { IDetailsTV, ITV } from '../models/tv/tv.interface';
+import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
+import { IDetailsPerson, IPerson } from '../models/person/person.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,67 +16,90 @@ import { IMoviesResponse } from '../models/movie/movies-response.interface';
 export class MediaService {
   constructor(private http: HttpClient) {}
 
-  // searchPeople(filters: IMediaFilters): Observable<IPeopleResponse> {
-  //   const params = new HttpParams({
-  //     fromObject: {
-  //       query: filters.query,
-  //       page: filters.page,
-  //     },
-  //   });
-
-  //   return this.http.get<IPeopleResponse>(`/search/${MediaType.PERSON}`, {
-  //     params,
-  //   });
-  // }
-
-  // searchTV(filters: IMediaFilters): Observable<ITVResponse> {
-  //   const params = new HttpParams({
-  //     fromObject: {
-  //       query: filters.query,
-  //       page: filters.page,
-  //     },
-  //   });
-
-  //   return this.http.get<ITVResponse>(`/search/${MediaType.TV}`, {
-  //     params,
-  //   });
-  // }
-
-  // searchMovie(filters: IMediaFilters): Observable<IMovieResponse> {
-  //   const params = new HttpParams({
-  //     fromObject: {
-  //       query: filters.query,
-  //       page: filters.page,
-  //     },
-  //   });
-
-  //   return this.http.get<IMovieResponse>(`/search/${MediaType.MOVIE}`, {
-  //     params,
-  //   });
-  // }
-
-  searchPeople(filters: IMediaFilters): Observable<IPeopleResponse> {
-    return this.search<IPeopleResponse>('person', filters);
-  }
-
-  searchTV(filters: IMediaFilters): Observable<ITVsResponse> {
-    return this.search<ITVsResponse>('tv', filters);
-  }
-
-  searchMovie(filters: IMediaFilters): Observable<IMoviesResponse> {
-    return this.search<IMoviesResponse>('movie', filters);
-  }
-
+  // Search
   private search<T>(type: MediaType, filters: IMediaFilters): Observable<T> {
-    const params = new HttpParams({
+    let params = new HttpParams({
       fromObject: {
-        query: filters.query,
-        page: filters.page,
+        ...filters,
       },
     });
 
     return this.http.get<T>(`/search/${type}`, {
       params,
     });
+  }
+
+  searchPeople(filters: IMediaFilters): Observable<ISearchPeopleResponse> {
+    return this.search<ISearchPeopleResponse>('person', filters);
+  }
+
+  searchTV(filters: IMediaFilters): Observable<ISearchTVsResponse> {
+    return this.search<ISearchTVsResponse>('tv', filters);
+  }
+
+  searchMovie(filters: IMediaFilters): Observable<ISearchMoviesResponse> {
+    return this.search<ISearchMoviesResponse>('movie', filters);
+  }
+
+  // Details
+  private getDetails<T>(type: MediaType, id: number): Observable<T> {
+    return this.http.get<T>(`/${type}/${id}`);
+  }
+
+  getTVDetails(id: number): Observable<IDetailsTV> {
+    return this.getDetails<IDetailsTV>('tv', id);
+  }
+
+  getMovieDetails(id: number): Observable<IDetailsMovie> {
+    return this.getDetails<IDetailsMovie>('movie', id);
+  }
+
+  getPersonDetails(id: number): Observable<IDetailsPerson> {
+    return this.getDetails<IDetailsPerson>('person', id);
+  }
+
+  // Popular
+  private getPopular<T>(mediaType: MediaType): Observable<T> {
+    return this.http.get<T>(`/${mediaType}/popular`);
+  }
+
+  getPopularMovies() {
+    return this.getPopular<IMovie>('movie');
+  }
+
+  getPopularTVs() {
+    return this.getPopular<ITV>('tv');
+  }
+
+  getPopularPeople() {
+    return this.getPopular<IPerson>('person');
+  }
+
+  // Discover
+
+  private discover<T>(
+    type: Exclude<MediaType, 'person'>,
+    filters: Partial<IDiscoverFilters>
+  ): Observable<T> {
+    let params = new HttpParams({
+      fromObject: {
+        ...filters,
+      },
+    });
+
+    return this.http.get<T>(`/discover/${type}`, {
+      params,
+    });
+  }
+
+  discoverMovies(
+    filters: Partial<IDiscoverFilters>
+  ): Observable<ISearchMoviesResponse> {
+    return this.discover<ISearchMoviesResponse>('movie', filters);
+  }
+  discoverTVs(
+    filters: Partial<IDiscoverFilters>
+  ): Observable<ISearchTVsResponse> {
+    return this.discover<ISearchTVsResponse>('tv', filters);
   }
 }

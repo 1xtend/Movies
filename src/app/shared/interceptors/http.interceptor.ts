@@ -10,7 +10,7 @@ import { Observable, finalize } from 'rxjs';
 import { environment } from 'src/environment/environment';
 
 @Injectable()
-export class ShowsInterceptor implements HttpInterceptor {
+export class MediaInterceptor implements HttpInterceptor {
   constructor(private loadingService: LoadingService) {}
 
   intercept(
