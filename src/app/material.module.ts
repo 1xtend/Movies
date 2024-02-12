@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
 
 const Material = [
   MatToolbarModule,
@@ -36,7 +37,8 @@ const Material = [
   MatTooltipModule,
   MatSlideToggleModule,
   MatProgressSpinnerModule,
-  MatSelectModule
+  MatSelectModule,
+  MatChipsModule,
 ];
 
 @NgModule({

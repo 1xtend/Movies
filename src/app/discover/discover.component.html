@@ -5,11 +5,18 @@
         <mat-card-title class="discover-aside__title">
           Discover
         </mat-card-title>
-
-        <mat-card-content> </mat-card-content>
       </mat-card-header>
 
-      <mat-card-content> </mat-card-content>
+      <mat-card-content>
+        <mat-chip-listbox multiple>
+          <mat-chip-option
+            *ngFor="let genre of genres[mediaType]"
+            color="primary"
+          >
+            {{ genre.name }}
+          </mat-chip-option>
+        </mat-chip-listbox>
+      </mat-card-content>
     </mat-card>
   </aside>
 
