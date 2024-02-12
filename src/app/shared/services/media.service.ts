@@ -88,6 +88,10 @@ export class MediaService {
       },
     });
 
+    if (filters.with_genres) {
+      params = params.append('with_genres', filters.with_genres);
+    }
+
     return this.http.get<T>(`/discover/${type}`, {
       params,
     });

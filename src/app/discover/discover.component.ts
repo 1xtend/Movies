@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
@@ -20,6 +21,7 @@ import {
   Observable,
   Subject,
   combineLatest,
+  debounceTime,
   of,
   switchMap,
   takeUntil,
@@ -48,10 +50,14 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
   noResult: boolean = false;
 
-  genres: { tv: IGenre[]; movie: IGenre[] } = {
+  genresList: { tv: IGenre[]; movie: IGenre[] } = {
     tv: [],
     movie: [],
   };
+
+  genreControl = new FormControl<number[]>([], {
+    nonNullable: true,
+  });
 
   readonly pageSize = 20;
 
@@ -67,7 +73,10 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   ngOnInit(): void {
     this.paramsChanges();
 
-    this.genresChanges();
+    this.fetchGenres();
+    this.genreChanges();
+
+    console.log(this.genresList);
   }
 
   private paramsChanges(): void {
@@ -104,14 +113,24 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
       });
   }
 
-  private genresChanges(): void {
+  private genreChanges(): void {
+    this.genreControl.valueChanges
+      .pipe(debounceTime(1000), takeUntil(this.ngUnsubscribe$))
+      .subscribe((genres) => {
+        this.filters.with_genres = genres.length ? genres.join(',') : undefined;
+
+        this.setQueryParams(this.filters, this.mediaType);
+      });
+  }
+
+  private fetchGenres(): void {
     const genresState = this.sharedService.genres;
 
     if (genresState[this.mediaType].length) {
-      this.genres[this.mediaType] = genresState[this.mediaType];
+      this.genresList[this.mediaType] = genresState[this.mediaType];
     } else {
       this.mediaService.getGenres(this.mediaType).subscribe((res) => {
-        this.genres[this.mediaType] = res.genres;
+        this.genresList[this.mediaType] = res.genres;
         this.sharedService.genres[this.mediaType] = res.genres;
       });
     }

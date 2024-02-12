@@ -8,10 +8,11 @@
       </mat-card-header>
 
       <mat-card-content>
-        <mat-chip-listbox multiple>
+        <mat-chip-listbox multiple [formControl]="genreControl">
           <mat-chip-option
-            *ngFor="let genre of genres[mediaType]"
+            *ngFor="let genre of genresList[mediaType]"
             color="primary"
+            [value]="genre.id"
           >
             {{ genre.name }}
           </mat-chip-option>

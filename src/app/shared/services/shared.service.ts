@@ -1,14 +1,11 @@
-import { IGenre } from './../models/genre.interface';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
+import { Subject } from 'rxjs';
 import { MediaType } from '../models/media.type';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 import { ViewportScroller } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpParams } from '@angular/common/http';
 import { IDiscoverParams, ISearchParams } from '../models/params.interface';
 import { IGenres } from '../models/genres.interface';
+import { IGenre } from './../models/genre.interface';
 
 @Injectable({
   providedIn: 'root',
