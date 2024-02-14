@@ -162,7 +162,6 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
         switchMap((genres) => {
           this.genresListSubject.next(genres);
 
-          console.log('Got genres: ', genres);
           return this.genreControl.valueChanges.pipe(
             takeUntil(this.ngUnsubscribe$)
           );
@@ -180,8 +179,6 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
         this.setQueryParams(this.filters, this.mediaType);
       });
-
-    
   }
 
   private fetchGenres(): Observable<IGenre[]> {
