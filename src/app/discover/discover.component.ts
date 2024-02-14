@@ -1,10 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { getMultipleValuesInSingleSelectionError } from '@angular/cdk/collections';
+import { LocationStrategy, PathLocationStrategy } from '@angular/common';
+import {
+  AfterContentChecked,
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  NavigationStart,
+  Router,
+} from '@angular/router';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { IDiscoverFilters } from '@app/shared/models/filters.interface';
-import { IGenre } from '@app/shared/models/genre.interface';
+import { IGenre, SavedGenresType } from '@app/shared/models/genres.interface';
 import { MediaType } from '@app/shared/models/media.type';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
@@ -17,13 +30,25 @@ import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface
 import { MediaService } from '@app/shared/services/media.service';
 import { SharedService } from '@app/shared/services/shared.service';
 import {
+  BehaviorSubject,
   EMPTY,
   Observable,
+  ReplaySubject,
   Subject,
   combineLatest,
+  concatMap,
   debounceTime,
+  defaultIfEmpty,
+  distinctUntilChanged,
+  filter,
+  generate,
+  map,
   of,
+  shareReplay,
+  skip,
+  startWith,
   switchMap,
+  take,
   takeUntil,
   tap,
 } from 'rxjs';
@@ -41,23 +66,25 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     }>
   >();
   res$ = this.resSubject.asObservable();
+
   mediaType: Exclude<MediaType, 'person'> = 'tv';
+
+  noResult: boolean = false;
+
+  private filtersSubject = new Subject<IDiscoverFilters>();
+  filters$ = this.filtersSubject.asObservable();
 
   filters: IDiscoverFilters = {
     page: 1,
     sort_by: 'popularity.desc',
   };
 
-  noResult: boolean = false;
-
-  genresList: { tv: IGenre[]; movie: IGenre[] } = {
-    tv: [],
-    movie: [],
-  };
-
-  genreControl = new FormControl<number[]>([], {
+  genreControl = new FormControl<string[]>([], {
     nonNullable: true,
   });
+
+  private genresListSubject = new ReplaySubject<IGenre[]>();
+  genresList$ = this.genresListSubject.asObservable();
 
   readonly pageSize = 20;
 
@@ -72,11 +99,8 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
   ngOnInit(): void {
     this.paramsChanges();
-
-    this.fetchGenres();
-    this.genreChanges();
-
-    console.log(this.genresList);
+    this.genresChanges();
+    this.filtersChanges();
   }
 
   private paramsChanges(): void {
@@ -85,17 +109,27 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
       queryParams: this.route.queryParamMap,
     })
       .pipe(
-        takeUntil(this.ngUnsubscribe$),
         switchMap(({ data, queryParams }) => {
-          this.filters = {
-            page: Number(queryParams.get('page')) || 1,
-            sort_by:
-              (queryParams.get('sort_by') as SortByType) || 'popularity.desc',
-            with_genres: queryParams.get('with_genres') || undefined,
-            year: Number(queryParams.get('year')) || undefined,
-          };
+          const navigation = this.router.getCurrentNavigation();
 
-          this.mediaType = data['type'];
+          if (!navigation || navigation.trigger === 'popstate') {
+            this.filters = {
+              page: Number(queryParams.get('page')) || 1,
+              sort_by:
+                (queryParams.get('sort_by') as SortByType) || 'popularity.desc',
+              with_genres: queryParams.get('with_genres') || undefined,
+              year: Number(queryParams.get('year')) || undefined,
+            };
+
+            this.mediaType = data['type'];
+
+            this.genreControl.setValue(
+              this.filters.with_genres
+                ? this.filters.with_genres.split(',')
+                : [],
+              { emitEvent: false }
+            );
+          }
 
           return this.fetchMedia();
         })
@@ -107,33 +141,68 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
           this.noResult = false;
         }
 
-        console.log(res);
+        console.log('Params changes');
 
         this.sharedService.scrollToTop();
       });
   }
 
-  private genreChanges(): void {
-    this.genreControl.valueChanges
-      .pipe(debounceTime(1000), takeUntil(this.ngUnsubscribe$))
+  private filtersChanges(): void {
+    this.filters$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((filters) => {
+      this.filters = filters;
+
+      console.log('Filters changes');
+      this.setQueryParams(this.filters, this.mediaType);
+    });
+  }
+
+  private genresChanges(): void {
+    this.fetchGenres()
+      .pipe(
+        switchMap((genres) => {
+          this.genresListSubject.next(genres);
+
+          console.log('Got genres: ', genres);
+          return this.genreControl.valueChanges.pipe(
+            takeUntil(this.ngUnsubscribe$)
+          );
+        }),
+        debounceTime(1000)
+      )
       .subscribe((genres) => {
-        this.filters.with_genres = genres.length ? genres.join(',') : undefined;
+        this.filters = {
+          ...this.filters,
+          with_genres: genres.length ? genres.join(',') : undefined,
+          page: 1,
+        };
+
+        console.log('Genres changes');
 
         this.setQueryParams(this.filters, this.mediaType);
       });
+
+    
   }
 
-  private fetchGenres(): void {
-    const genresState = this.sharedService.genres;
+  private fetchGenres(): Observable<IGenre[]> {
+    return this.sharedService.genres$.pipe(
+      take(1),
+      switchMap((genres) => {
+        const currentGenres = genres[this.mediaType];
 
-    if (genresState[this.mediaType].length) {
-      this.genresList[this.mediaType] = genresState[this.mediaType];
-    } else {
-      this.mediaService.getGenres(this.mediaType).subscribe((res) => {
-        this.genresList[this.mediaType] = res.genres;
-        this.sharedService.genres[this.mediaType] = res.genres;
-      });
-    }
+        if (currentGenres && currentGenres.length) {
+          return of(currentGenres);
+        }
+
+        return this.mediaService.getGenres(this.mediaType).pipe(
+          map((res) => {
+            this.sharedService.setGenresSubject(res.genres, this.mediaType);
+
+            return res.genres;
+          })
+        );
+      })
+    );
   }
 
   private fetchMedia(): Observable<ISearchTVsResponse | ISearchMoviesResponse> {
@@ -157,12 +226,10 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   handlePageEvent(e: PageEvent): void {
-    const filters: IDiscoverFilters = {
+    this.filtersSubject.next({
       ...this.filters,
       page: e.pageIndex + 1,
-    };
-
-    this.setQueryParams(filters, this.mediaType);
+    });
   }
 
   private setQueryParams(

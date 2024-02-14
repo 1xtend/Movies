@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MediaInterceptor } from './shared/interceptors/http.interceptor';
+import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [

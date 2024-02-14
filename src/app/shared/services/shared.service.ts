@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { MediaType } from '../models/media.type';
 import { ViewportScroller } from '@angular/common';
 import { Router } from '@angular/router';
 import { IDiscoverParams, ISearchParams } from '../models/params.interface';
-import { IGenres } from '../models/genres.interface';
-import { IGenre } from './../models/genre.interface';
+import { IGenres, SavedGenresType } from '../models/genres.interface';
+import { IGenre } from './../models/genres.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -17,16 +17,12 @@ export class SharedService {
   private mediaTypeSubject = new Subject<MediaType>();
   mediaType$ = this.mediaTypeSubject.asObservable();
 
-  private genresSubject = new Subject<IGenres>();
-  genres$ = this.genresSubject.asObservable();
-
-  tvGenres: IGenre[] = [];
-  movieGenres: IGenre[] = [];
-
-  genres: { tv: IGenre[]; movie: IGenre[] } = {
-    tv: [],
-    movie: [],
+  private genres: SavedGenresType = {
+    movie: undefined,
+    tv: undefined,
   };
+  private genresSubject = new BehaviorSubject<SavedGenresType>(this.genres);
+  genres$ = this.genresSubject.asObservable();
 
   constructor(private viewport: ViewportScroller, private router: Router) {}
 
@@ -38,8 +34,10 @@ export class SharedService {
     this.mediaTypeSubject.next(type);
   }
 
-  setGenresSubject(genres: IGenres): void {
-    this.genresSubject.next(genres);
+  setGenresSubject(genres: IGenre[], type: Exclude<MediaType, 'person'>): void {
+    this.genres[type] = genres;
+
+    this.genresSubject.next(this.genres);
   }
 
   scrollToTop(): void {

@@ -1,4 +1,4 @@
-import { IGenre } from '../genre.interface';
+import { IGenre } from '../genres.interface';
 import { INetwork } from '../network.interface';
 import { IProductionCountry } from '../production-country.interface';
 
