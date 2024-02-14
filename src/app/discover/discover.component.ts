@@ -152,7 +152,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
       this.filters = filters;
 
       console.log('Filters changes');
-      this.setQueryParams(this.filters, this.mediaType);
+      this.setQueryParams();
     });
   }
 
@@ -169,15 +169,13 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
         debounceTime(1000)
       )
       .subscribe((genres) => {
-        this.filters = {
+        console.log('Genres changes');
+
+        this.filtersSubject.next({
           ...this.filters,
           with_genres: genres.length ? genres.join(',') : undefined,
           page: 1,
-        };
-
-        console.log('Genres changes');
-
-        this.setQueryParams(this.filters, this.mediaType);
+        });
       });
   }
 
@@ -229,15 +227,12 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     });
   }
 
-  private setQueryParams(
-    filters: IDiscoverFilters,
-    mediaType: MediaType
-  ): void {
+  private setQueryParams(): void {
     const params: IDiscoverParams = {
-      ...filters,
+      ...this.filters,
     };
 
-    this.sharedService.setParams(params, '/discover', mediaType);
+    this.sharedService.setParams(params, '/discover', this.mediaType);
   }
 
   mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
