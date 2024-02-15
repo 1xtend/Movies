@@ -15,6 +15,7 @@ import {
   NavigationStart,
   Router,
 } from '@angular/router';
+import { ISortBy, movieSortBy, sortBy } from '@app/shared/helpers/sort-by';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { IDiscoverFilters } from '@app/shared/models/filters.interface';
 import { IGenre, SavedGenresType } from '@app/shared/models/genres.interface';
@@ -22,9 +23,8 @@ import { MediaType } from '@app/shared/models/media.type';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { IDiscoverParams } from '@app/shared/models/params.interface';
-import { ISearchPeopleResponse } from '@app/shared/models/person/people-response.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
-import { SortByType } from '@app/shared/models/sort-by.type';
+import { MovieSortByType, TVSortByType } from '@app/shared/models/sort-by.type';
 import { ITV } from '@app/shared/models/tv/tv.interface';
 import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { MediaService } from '@app/shared/services/media.service';
@@ -35,6 +35,7 @@ import {
   Observable,
   ReplaySubject,
   Subject,
+  catchError,
   combineLatest,
   concatMap,
   debounceTime,
@@ -83,8 +84,20 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     nonNullable: true,
   });
 
+  sortByControl = new FormControl<MovieSortByType | TVSortByType>(
+    'popularity.desc',
+    {
+      nonNullable: true,
+    }
+  );
+
   private genresListSubject = new ReplaySubject<IGenre[]>();
   genresList$ = this.genresListSubject.asObservable();
+
+  private sortByListSubject = new BehaviorSubject<
+    ISortBy<MovieSortByType | TVSortByType>[]
+  >([]);
+  sortByList$ = this.sortByListSubject.asObservable();
 
   readonly pageSize = 20;
 
@@ -100,6 +113,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   ngOnInit(): void {
     this.paramsChanges();
     this.genresChanges();
+    this.sortByChanges();
     this.filtersChanges();
   }
 
@@ -116,7 +130,9 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
             this.filters = {
               page: Number(queryParams.get('page')) || 1,
               sort_by:
-                (queryParams.get('sort_by') as SortByType) || 'popularity.desc',
+                (queryParams.get('sort_by') as
+                  | MovieSortByType
+                  | TVSortByType) || 'popularity.desc',
               with_genres: queryParams.get('with_genres') || undefined,
               year: Number(queryParams.get('year')) || undefined,
             };
@@ -127,6 +143,13 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
               this.filters.with_genres
                 ? this.filters.with_genres.split(',')
                 : [],
+              { emitEvent: false }
+            );
+
+            this.sortByListSubject.next(sortBy[this.mediaType]);
+
+            this.sortByControl.setValue(
+              this.filters.sort_by ?? 'popularity.desc',
               { emitEvent: false }
             );
           }
@@ -175,6 +198,17 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
           ...this.filters,
           with_genres: genres.length ? genres.join(',') : undefined,
           page: 1,
+        });
+      });
+  }
+
+  private sortByChanges(): void {
+    this.sortByControl.valueChanges
+      .pipe(debounceTime(1000), takeUntil(this.ngUnsubscribe$))
+      .subscribe((value) => {
+        this.filtersSubject.next({
+          ...this.filters,
+          sort_by: value,
         });
       });
   }

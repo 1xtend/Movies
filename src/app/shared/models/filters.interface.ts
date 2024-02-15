@@ -1,4 +1,4 @@
-import { SortByType } from './sort-by.type';
+import { MovieSortByType, TVSortByType } from '@app/shared/models/sort-by.type';
 
 export interface IMediaFilters {
   query: string;
@@ -9,7 +9,7 @@ export interface IMediaFilters {
 
 export interface IDiscoverFilters {
   page: number;
-  sort_by: SortByType;
+  sort_by: MovieSortByType | TVSortByType;
   with_genres?: string | undefined;
   year?: number | undefined;
 }
