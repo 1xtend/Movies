@@ -1,3 +1,4 @@
+import { NotificationService } from './shared/services/notification.service';
 import { Component, OnInit } from '@angular/core';
 import { MediaService } from './shared/services/media.service';
 
@@ -9,7 +10,7 @@ import { MediaService } from './shared/services/media.service';
 export class AppComponent implements OnInit {
   openDrawer: boolean = false;
 
-  constructor(private mediaService: MediaService) {}
+  constructor() {}
 
   ngOnInit(): void {}
 
