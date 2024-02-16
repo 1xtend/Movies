@@ -8,7 +8,10 @@
       </mat-card-header>
 
       <mat-card-content>
-        <mat-form-field *ngIf="sortByList$ | async as sortByList">
+        <mat-form-field
+          *ngIf="sortByList$ | async as sortByList"
+          class="discover-aside__select"
+        >
           <mat-label>Sort by</mat-label>
 
           <mat-select [formControl]="sortByControl">
@@ -22,6 +25,7 @@
           multiple
           [formControl]="genreControl"
           *ngIf="genresList$ | async as genres"
+          class="discover-aside__genres"
         >
           <mat-chip-option
             *ngFor="let genre of genres"
@@ -32,7 +36,10 @@
           </mat-chip-option>
         </mat-chip-listbox>
 
-        <mat-slide-toggle [formControl]="includeAdultControl">
+        <mat-slide-toggle
+          [formControl]="includeAdultControl"
+          class="discover-aside__toggler"
+        >
           Include adult
         </mat-slide-toggle>
       </mat-card-content>
