@@ -31,6 +31,10 @@
             {{ genre.name }}
           </mat-chip-option>
         </mat-chip-listbox>
+
+        <mat-slide-toggle [formControl]="includeAdultControl">
+          Include adult
+        </mat-slide-toggle>
       </mat-card-content>
     </mat-card>
   </aside>

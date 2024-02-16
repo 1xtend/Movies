@@ -92,6 +92,10 @@ export class MediaService {
       params = params.append('with_genres', filters.with_genres);
     }
 
+    if (filters.include_adult) {
+      params = params.append('include_adult', filters.include_adult);
+    }
+
     return this.http.get<T>(`/discover/${type}`, {
       params,
     });

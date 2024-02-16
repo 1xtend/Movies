@@ -69,28 +69,31 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   >();
   res$ = this.resSubject.asObservable();
 
+  // Filters
   mediaType: Exclude<MediaType, 'person'> = 'tv';
-
-  noResult: boolean = false;
-
-  private filtersSubject = new Subject<IDiscoverFilters>();
-  filters$ = this.filtersSubject.asObservable();
-
   filters: IDiscoverFilters = {
     page: 1,
     sort_by: 'popularity.desc',
+    include_adult: false,
   };
 
+  // Form controls
   genreControl = new FormControl<string[]>([], {
     nonNullable: true,
   });
 
   sortByControl = new FormControl<MovieSortByType | TVSortByType>(
     'popularity.desc',
-    {
-      nonNullable: true,
-    }
+    { nonNullable: true }
   );
+
+  includeAdultControl = new FormControl<boolean>(this.filters.include_adult, {
+    nonNullable: true,
+  });
+
+  // States
+  private filtersSubject = new Subject<IDiscoverFilters>();
+  filters$ = this.filtersSubject.asObservable();
 
   private genresListSubject = new ReplaySubject<IGenre[]>();
   genresList$ = this.genresListSubject.asObservable();
@@ -100,7 +103,9 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   >([]);
   sortByList$ = this.sortByListSubject.asObservable();
 
+  // Other
   readonly pageSize = 20;
+  noResult: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -115,6 +120,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     this.paramsChanges();
     this.genresChanges();
     this.sortByChanges();
+    this.includeAdultChanges();
     this.filtersChanges();
   }
 
@@ -136,6 +142,9 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
                   | TVSortByType) || 'popularity.desc',
               with_genres: queryParams.get('with_genres') || undefined,
               year: Number(queryParams.get('year')) || undefined,
+              include_adult: JSON.parse(
+                queryParams.get('include_adult') ?? 'false'
+              ),
             };
 
             this.mediaType = data['type'];
@@ -151,6 +160,11 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
             this.sortByControl.setValue(
               this.filters.sort_by ?? 'popularity.desc',
+              { emitEvent: false }
+            );
+
+            this.includeAdultControl.setValue(
+              this.filters.include_adult ?? false,
               { emitEvent: false }
             );
           }
@@ -210,6 +224,17 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
         this.filtersSubject.next({
           ...this.filters,
           sort_by: value,
+        });
+      });
+  }
+
+  private includeAdultChanges(): void {
+    this.includeAdultControl.valueChanges
+      .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(1000))
+      .subscribe((include) => {
+        this.filtersSubject.next({
+          ...this.filters,
+          include_adult: include,
         });
       });
   }

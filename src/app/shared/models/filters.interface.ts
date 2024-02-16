@@ -10,6 +10,7 @@ export interface IMediaFilters {
 export interface IDiscoverFilters {
   page: number;
   sort_by: MovieSortByType | TVSortByType;
+  include_adult: boolean;
   with_genres?: string | undefined;
   year?: number | undefined;
 }
