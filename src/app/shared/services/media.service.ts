@@ -10,6 +10,7 @@ import { IDetailsTV, ITV } from '../models/tv/tv.interface';
 import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson, IPerson } from '../models/person/person.interface';
 import { IGenres } from '../models/genres.interface';
+import { ILanguage } from '../models/languages.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +45,11 @@ export class MediaService {
 
   // Details
   private getDetails<T>(type: MediaType, id: number): Observable<T> {
-    return this.http.get<T>(`/${type}/${id}`);
+    let params = new HttpParams();
+
+    return this.http.get<T>(`/${type}/${id}`, {
+      params,
+    });
   }
 
   getTVDetails(id: number): Observable<IDetailsTV> {
@@ -96,6 +101,10 @@ export class MediaService {
       params = params.append('include_adult', filters.include_adult);
     }
 
+    if (filters.language) {
+      params = params.append('language', filters.language);
+    }
+
     return this.http.get<T>(`/discover/${type}`, {
       params,
     });
@@ -112,5 +121,10 @@ export class MediaService {
   // Genres
   getGenres(type: Exclude<MediaType, 'person'>): Observable<IGenres> {
     return this.http.get<IGenres>(`/genre/${type}/list`);
+  }
+
+  // Languages
+  getLanguages(): Observable<ILanguage[]> {
+    return this.http.get<ILanguage[]>(`/configuration/languages`);
   }
 }

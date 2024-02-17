@@ -13,4 +13,5 @@ export interface IDiscoverFilters {
   include_adult: boolean;
   with_genres?: string | undefined;
   year?: number | undefined;
+  language?: string | undefined;
 }

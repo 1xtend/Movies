@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { IDiscoverParams, ISearchParams } from '../models/params.interface';
 import { IGenres, SavedGenresType } from '../models/genres.interface';
 import { IGenre } from './../models/genres.interface';
+import { ILanguage } from '../models/languages.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,9 @@ export class SharedService {
 
   constructor(private viewport: ViewportScroller, private router: Router) {}
 
+  private languagesSubject = new BehaviorSubject<ILanguage[]>([]);
+  languages$ = this.languagesSubject.asObservable();
+
   setSearchSubject(text: string): void {
     this.searchSubject.next(text);
   }
@@ -38,6 +42,10 @@ export class SharedService {
     this.genres[type] = genres;
 
     this.genresSubject.next(this.genres);
+  }
+
+  setLanguagesSubject(languages: ILanguage[]): void {
+    this.languagesSubject.next(languages);
   }
 
   scrollToTop(): void {

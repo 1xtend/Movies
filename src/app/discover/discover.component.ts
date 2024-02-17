@@ -91,6 +91,10 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     nonNullable: true,
   });
 
+  languageControl = new FormControl<string>('', {
+    nonNullable: true,
+  });
+
   // States
   private filtersSubject = new Subject<IDiscoverFilters>();
   filters$ = this.filtersSubject.asObservable();
@@ -106,21 +110,25 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   // Other
   readonly pageSize = 20;
   noResult: boolean = false;
+  private readonly debounceTime = 1000;
 
   constructor(
     private route: ActivatedRoute,
     private mediaService: MediaService,
     private router: Router,
-    private sharedService: SharedService
+    public sharedService: SharedService
   ) {
     super();
   }
 
   ngOnInit(): void {
     this.paramsChanges();
+
     this.genresChanges();
     this.sortByChanges();
     this.includeAdultChanges();
+    this.languageChanges();
+
     this.filtersChanges();
   }
 
@@ -145,6 +153,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
               include_adult: JSON.parse(
                 queryParams.get('include_adult') ?? 'false'
               ),
+              language: queryParams.get('language') || undefined,
             };
 
             this.mediaType = data['type'];
@@ -167,6 +176,10 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
               this.filters.include_adult ?? false,
               { emitEvent: false }
             );
+
+            this.languageControl.setValue(this.filters.language ?? 'xx', {
+              emitEvent: false,
+            });
           }
 
           return this.fetchMedia();
@@ -204,7 +217,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
             takeUntil(this.ngUnsubscribe$)
           );
         }),
-        debounceTime(1000)
+        debounceTime(this.debounceTime)
       )
       .subscribe((genres) => {
         console.log('Genres changes');
@@ -219,7 +232,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
   private sortByChanges(): void {
     this.sortByControl.valueChanges
-      .pipe(debounceTime(1000), takeUntil(this.ngUnsubscribe$))
+      .pipe(debounceTime(this.debounceTime), takeUntil(this.ngUnsubscribe$))
       .subscribe((value) => {
         this.filtersSubject.next({
           ...this.filters,
@@ -230,13 +243,52 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
   private includeAdultChanges(): void {
     this.includeAdultControl.valueChanges
-      .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(1000))
+      .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(this.debounceTime))
       .subscribe((include) => {
         this.filtersSubject.next({
           ...this.filters,
           include_adult: include,
         });
       });
+  }
+
+  private languageChanges(): void {
+    this.fetchLanguages()
+      .pipe(
+        switchMap(() => {
+          return this.languageControl.valueChanges.pipe(
+            takeUntil(this.ngUnsubscribe$)
+          );
+        }),
+        debounceTime(this.debounceTime)
+      )
+      .subscribe((language) => {
+        this.filtersSubject.next({
+          ...this.filters,
+          language,
+          page: 1,
+        });
+      });
+  }
+
+  private fetchLanguages() {
+    return this.sharedService.languages$.pipe(
+      take(1),
+      switchMap((languages) => {
+        if (languages.length) {
+          console.log('Saved languages: ', languages);
+          return of(languages);
+        }
+
+        return this.mediaService.getLanguages().pipe(
+          tap((languages) => {
+            console.log('Fetched languages: ', languages);
+
+            this.sharedService.setLanguagesSubject(languages);
+          })
+        );
+      })
+    );
   }
 
   private fetchGenres(): Observable<IGenre[]> {
