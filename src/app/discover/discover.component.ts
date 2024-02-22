@@ -237,6 +237,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
         this.filtersSubject.next({
           ...this.filters,
           sort_by: value,
+          page: 1,
         });
       });
   }
