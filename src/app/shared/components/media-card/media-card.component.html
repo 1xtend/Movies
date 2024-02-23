@@ -19,8 +19,10 @@
       [routerLink]="['/details', mediaType, id]"
       mat-card-title
       class="card__title"
-      >{{ title }}</a
+      [style.fontSize]="titleSize + 'px'"
     >
+      {{ title }}
+    </a>
   </mat-card-content>
 </mat-card>
 

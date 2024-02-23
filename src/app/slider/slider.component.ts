@@ -63,6 +63,7 @@ export class SliderComponent
 
   // Drag
   isDragging: boolean = false;
+  private startDragging: boolean = false;
   private startX: number = 0;
   private draggedPath: number = 0;
 
@@ -141,14 +142,16 @@ export class SliderComponent
 
   // Drag
   dragStart(e: MouseEvent): void {
-    this.isDragging = true;
     this.startX = e.pageX;
+    this.startDragging = true;
 
     this.handleNavigation(true);
   }
 
   private dragging(e: MouseEvent): void {
-    if (!this.isDragging) return;
+    if (!this.startDragging) return;
+
+    this.isDragging = true;
 
     this.draggedPath = this.translate - (e.pageX - this.startX);
 
@@ -163,9 +166,10 @@ export class SliderComponent
   }
 
   private dragStop(): void {
-    if (!this.isDragging) return;
+    if (!this.startDragging) return;
 
     this.isDragging = false;
+    this.startDragging = false;
     this.handleNavigation(false);
 
     this.activeIndex = Math.round(
@@ -178,7 +182,7 @@ export class SliderComponent
   private onDocumentMouseEvents(): void {
     fromEvent(this.document, 'mouseup')
       .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(() => {
+      .subscribe((e) => {
         this.dragStop();
       });
 

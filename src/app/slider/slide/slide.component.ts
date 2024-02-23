@@ -20,6 +20,9 @@ export class SlideComponent implements AfterViewInit {
       img.draggable = false;
       img.loading = 'lazy';
     });
+    this.el.nativeElement.querySelectorAll('a').forEach((img) => {
+      img.draggable = false;
+    });
   }
 
   setStyle(style: ISlideStyle): void {

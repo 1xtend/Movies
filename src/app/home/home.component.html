@@ -39,7 +39,14 @@
           *ngIf="popularMovies$ | async as movies"
         >
           <app-slide *ngFor="let movie of movies.results">
-            <img [src]="posterPath + movie.poster_path" [alt]="movie.title" />
+            <app-media-card
+              [imagePath]="movie.poster_path"
+              [mediaType]="'movie'"
+              [id]="movie.id"
+              [title]="movie.title"
+              [voteAverage]="movie.vote_average"
+              [titleSize]="14"
+            ></app-media-card>
           </app-slide>
         </app-slider>
 
