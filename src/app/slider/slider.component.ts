@@ -141,19 +141,21 @@ export class SliderComponent
   }
 
   // Drag
-  dragStart(e: MouseEvent): void {
-    this.startX = e.pageX;
+  dragStart(e: MouseEvent | TouchEvent): void {
+    this.startX = e instanceof MouseEvent ? e.pageX : e.touches[0].clientX;
     this.startDragging = true;
 
     this.handleNavigation(true);
   }
 
-  private dragging(e: MouseEvent): void {
+  private dragging(e: MouseEvent | TouchEvent): void {
     if (!this.startDragging) return;
+
+    const distance = e instanceof MouseEvent ? e.pageX : e.touches[0].clientX;
 
     this.isDragging = true;
 
-    this.draggedPath = this.translate - (e.pageX - this.startX);
+    this.draggedPath = this.translate - (distance - this.startX);
 
     if (
       this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
@@ -186,10 +188,21 @@ export class SliderComponent
         this.dragStop();
       });
 
+    fromEvent(this.document, 'touchend')
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((e) => {
+        this.dragStop();
+      });
+
     fromEvent(this.document, 'mousemove')
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((e) => {
         this.dragging(<MouseEvent>e);
+      });
+    fromEvent(this.document, 'touchmove')
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((e) => {
+        this.dragging(<TouchEvent>e);
       });
   }
 

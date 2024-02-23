@@ -13,6 +13,7 @@
       dragging: isDragging
     }"
     (mousedown)="dragStart($event)"
+    (touchstart)="dragStart($event)"
   >
     <ng-content></ng-content>
   </div>
