@@ -1,10 +1,16 @@
 import {
+  AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ContentChildren,
   ElementRef,
+  QueryList,
+  ViewChildren,
 } from '@angular/core';
 import { ISlideStyle } from '../models/slide-style.interface';
+import { takeUntil } from 'rxjs';
+import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 
 @Component({
   selector: 'app-slide',
@@ -12,10 +18,19 @@ import { ISlideStyle } from '../models/slide-style.interface';
   styleUrls: ['./slide.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SlideComponent implements AfterViewInit {
-  constructor(private el: ElementRef<HTMLElement>) {}
+export class SlideComponent
+  extends UnsubscribeAbstract
+  implements AfterViewInit
+{
+  constructor(private el: ElementRef<HTMLElement>) {
+    super();
+  }
 
   ngAfterViewInit(): void {
+    this.setAttributes();
+  }
+
+  private setAttributes(): void {
     this.el.nativeElement.querySelectorAll('img').forEach((img) => {
       img.draggable = false;
       img.loading = 'lazy';

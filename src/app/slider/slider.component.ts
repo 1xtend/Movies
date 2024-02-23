@@ -1,13 +1,10 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
   Inject,
   Input,
-  OnInit,
   QueryList,
   ViewChild,
 } from '@angular/core';
@@ -16,7 +13,6 @@ import { debounceTime, fromEvent, merge, takeUntil, timer } from 'rxjs';
 import { SlideComponent } from './slide/slide.component';
 import { ISlideStyle } from './models/slide-style.interface';
 import { DOCUMENT } from '@angular/common';
-import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-slider',

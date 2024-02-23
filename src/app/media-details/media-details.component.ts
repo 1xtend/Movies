@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { MediaType } from '@app/shared/models/media.type';
@@ -13,6 +13,7 @@ import { environment } from 'src/environment/environment';
   selector: 'app-media-details',
   templateUrl: './media-details.component.html',
   styleUrls: ['./media-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaDetailsComponent
   extends UnsubscribeAbstract

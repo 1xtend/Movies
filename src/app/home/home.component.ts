@@ -35,7 +35,7 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   backdropPath = environment.imagePaths.w1280Backdrop;
   profilePath = environment.imagePaths.h632Profile;
 
-  slidesValue: number = 5;
+  slidesValue: number = 6;
 
   constructor(
     private mediaService: MediaService,
@@ -53,12 +53,17 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   private resize(): void {
     this.breakpointObserver
       .observe([
-        '(min-width: 768px)',
+        '(max-width: 991px)',
         '(max-width: 768px)',
         '(max-width: 500px)',
+        '(min-width: 991px)',
       ])
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((result: BreakpointState) => {
+        if (result.breakpoints['(max-width: 991px)']) {
+          this.slidesValue = 4;
+        }
+
         if (result.breakpoints['(max-width: 768px)']) {
           this.slidesValue = 3;
         }
@@ -67,8 +72,8 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
           this.slidesValue = 2;
         }
 
-        if (result.breakpoints['(min-width: 768px)']) {
-          this.slidesValue = 5;
+        if (result.breakpoints['(min-width: 991px)']) {
+          this.slidesValue = 6;
         }
       });
   }

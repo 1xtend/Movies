@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ILanguage } from '@app/shared/models/languages.interface';
 import { MediaType } from '@app/shared/models/media.type';
 import { environment } from 'src/environment/environment';
 
