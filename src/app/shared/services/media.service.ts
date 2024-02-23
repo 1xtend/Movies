@@ -4,7 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { ISearchPeopleResponse } from '../models/person/people-response.interface';
-import { ISearchTVsResponse } from '../models/tv/tvs-response.interface';
+import { ITVsResponse } from '../models/tv/tvs-response.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
 import { IDetailsTV, ITV } from '../models/tv/tv.interface';
 import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
@@ -35,8 +35,8 @@ export class MediaService {
     return this.search<ISearchPeopleResponse>('person', filters);
   }
 
-  searchTV(filters: IMediaFilters): Observable<ISearchTVsResponse> {
-    return this.search<ISearchTVsResponse>('tv', filters);
+  searchTV(filters: IMediaFilters): Observable<ITVsResponse> {
+    return this.search<ITVsResponse>('tv', filters);
   }
 
   searchMovie(filters: IMediaFilters): Observable<IMoviesResponse> {
@@ -74,7 +74,7 @@ export class MediaService {
   }
 
   getPopularTVs() {
-    return this.getPopular<ITV>('tv');
+    return this.getPopular<ITVsResponse>('tv');
   }
 
   getPopularPeople() {
@@ -114,8 +114,8 @@ export class MediaService {
     return this.discover<IMoviesResponse>('movie', filters);
   }
 
-  discoverTVs(filters: IDiscoverFilters): Observable<ISearchTVsResponse> {
-    return this.discover<ISearchTVsResponse>('tv', filters);
+  discoverTVs(filters: IDiscoverFilters): Observable<ITVsResponse> {
+    return this.discover<ITVsResponse>('tv', filters);
   }
 
   // Genres

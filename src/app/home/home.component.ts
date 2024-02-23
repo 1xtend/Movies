@@ -18,6 +18,7 @@ import { environment } from 'src/environment/environment';
 import { Platform } from '@angular/cdk/platform';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
+import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 
 @Component({
   selector: 'app-home',
@@ -25,11 +26,8 @@ import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent extends UnsubscribeAbstract implements OnInit {
-  private popularMoviesSubject = new BehaviorSubject<
-    IMoviesResponse | undefined
-  >(undefined);
-  // popularMovies$ = this.popularMoviesSubject.asObservable();
   popularMovies$?: Observable<IMoviesResponse>;
+  popularTVs$?: Observable<ITVsResponse>;
 
   posterPath = environment.imagePaths.original;
   backdropPath = environment.imagePaths.w1280Backdrop;
@@ -47,6 +45,7 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
 
   ngOnInit(): void {
     this.getPopularMovies();
+    this.getPopularTVs();
     this.resize();
   }
 
@@ -55,7 +54,7 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
       .observe([
         '(max-width: 991px)',
         '(max-width: 768px)',
-        '(max-width: 500px)',
+        '(max-width: 480px)',
         '(min-width: 991px)',
       ])
       .pipe(takeUntil(this.ngUnsubscribe$))
@@ -68,7 +67,7 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
           this.slidesValue = 3;
         }
 
-        if (result.breakpoints['(max-width: 500px)']) {
+        if (result.breakpoints['(max-width: 480px)']) {
           this.slidesValue = 2;
         }
 
@@ -91,6 +90,25 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
           tap((movies) => {
             console.log('get fetched');
             this.sharedService.setPopularMoviesSubject(movies);
+          })
+        );
+      })
+    );
+  }
+
+  private getPopularTVs(): void {
+    this.popularTVs$ = this.sharedService.popularTVs$.pipe(
+      take(1),
+      switchMap((tv) => {
+        if (tv && tv.results.length) {
+          console.log('get saved');
+          return of(tv);
+        }
+
+        return this.mediaService.getPopularTVs().pipe(
+          tap((tv) => {
+            console.log('get fetched');
+            this.sharedService.setPopularTVsSubject(tv);
           })
         );
       })

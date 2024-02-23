@@ -13,7 +13,7 @@ import { IDiscoverParams } from '@app/shared/models/params.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
 import { MovieSortByType, TVSortByType } from '@app/shared/models/sort-by.type';
 import { ITV } from '@app/shared/models/tv/tv.interface';
-import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface';
+import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { MediaService } from '@app/shared/services/media.service';
 import { SharedService } from '@app/shared/services/shared.service';
 import {
@@ -51,7 +51,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   private resSubject = new Subject<
     Partial<{
       movies: IMoviesResponse;
-      tvs: ISearchTVsResponse;
+      tvs: ITVsResponse;
     }>
   >();
   res$ = this.resSubject.asObservable();
@@ -300,7 +300,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     );
   }
 
-  private fetchMedia(): Observable<ISearchTVsResponse | IMoviesResponse> {
+  private fetchMedia(): Observable<ITVsResponse | IMoviesResponse> {
     if (this.mediaType === 'tv') {
       return this.mediaService.discoverTVs(this.filters).pipe(
         tap((res) => {

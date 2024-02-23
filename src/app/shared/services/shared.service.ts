@@ -8,6 +8,7 @@ import { IGenres, SavedGenresType } from '../models/genres.interface';
 import { IGenre } from './../models/genres.interface';
 import { ILanguage } from '../models/languages.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
+import { ITVsResponse } from '../models/tv/tvs-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,10 @@ export class SharedService {
     IMoviesResponse | undefined
   >(undefined);
   popularMovies$ = this.popularMoviesSubject.asObservable();
+  private popularTVsSubject = new BehaviorSubject<ITVsResponse | undefined>(
+    undefined
+  );
+  popularTVs$ = this.popularTVsSubject.asObservable();
 
   constructor(private viewport: ViewportScroller, private router: Router) {}
 
@@ -56,6 +61,10 @@ export class SharedService {
 
   setPopularMoviesSubject(movies: IMoviesResponse): void {
     this.popularMoviesSubject.next(movies);
+  }
+
+  setPopularTVsSubject(tvs: ITVsResponse): void {
+    this.popularTVsSubject.next(tvs);
   }
 
   scrollToTop(): void {
