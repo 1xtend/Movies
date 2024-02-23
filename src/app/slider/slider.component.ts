@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   ElementRef,
@@ -13,10 +14,8 @@ import {
   BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
-  from,
   fromEvent,
   map,
-  merge,
   switchMap,
   takeUntil,
   tap,
@@ -30,6 +29,7 @@ import { DOCUMENT } from '@angular/common';
   selector: 'app-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderComponent
   extends UnsubscribeAbstract
@@ -82,15 +82,6 @@ export class SliderComponent
       this.slidesPerView
     );
   }
-  // get scrollWidth() {
-  //   return this.slideWidth + this.gap;
-  // }
-  // get trackWidth() {
-  //   return (
-  //     (this.slideWidth + this.gap) * (this.slides.length - this.slidesPerView) -
-  //     this.gap
-  //   );
-  // }
 
   // Index
   private activeIndex: number = 0;
@@ -100,7 +91,8 @@ export class SliderComponent
 
   // Translate
   private translate: number = 0;
-  translateX: string = '';
+  private translateSubject = new BehaviorSubject<string>('');
+  translate$ = this.translateSubject.asObservable();
 
   // Drag
   private isDraggingSubject = new BehaviorSubject<boolean>(false);
@@ -112,7 +104,9 @@ export class SliderComponent
   private draggedPath: number = 0;
 
   // Event listeners
-  private resize$ = fromEvent(window, 'resize');
+  private resize$ = fromEvent(window, 'resize').pipe(
+    takeUntil(this.ngUnsubscribe$)
+  );
   private mouseDown$ = fromEvent<MouseEvent>(
     this.el.nativeElement,
     'mousedown'
@@ -137,17 +131,15 @@ export class SliderComponent
     this.updateWidth();
 
     this.onNavigationButtonClick();
-    this.sliderDragging();
+    this.onMouseEvents();
   }
 
   // On resize
   private onResize(): void {
-    this.resize$
-      .pipe(debounceTime(500), takeUntil(this.ngUnsubscribe$))
-      .subscribe((e) => {
-        this.updateWidth();
-        this.handleSlideScroll();
-      });
+    this.resize$.pipe(debounceTime(500)).subscribe((e) => {
+      this.updateWidth();
+      this.handleSlideScroll();
+    });
   }
 
   // Navigation
@@ -203,10 +195,11 @@ export class SliderComponent
   }
 
   // Drag
-  private sliderDragging(): void {
+  private onMouseEvents(): void {
     const dragMove$ = this.mouseDown$.pipe(
       switchMap((startEvent) => {
         this.startDragging = true;
+
         this.handleNavigation(true);
 
         return this.mouseMove$.pipe(
@@ -232,7 +225,7 @@ export class SliderComponent
           return;
         }
 
-        this.setTranslateX(this.draggedPath);
+        this.setTranslate(this.draggedPath);
       }),
       takeUntil(this.ngUnsubscribe$)
     );
@@ -242,6 +235,7 @@ export class SliderComponent
       if (!this.startDragging) return;
 
       this.startDragging = false;
+
       this.isDraggingSubject.next(false);
       this.handleNavigation(false);
 
@@ -322,16 +316,16 @@ export class SliderComponent
   }
 
   private slideTo(index: number): void {
-    // if (this.isDragging) return;
-
     this.lockNavigation();
 
     this.translate = Math.abs(this.scrollWidth * index);
-    this.setTranslateX(this.translate);
+    this.setTranslate(this.translate);
   }
 
-  // Slide styles
-  private setTranslateX(path: number): void {
-    this.translateX = `translateX(${path < 0 ? Math.abs(path) : '-' + path}px)`;
+  // Translate
+  private setTranslate(path: number): void {
+    this.translateSubject.next(
+      `translateX(${path < 0 ? Math.abs(path) : '-' + path}px)`
+    );
   }
 }
