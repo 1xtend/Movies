@@ -5,7 +5,7 @@ import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { ISearchPeopleResponse } from '../models/person/people-response.interface';
 import { ISearchTVsResponse } from '../models/tv/tvs-response.interface';
-import { ISearchMoviesResponse } from '../models/movie/movies-response.interface';
+import { IMoviesResponse } from '../models/movie/movies-response.interface';
 import { IDetailsTV, ITV } from '../models/tv/tv.interface';
 import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson, IPerson } from '../models/person/person.interface';
@@ -39,8 +39,8 @@ export class MediaService {
     return this.search<ISearchTVsResponse>('tv', filters);
   }
 
-  searchMovie(filters: IMediaFilters): Observable<ISearchMoviesResponse> {
-    return this.search<ISearchMoviesResponse>('movie', filters);
+  searchMovie(filters: IMediaFilters): Observable<IMoviesResponse> {
+    return this.search<IMoviesResponse>('movie', filters);
   }
 
   // Details
@@ -70,7 +70,7 @@ export class MediaService {
   }
 
   getPopularMovies() {
-    return this.getPopular<IMovie>('movie');
+    return this.getPopular<IMoviesResponse>('movie');
   }
 
   getPopularTVs() {
@@ -110,8 +110,8 @@ export class MediaService {
     });
   }
 
-  discoverMovies(filters: IDiscoverFilters): Observable<ISearchMoviesResponse> {
-    return this.discover<ISearchMoviesResponse>('movie', filters);
+  discoverMovies(filters: IDiscoverFilters): Observable<IMoviesResponse> {
+    return this.discover<IMoviesResponse>('movie', filters);
   }
 
   discoverTVs(filters: IDiscoverFilters): Observable<ISearchTVsResponse> {

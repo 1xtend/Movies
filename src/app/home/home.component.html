@@ -1,1 +1,51 @@
-<p>home works!</p>
+<!-- <app-slider
+  [nextBtn]="slideNext"
+  [prevBtn]="slidePrev"
+  [slidesPerView]="5"
+  [gap]="16"
+  [speed]="350"
+  [slidesToScroll]="5"
+  *ngIf="movies$ | async as movies"
+>
+  <app-slide *ngFor="let movie of movies.results">
+    <img
+      [src]="posterPath + movie.poster_path"
+      alt=""
+      style="max-width: 100%"
+    />
+  </app-slide>
+</app-slider>
+
+<button type="button" #slidePrev>Prev</button>
+<button type="button" #slideNext>Next</button> -->
+
+<section class="home">
+  <h1 class="home__main-title">
+    Welcome to VMTV - Your Ultimate Destination for Movie Enthusiasts!
+  </h1>
+
+  <div class="home__content">
+    <div class="home__box">
+      <h2 class="home__title">Popular movies</h2>
+
+      <div class="home__slider">
+        <app-slider
+          [nextBtn]="slideNext"
+          [prevBtn]="slidePrev"
+          [slidesPerView]="5"
+          [gap]="16"
+          [speed]="350"
+          [slidesToScroll]="5"
+          *ngIf="popularMovies$ | async as movies"
+        >
+          <app-slide *ngFor="let movie of movies.results">
+            <img [src]="posterPath + movie.poster_path" [alt]="movie.title" />
+          </app-slide>
+        </app-slider>
+
+        <button type="button" #slidePrev>Prev</button>
+        <button type="button" #slideNext>Next</button>
+      </div>
+    </div>
+  </div>
+</section>

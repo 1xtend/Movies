@@ -1,27 +1,14 @@
-import { getMultipleValuesInSingleSelectionError } from '@angular/cdk/collections';
-import { LocationStrategy, PathLocationStrategy } from '@angular/common';
-import {
-  AfterContentChecked,
-  AfterContentInit,
-  AfterViewInit,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  NavigationStart,
-  Router,
-} from '@angular/router';
-import { ISortBy, movieSortBy, sortBy } from '@app/shared/helpers/sort-by';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ISortBy, sortBy } from '@app/shared/helpers/sort-by';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { IDiscoverFilters } from '@app/shared/models/filters.interface';
-import { IGenre, SavedGenresType } from '@app/shared/models/genres.interface';
+import { IGenre } from '@app/shared/models/genres.interface';
 import { MediaType } from '@app/shared/models/media.type';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
-import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
+import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { IDiscoverParams } from '@app/shared/models/params.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
 import { MovieSortByType, TVSortByType } from '@app/shared/models/sort-by.type';
@@ -63,7 +50,7 @@ import {
 export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   private resSubject = new Subject<
     Partial<{
-      movies: ISearchMoviesResponse;
+      movies: IMoviesResponse;
       tvs: ISearchTVsResponse;
     }>
   >();
@@ -313,7 +300,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     );
   }
 
-  private fetchMedia(): Observable<ISearchTVsResponse | ISearchMoviesResponse> {
+  private fetchMedia(): Observable<ISearchTVsResponse | IMoviesResponse> {
     if (this.mediaType === 'tv') {
       return this.mediaService.discoverTVs(this.filters).pipe(
         tap((res) => {

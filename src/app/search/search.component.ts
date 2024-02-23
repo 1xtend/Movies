@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
 import { IMediaFilters } from '@app/shared/models/filters.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
+import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { ISearchPeopleResponse } from '@app/shared/models/person/people-response.interface';
 import { ITV } from '@app/shared/models/tv/tv.interface';
@@ -26,7 +26,7 @@ import { ISearchParams } from '@app/shared/models/params.interface';
 export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   private resSubject = new Subject<
     Partial<{
-      movies: ISearchMoviesResponse;
+      movies: IMoviesResponse;
       tvs: ISearchTVsResponse;
       people: ISearchPeopleResponse;
     }>

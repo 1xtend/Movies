@@ -1,5 +1,7 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
@@ -10,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { fromEvent, takeUntil } from 'rxjs';
+import { debounceTime, fromEvent, takeUntil } from 'rxjs';
 import { SlideComponent } from './slide/slide.component';
 import { ISlideStyle } from './models/slide-style.interface';
 import { DOCUMENT } from '@angular/common';
@@ -22,7 +24,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class SliderComponent
   extends UnsubscribeAbstract
-  implements AfterViewInit, OnInit
+  implements AfterViewInit
 {
   @ContentChildren(SlideComponent) slides!: QueryList<SlideComponent>;
   @ViewChild('wrapper') wrapper!: ElementRef<HTMLElement>;
@@ -45,9 +47,15 @@ export class SliderComponent
   private scrollWidth: number = 0;
   private trackWidth: number = 0;
 
+  get sliderWidth() {
+    return this.el.nativeElement.offsetWidth;
+  }
+
   // Index
   private activeIndex: number = 0;
-  private maxIndex: number = 0;
+  get maxIndex() {
+    return this.slides.length - this.slidesPerView;
+  }
 
   // Translate
   private translate: number = 0;
@@ -65,21 +73,24 @@ export class SliderComponent
     super();
   }
 
-  ngOnInit(): void {
-    this.onResize();
-  }
-
   ngAfterViewInit(): void {
+    this.onResize();
+
     this.updateWidth();
+
     this.onNavigationButtonClick();
-    this.onDocumentMouseUp();
+    this.onDocumentMouseEvents();
   }
 
   // On resize
   private onResize(): void {
-    this.resize$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
-      this.updateWidth();
-    });
+    this.resize$
+      .pipe(debounceTime(500), takeUntil(this.ngUnsubscribe$))
+      .subscribe((e) => {
+        this.updateWidth();
+        this.slideTo(this.activeIndex);
+        // console.log(this.activeIndex);
+      });
   }
 
   // Navigation
@@ -136,7 +147,7 @@ export class SliderComponent
     this.handleNavigation(true);
   }
 
-  dragging(e: MouseEvent): void {
+  private dragging(e: MouseEvent): void {
     if (!this.isDragging) return;
 
     this.draggedPath = this.translate - (e.pageX - this.startX);
@@ -157,18 +168,6 @@ export class SliderComponent
     this.isDragging = false;
     this.handleNavigation(false);
 
-    // if (this.draggedPath > (this.slideWidth + this.gap) * this.activeIndex) {
-    //   this.activeIndex = Math.round(
-    //     this.draggedPath / (this.slideWidth + this.gap)
-    //   );
-    // }
-
-    // if (this.draggedPath < (this.slideWidth + this.gap) * this.activeIndex) {
-    //   this.activeIndex = Math.round(
-    //     this.draggedPath / (this.slideWidth + this.gap)
-    //   );
-    // }
-
     this.activeIndex = Math.round(
       this.draggedPath / (this.slideWidth + this.gap)
     );
@@ -176,11 +175,17 @@ export class SliderComponent
     this.handleSlideScroll();
   }
 
-  private onDocumentMouseUp(): void {
+  private onDocumentMouseEvents(): void {
     fromEvent(this.document, 'mouseup')
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe(() => {
         this.dragStop();
+      });
+
+    fromEvent(this.document, 'mousemove')
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((e) => {
+        this.dragging(<MouseEvent>e);
       });
   }
 
@@ -188,13 +193,24 @@ export class SliderComponent
   private updateWidth(): void {
     this.lockNavigation();
 
-    const parentWidth = this.wrapper.nativeElement.offsetWidth;
-    const defaultWidth = parentWidth / this.slidesPerView;
+    // const parentWidth = this.el.nativeElement.offsetWidth;
+    const defaultWidth = this.sliderWidth / this.slidesPerView;
     const widthWithGap =
-      parentWidth - (this.gap * (this.slidesPerView - 1)) / this.slidesPerView;
+      (this.sliderWidth - this.gap * (this.slidesPerView - 1)) /
+      this.slidesPerView;
+
+    // console.log('parentWidth', parentWidth);
+    // console.log('gap', this.gap);
+    // console.log('part', parentWidth - this.gap * (this.slidesPerView - 1));
+
+    // const defaultWidth = this.sliderWidth / this.slidesPerView;
+    // const widthWithGap =
+    //   (this.sliderWidth - this.gap * (this.slidesPerView - 1)) /
+    //   this.slidesPerView;
 
     this.slideWidth =
       this.gap > 0 && this.slidesPerView > 1 ? widthWithGap : defaultWidth;
+
     this.scrollWidth = this.slideWidth + this.gap;
     this.trackWidth =
       (this.slideWidth + this.gap) * (this.slides.length - this.slidesPerView) -
