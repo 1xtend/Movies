@@ -30,8 +30,8 @@
 
       <div class="home__slider">
         <app-slider
-          [nextBtn]="slideNext"
-          [prevBtn]="slidePrev"
+          [prevBtn]="slidePrev._elementRef"
+          [nextBtn]="slideNext._elementRef"
           [slidesPerView]="slidesValue"
           [gap]="16"
           [speed]="350"
@@ -50,8 +50,27 @@
           </app-slide>
         </app-slider>
 
-        <button type="button" #slidePrev>Prev</button>
-        <button type="button" #slideNext>Next</button>
+        <button
+          type="button"
+          #slidePrev
+          mat-fab
+          color="primary"
+          class="home__slide-btn home__slide-btn--prev"
+        >
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+        <button
+          type="button"
+          #slideNext
+          mat-fab
+          color="primary"
+          class="home__slide-btn home__slide-btn--next"
+        >
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+
+        <!-- <button type="button" #slidePrev>prev</button>
+        <button type="button" #slideNext>next</button> -->
       </div>
     </div>
   </div>

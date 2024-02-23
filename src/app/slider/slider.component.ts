@@ -16,6 +16,7 @@ import { debounceTime, fromEvent, merge, takeUntil, timer } from 'rxjs';
 import { SlideComponent } from './slide/slide.component';
 import { ISlideStyle } from './models/slide-style.interface';
 import { DOCUMENT } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-slider',
@@ -37,8 +38,24 @@ export class SliderComponent
   @Input() speed: number = 500;
 
   // Slide buttons
-  @Input({ required: true }) nextBtn!: HTMLElement;
-  @Input({ required: true }) prevBtn!: HTMLElement;
+  @Input() nextBtn?: unknown;
+  @Input() prevBtn?: unknown;
+
+  get nextBtnEl() {
+    return !this.nextBtn
+      ? undefined
+      : this.nextBtn instanceof HTMLElement
+      ? this.nextBtn
+      : (<ElementRef<HTMLElement>>this.nextBtn).nativeElement;
+  }
+
+  get prevBtnEl() {
+    return !this.prevBtn
+      ? undefined
+      : this.prevBtn instanceof HTMLElement
+      ? this.prevBtn
+      : (<ElementRef<HTMLElement>>this.prevBtn).nativeElement;
+  }
 
   // Width
   private slideWidth: number = 0;
@@ -105,35 +122,46 @@ export class SliderComponent
 
   // Navigation
   private onNavigationButtonClick(): void {
-    fromEvent(this.prevBtn, 'click')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(() => {
-        this.handleSlideScroll('prev');
-      });
+    if (this.prevBtnEl) {
+      fromEvent(this.prevBtnEl, 'click')
+        .pipe(takeUntil(this.ngUnsubscribe$))
+        .subscribe(() => {
+          this.handleSlideScroll('prev');
+        });
+    }
 
-    fromEvent(this.nextBtn, 'click')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(() => {
-        this.handleSlideScroll('next');
-      });
+    if (this.nextBtnEl) {
+      fromEvent(this.nextBtnEl, 'click')
+        .pipe(takeUntil(this.ngUnsubscribe$))
+        .subscribe(() => {
+          this.handleSlideScroll('next');
+        });
+    }
   }
 
   private handleNavigation(disable: boolean, type?: 'prev' | 'next'): void {
-    const next = <HTMLButtonElement>this.nextBtn;
-    const prev = <HTMLButtonElement>this.prevBtn;
+    if (!this.prevBtnEl || !this.nextBtnEl) {
+      return;
+    }
 
-    if (type === 'next') {
-      next.disabled = disable;
+    if (
+      !(this.prevBtnEl instanceof HTMLButtonElement) ||
+      !(this.nextBtnEl instanceof HTMLButtonElement)
+    ) {
       return;
     }
 
     if (type === 'prev') {
-      prev.disabled = disable;
-      return;
+      this.prevBtnEl.disabled = disable;
     }
 
-    prev.disabled = this.activeIndex <= 0 ? true : disable;
-    next.disabled = this.activeIndex >= this.maxIndex ? true : disable;
+    if (type === 'next') {
+      this.nextBtnEl.disabled = disable;
+    }
+
+    this.prevBtnEl.disabled = this.activeIndex <= 0 ? true : disable;
+    this.nextBtnEl.disabled =
+      this.activeIndex >= this.maxIndex ? true : disable;
   }
 
   private lockNavigation(): void {
