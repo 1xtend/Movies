@@ -40,8 +40,6 @@ export class SliderComponent
   @Input({ required: true }) nextBtn!: HTMLElement;
   @Input({ required: true }) prevBtn!: HTMLElement;
 
-  private resize$ = fromEvent(window, 'resize');
-
   // Width
   private slideWidth: number = 0;
   private scrollWidth: number = 0;
@@ -66,6 +64,17 @@ export class SliderComponent
   private startDragging: boolean = false;
   private startX: number = 0;
   private draggedPath: number = 0;
+
+  // Event listeners
+  private resize$ = fromEvent(window, 'resize');
+  private dragEndEvents$ = merge(
+    fromEvent(this.document, 'mouseup'),
+    fromEvent(this.document, 'touchend')
+  );
+  private dragMoveEvents$ = merge(
+    fromEvent(this.document, 'mousemove'),
+    fromEvent(this.document, 'touchmove')
+  );
 
   constructor(
     private el: ElementRef<HTMLElement>,
@@ -179,21 +188,11 @@ export class SliderComponent
   }
 
   private onDocumentDragEvents(): void {
-    const dragEndEvents$ = merge(
-      fromEvent(this.document, 'mouseup'),
-      fromEvent(this.document, 'touchend')
-    );
-
-    const dragMoveEvents$ = merge(
-      fromEvent(this.document, 'mousemove'),
-      fromEvent(this.document, 'touchmove')
-    );
-
-    dragEndEvents$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
+    this.dragEndEvents$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
       this.dragStop();
     });
 
-    dragMoveEvents$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
+    this.dragMoveEvents$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
       this.dragging(<MouseEvent | TouchEvent>e);
     });
   }
@@ -202,20 +201,10 @@ export class SliderComponent
   private updateWidth(): void {
     this.lockNavigation();
 
-    // const parentWidth = this.el.nativeElement.offsetWidth;
     const defaultWidth = this.sliderWidth / this.slidesPerView;
     const widthWithGap =
       (this.sliderWidth - this.gap * (this.slidesPerView - 1)) /
       this.slidesPerView;
-
-    // console.log('parentWidth', parentWidth);
-    // console.log('gap', this.gap);
-    // console.log('part', parentWidth - this.gap * (this.slidesPerView - 1));
-
-    // const defaultWidth = this.sliderWidth / this.slidesPerView;
-    // const widthWithGap =
-    //   (this.sliderWidth - this.gap * (this.slidesPerView - 1)) /
-    //   this.slidesPerView;
 
     this.slideWidth =
       this.gap > 0 && this.slidesPerView > 1 ? widthWithGap : defaultWidth;

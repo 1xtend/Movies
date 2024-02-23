@@ -26,7 +26,7 @@ export class MediaDetailsComponent
   private mediaType: MediaType = this.route.snapshot.data['mediaType'];
   private id: number = Number(this.route.snapshot.params['id']);
 
-  posterPath = environment.imagePaths.original;
+  posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
   profilePath = environment.imagePaths.h632Profile;
 

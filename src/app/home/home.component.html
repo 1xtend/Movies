@@ -32,10 +32,10 @@
         <app-slider
           [nextBtn]="slideNext"
           [prevBtn]="slidePrev"
-          [slidesPerView]="5"
+          [slidesPerView]="slidesValue"
           [gap]="16"
           [speed]="350"
-          [slidesToScroll]="5"
+          [slidesToScroll]="slidesValue"
           *ngIf="popularMovies$ | async as movies"
         >
           <app-slide *ngFor="let movie of movies.results">
