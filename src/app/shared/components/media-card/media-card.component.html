@@ -19,7 +19,7 @@
       [routerLink]="['/details', mediaType, id]"
       mat-card-title
       class="card__title"
-      [style.fontSize]="titleSize + 'px'"
+      [style.fontSize.px]="titleSize"
     >
       {{ title }}
     </a>
@@ -53,6 +53,7 @@
         mat-card-title
         class="card__title"
         *ngIf="title"
+        [style.fontSize.px]="titleSize"
         >{{ title }}</a
       >
 
