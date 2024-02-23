@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { debounceTime, fromEvent, takeUntil } from 'rxjs';
+import { debounceTime, fromEvent, merge, takeUntil, timer } from 'rxjs';
 import { SlideComponent } from './slide/slide.component';
 import { ISlideStyle } from './models/slide-style.interface';
 import { DOCUMENT } from '@angular/common';
@@ -80,7 +80,7 @@ export class SliderComponent
     this.updateWidth();
 
     this.onNavigationButtonClick();
-    this.onDocumentMouseEvents();
+    this.onDocumentDragEvents();
   }
 
   // On resize
@@ -130,14 +130,11 @@ export class SliderComponent
   private lockNavigation(): void {
     this.handleNavigation(true);
 
-    const timeout = setTimeout(() => {
-      this.handleNavigation(false);
-
-      return () => {
-        console.log('Clear timeout');
-        clearTimeout(timeout);
-      };
-    }, this.speed);
+    timer(this.speed)
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe(() => {
+        this.handleNavigation(false);
+      });
   }
 
   // Drag
@@ -181,29 +178,24 @@ export class SliderComponent
     this.handleSlideScroll();
   }
 
-  private onDocumentMouseEvents(): void {
-    fromEvent(this.document, 'mouseup')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe((e) => {
-        this.dragStop();
-      });
+  private onDocumentDragEvents(): void {
+    const dragEndEvents$ = merge(
+      fromEvent(this.document, 'mouseup'),
+      fromEvent(this.document, 'touchend')
+    );
 
-    fromEvent(this.document, 'touchend')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe((e) => {
-        this.dragStop();
-      });
+    const dragMoveEvents$ = merge(
+      fromEvent(this.document, 'mousemove'),
+      fromEvent(this.document, 'touchmove')
+    );
 
-    fromEvent(this.document, 'mousemove')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe((e) => {
-        this.dragging(<MouseEvent>e);
-      });
-    fromEvent(this.document, 'touchmove')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe((e) => {
-        this.dragging(<TouchEvent>e);
-      });
+    dragEndEvents$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
+      this.dragStop();
+    });
+
+    dragMoveEvents$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
+      this.dragging(<MouseEvent | TouchEvent>e);
+    });
   }
 
   // Update values
