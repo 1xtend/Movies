@@ -9,7 +9,19 @@ import {
   ViewChild,
 } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { debounceTime, fromEvent, merge, takeUntil, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  distinctUntilChanged,
+  from,
+  fromEvent,
+  map,
+  merge,
+  switchMap,
+  takeUntil,
+  tap,
+  timer,
+} from 'rxjs';
 import { SlideComponent } from './slide/slide.component';
 import { ISlideStyle } from './models/slide-style.interface';
 import { DOCUMENT } from '@angular/common';
@@ -73,20 +85,25 @@ export class SliderComponent
   translateX: string = '';
 
   // Drag
-  isDragging: boolean = false;
+  private isDraggingSubject = new BehaviorSubject<boolean>(false);
+  isDragging$ = this.isDraggingSubject
+    .asObservable()
+    .pipe(distinctUntilChanged());
+
   private startDragging: boolean = false;
-  private startX: number = 0;
   private draggedPath: number = 0;
 
   // Event listeners
   private resize$ = fromEvent(window, 'resize');
-  private dragEndEvents$ = merge(
-    fromEvent(this.document, 'mouseup'),
-    fromEvent(this.document, 'touchend')
+  private mouseDown$ = fromEvent<MouseEvent>(
+    this.el.nativeElement,
+    'mousedown'
+  ).pipe(takeUntil(this.ngUnsubscribe$));
+  private mouseMove$ = fromEvent<MouseEvent>(this.document, 'mousemove').pipe(
+    takeUntil(this.ngUnsubscribe$)
   );
-  private dragMoveEvents$ = merge(
-    fromEvent(this.document, 'mousemove'),
-    fromEvent(this.document, 'touchmove')
+  private mouseUp$ = fromEvent<MouseEvent>(this.document, 'mouseup').pipe(
+    takeUntil(this.ngUnsubscribe$)
   );
 
   constructor(
@@ -102,7 +119,7 @@ export class SliderComponent
     this.updateWidth();
 
     this.onNavigationButtonClick();
-    this.onDocumentDragEvents();
+    this.sliderDragging();
   }
 
   // On resize
@@ -112,7 +129,6 @@ export class SliderComponent
       .subscribe((e) => {
         this.updateWidth();
         this.slideTo(this.activeIndex);
-        // console.log(this.activeIndex);
       });
   }
 
@@ -136,11 +152,9 @@ export class SliderComponent
   }
 
   private handleNavigation(disable: boolean, type?: 'prev' | 'next'): void {
-    if (!this.prevBtnEl || !this.nextBtnEl) {
-      return;
-    }
-
     if (
+      !this.prevBtnEl ||
+      !this.nextBtnEl ||
       !(this.prevBtnEl instanceof HTMLButtonElement) ||
       !(this.nextBtnEl instanceof HTMLButtonElement)
     ) {
@@ -171,53 +185,57 @@ export class SliderComponent
   }
 
   // Drag
-  dragStart(e: MouseEvent | TouchEvent): void {
-    this.startX = e instanceof MouseEvent ? e.pageX : e.touches[0].clientX;
-    this.startDragging = true;
+  private sliderDragging(): void {
+    const dragMove$ = this.mouseDown$.pipe(
+      switchMap((startEvent) => {
+        this.startDragging = true;
+        this.handleNavigation(true);
 
-    this.handleNavigation(true);
-  }
+        return this.mouseMove$.pipe(
+          map((moveEvent) => {
+            return {
+              startEvent,
+              moveEvent,
+            };
+          }),
+          takeUntil(this.mouseUp$)
+        );
+      }),
+      tap(({ startEvent, moveEvent }) => {
+        this.draggedPath =
+          this.translate + (startEvent.pageX - moveEvent.pageX);
 
-  private dragging(e: MouseEvent | TouchEvent): void {
-    if (!this.startDragging) return;
+        this.isDraggingSubject.next(true);
 
-    const distance = e instanceof MouseEvent ? e.pageX : e.touches[0].clientX;
+        console.log(moveEvent.pageX);
 
-    this.isDragging = true;
+        if (
+          this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
+          this.draggedPath < (this.slideWidth + this.gap) * -1
+        ) {
+          return;
+        }
 
-    this.draggedPath = this.translate - (distance - this.startX);
-
-    if (
-      this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
-      this.draggedPath < (this.slideWidth + this.gap) * -1
-    ) {
-      return;
-    }
-
-    this.setTranslateX(this.draggedPath);
-  }
-
-  private dragStop(): void {
-    if (!this.startDragging) return;
-
-    this.isDragging = false;
-    this.startDragging = false;
-    this.handleNavigation(false);
-
-    this.activeIndex = Math.round(
-      this.draggedPath / (this.slideWidth + this.gap)
+        this.setTranslateX(this.draggedPath);
+      }),
+      takeUntil(this.ngUnsubscribe$)
     );
+    dragMove$.subscribe();
 
-    this.handleSlideScroll();
-  }
+    this.mouseUp$.subscribe(() => {
+      if (!this.startDragging) return;
 
-  private onDocumentDragEvents(): void {
-    this.dragEndEvents$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
-      this.dragStop();
-    });
+      console.log('mouseup');
 
-    this.dragMoveEvents$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
-      this.dragging(<MouseEvent | TouchEvent>e);
+      this.startDragging = false;
+      this.isDraggingSubject.next(false);
+      this.handleNavigation(false);
+
+      this.activeIndex = Math.round(
+        this.draggedPath / (this.slideWidth + this.gap)
+      );
+
+      this.handleSlideScroll();
     });
   }
 
@@ -293,7 +311,9 @@ export class SliderComponent
   }
 
   private slideTo(index: number): void {
-    if (this.isDragging) return;
+    // if (this.isDragging) return;
+
+    console.log('received index', index);
 
     this.lockNavigation();
 

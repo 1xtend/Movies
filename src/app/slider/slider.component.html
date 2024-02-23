@@ -8,12 +8,12 @@
     #wrapper
     class="slider__wrapper"
     [style.transform]="translateX"
-    [style.transition-duration]="isDragging ? 0 + 'ms' : speed + 'ms'"
+    [style.transition-duration]="
+      (isDragging$ | async) ? 0 + 'ms' : speed + 'ms'
+    "
     [ngClass]="{
-      dragging: isDragging
+      dragging: (isDragging$ | async)
     }"
-    (mousedown)="dragStart($event)"
-    (touchstart)="dragStart($event)"
   >
     <ng-content></ng-content>
   </div>
