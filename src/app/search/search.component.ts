@@ -1,8 +1,7 @@
-import { LoadingService } from './../shared/services/loading.service';
 import { MediaService } from '../shared/services/media.service';
 import { EMPTY, Subject, combineLatest, switchMap, takeUntil, tap } from 'rxjs';
 import { SharedService } from './../shared/services/shared.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
@@ -22,6 +21,7 @@ import { ISearchParams } from '@app/shared/models/params.interface';
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   private resSubject = new Subject<
@@ -53,8 +53,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     private sharedService: SharedService,
     private mediaService: MediaService,
     private route: ActivatedRoute,
-    private router: Router,
-    private loadingService: LoadingService
+    private router: Router
   ) {
     super();
   }

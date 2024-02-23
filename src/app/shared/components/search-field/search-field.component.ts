@@ -2,17 +2,9 @@ import { LoadingService } from './../../services/loading.service';
 import { FormControl } from '@angular/forms';
 import { SharedService } from './../../services/shared.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  from,
-  map,
-  switchMap,
-  take,
-  takeUntil,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 
 @Component({

@@ -1,6 +1,6 @@
 import { SharedService } from '@app/shared/services/shared.service';
 import { MediaService } from './../shared/services/media.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
@@ -28,6 +28,7 @@ import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   popularMovies$?: Observable<IMoviesResponse>;
   popularTVs$?: Observable<ITVsResponse>;
+  popularPeople$?: Observable<ITVsResponse>;
 
   posterPath = environment.imagePaths.original;
   backdropPath = environment.imagePaths.w1280Backdrop;
