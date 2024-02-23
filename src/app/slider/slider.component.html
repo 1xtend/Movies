@@ -1,0 +1,20 @@
+<div
+  class="slider"
+  [ngStyle]="{
+    height: height === 'auto' ? height : height + 'px'
+  }"
+>
+  <div
+    #wrapper
+    class="slider__wrapper"
+    [style.transform]="translateX"
+    [style.transition-duration]="isDragging ? 0 + 'ms' : speed + 'ms'"
+    [ngClass]="{
+      dragging: isDragging
+    }"
+    (mousemove)="dragging($event)"
+    (mousedown)="dragStart($event)"
+  >
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 .discover {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 250px 1fr;
   gap: 1rem;
 
   @media (max-width: 767px) {
@@ -31,5 +31,25 @@
     &:not(:last-child) {
       margin-bottom: 1rem;
     }
+  }
+
+  &__select {
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+
+    ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
+
+  &__genres:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+  &__toggler:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+  &__slide {
+    width: 90%;
   }
 }

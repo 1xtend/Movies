@@ -1,18 +1,6 @@
 import { LoadingService } from './../shared/services/loading.service';
 import { MediaService } from '../shared/services/media.service';
-import {
-  EMPTY,
-  Observable,
-  Subject,
-  combineLatest,
-  first,
-  map,
-  skip,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { EMPTY, Subject, combineLatest, switchMap, takeUntil, tap } from 'rxjs';
 import { SharedService } from './../shared/services/shared.service';
 import { Component, OnInit } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
@@ -28,9 +16,7 @@ import { ISearchPeopleResponse } from '@app/shared/models/person/people-response
 import { ITV } from '@app/shared/models/tv/tv.interface';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
-import { HttpParams } from '@angular/common/http';
-import { ISearchParams } from '@app/shared/models/search-params.interface';
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { ISearchParams } from '@app/shared/models/params.interface';
 
 @Component({
   selector: 'app-search',
@@ -55,9 +41,10 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   filters: IMediaFilters = {
     page: 1,
     query: '',
-    includeAdult: undefined,
-    year: undefined,
   };
+
+  private filtersSubject = new Subject<IMediaFilters>();
+  filters$ = this.filtersSubject.asObservable();
 
   readonly pageSize = 20;
   noResult: boolean = false;
@@ -77,11 +64,10 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
     this.searchChanges();
     this.mediaTypeChanges();
+    this.filtersChanges();
   }
 
   private paramsChanges(): void {
-    this.loadingService.setLoading(true);
-
     combineLatest({
       data: this.route.data,
       queryParams: this.route.queryParamMap,
@@ -93,15 +79,19 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
             return EMPTY;
           }
 
-          this.filters = {
-            query: queryParams.get('q') || '',
-            page: Number(queryParams.get('page')) || 1,
-            includeAdult:
-              Boolean(queryParams.get('include_adult')) || undefined,
-          };
+          const navigation = this.router.getCurrentNavigation();
 
-          this.mediaType = data['type'];
-          this.mediaTypeControl.setValue(this.mediaType);
+          if (!navigation || navigation.trigger === 'popstate') {
+            this.filters = {
+              query: queryParams.get('q') || '',
+              page: Number(queryParams.get('page')) || 1,
+            };
+
+            this.mediaType = data['type'];
+            this.mediaTypeControl.setValue(this.mediaType, {
+              emitEvent: false,
+            });
+          }
 
           return this.fetchMedia();
         })
@@ -121,12 +111,10 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.sharedService.search$
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((query) => {
-        const filters: IMediaFilters = {
+        this.filtersSubject.next({
           query,
           page: 1,
-        };
-
-        this.setQueryParams(filters, this.mediaType);
+        });
       });
   }
 
@@ -134,13 +122,21 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.sharedService.mediaType$
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((type) => {
-        const filters: IMediaFilters = {
+        this.mediaType = type;
+
+        this.filtersSubject.next({
           ...this.filters,
           page: 1,
-        };
-
-        this.setQueryParams(filters, type);
+        });
       });
+  }
+
+  private filtersChanges(): void {
+    this.filters$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((filters) => {
+      this.filters = filters;
+
+      this.setQueryParams();
+    });
   }
 
   handleTabEvent(e: MatButtonToggleChange): void {
@@ -148,12 +144,10 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   handlePageEvent(e: PageEvent): void {
-    const filters: IMediaFilters = {
+    this.filtersSubject.next({
       ...this.filters,
       page: e.pageIndex + 1,
-    };
-
-    this.setQueryParams(filters, this.mediaType);
+    });
   }
 
   mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
@@ -188,22 +182,12 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     return EMPTY;
   }
 
-  private setQueryParams(filters: IMediaFilters, mediaType: MediaType): void {
+  private setQueryParams(): void {
     const params: ISearchParams = {
-      q: filters.query,
-      page: filters.page,
+      q: this.filters.query,
+      page: this.filters.page,
     };
 
-    if (filters.includeAdult !== undefined) {
-      params.include_adult = filters.includeAdult;
-    }
-
-    if (filters.year) {
-      params.year = filters.year;
-    }
-
-    this.router.navigate(['/search', mediaType], {
-      queryParams: params,
-    });
+    this.sharedService.setParams(params, '/search', this.mediaType);
   }
 }

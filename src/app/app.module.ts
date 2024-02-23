@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MediaInterceptor } from './shared/interceptors/http.interceptor';
+import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,11 @@ import { MediaInterceptor } from './shared/interceptors/http.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MediaInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
       multi: true,
     },
   ],

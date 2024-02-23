@@ -1,4 +1,5 @@
-import { IGenre } from '../genre.interface';
+import { IGenre } from '../genres.interface';
+import { ILanguage } from '../languages.interface';
 import { INetwork } from '../network.interface';
 import { IProductionCountry } from '../production-country.interface';
 
@@ -38,7 +39,7 @@ export interface IDetailsMovie {
   release_date: string;
   revenue: number;
   runtime: number;
-  spoken_languages: ISpokenLanguages[];
+  spoken_languages: ILanguage[];
   status: string;
   tagline: string;
   title: string;
@@ -53,10 +54,4 @@ interface IBelongsToCollection {
   name: string;
   poster_path: string | null;
   backdrop_path: string | null;
-}
-
-interface ISpokenLanguages {
-  english_name: string;
-  iso_639_1: string;
-  name: string;
 }

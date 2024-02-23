@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { ISearchPeopleResponse } from '../models/person/people-response.interface';
@@ -9,6 +9,8 @@ import { ISearchMoviesResponse } from '../models/movie/movies-response.interface
 import { IDetailsTV, ITV } from '../models/tv/tv.interface';
 import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson, IPerson } from '../models/person/person.interface';
+import { IGenres } from '../models/genres.interface';
+import { ILanguage } from '../models/languages.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +45,11 @@ export class MediaService {
 
   // Details
   private getDetails<T>(type: MediaType, id: number): Observable<T> {
-    return this.http.get<T>(`/${type}/${id}`);
+    let params = new HttpParams();
+
+    return this.http.get<T>(`/${type}/${id}`, {
+      params,
+    });
   }
 
   getTVDetails(id: number): Observable<IDetailsTV> {
@@ -76,30 +82,49 @@ export class MediaService {
   }
 
   // Discover
-
   private discover<T>(
     type: Exclude<MediaType, 'person'>,
-    filters: Partial<IDiscoverFilters>
+    filters: IDiscoverFilters
   ): Observable<T> {
     let params = new HttpParams({
       fromObject: {
-        ...filters,
+        page: filters.page,
+        sort_by: filters.sort_by,
       },
     });
+
+    if (filters.with_genres) {
+      params = params.append('with_genres', filters.with_genres);
+    }
+
+    if (filters.include_adult) {
+      params = params.append('include_adult', filters.include_adult);
+    }
+
+    if (filters.language) {
+      params = params.append('language', filters.language);
+    }
 
     return this.http.get<T>(`/discover/${type}`, {
       params,
     });
   }
 
-  discoverMovies(
-    filters: Partial<IDiscoverFilters>
-  ): Observable<ISearchMoviesResponse> {
+  discoverMovies(filters: IDiscoverFilters): Observable<ISearchMoviesResponse> {
     return this.discover<ISearchMoviesResponse>('movie', filters);
   }
-  discoverTVs(
-    filters: Partial<IDiscoverFilters>
-  ): Observable<ISearchTVsResponse> {
+
+  discoverTVs(filters: IDiscoverFilters): Observable<ISearchTVsResponse> {
     return this.discover<ISearchTVsResponse>('tv', filters);
+  }
+
+  // Genres
+  getGenres(type: Exclude<MediaType, 'person'>): Observable<IGenres> {
+    return this.http.get<IGenres>(`/genre/${type}/list`);
+  }
+
+  // Languages
+  getLanguages(): Observable<ILanguage[]> {
+    return this.http.get<ILanguage[]>(`/configuration/languages`);
   }
 }
