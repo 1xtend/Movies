@@ -73,6 +73,24 @@ export class SliderComponent
   get sliderWidth() {
     return this.el.nativeElement.offsetWidth;
   }
+  get defaultWidth() {
+    return this.sliderWidth / this.slidesPerView;
+  }
+  get widthWithGap() {
+    return (
+      (this.sliderWidth - this.gap * (this.slidesPerView - 1)) /
+      this.slidesPerView
+    );
+  }
+  // get scrollWidth() {
+  //   return this.slideWidth + this.gap;
+  // }
+  // get trackWidth() {
+  //   return (
+  //     (this.slideWidth + this.gap) * (this.slides.length - this.slidesPerView) -
+  //     this.gap
+  //   );
+  // }
 
   // Index
   private activeIndex: number = 0;
@@ -128,7 +146,7 @@ export class SliderComponent
       .pipe(debounceTime(500), takeUntil(this.ngUnsubscribe$))
       .subscribe((e) => {
         this.updateWidth();
-        this.slideTo(this.activeIndex);
+        this.handleSlideScroll();
       });
   }
 
@@ -207,8 +225,6 @@ export class SliderComponent
 
         this.isDraggingSubject.next(true);
 
-        console.log(moveEvent.pageX);
-
         if (
           this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
           this.draggedPath < (this.slideWidth + this.gap) * -1
@@ -224,8 +240,6 @@ export class SliderComponent
 
     this.mouseUp$.subscribe(() => {
       if (!this.startDragging) return;
-
-      console.log('mouseup');
 
       this.startDragging = false;
       this.isDraggingSubject.next(false);
@@ -243,13 +257,10 @@ export class SliderComponent
   private updateWidth(): void {
     this.lockNavigation();
 
-    const defaultWidth = this.sliderWidth / this.slidesPerView;
-    const widthWithGap =
-      (this.sliderWidth - this.gap * (this.slidesPerView - 1)) /
-      this.slidesPerView;
-
     this.slideWidth =
-      this.gap > 0 && this.slidesPerView > 1 ? widthWithGap : defaultWidth;
+      this.gap > 0 && this.slidesPerView > 1
+        ? this.widthWithGap
+        : this.defaultWidth;
 
     this.scrollWidth = this.slideWidth + this.gap;
     this.trackWidth =
@@ -312,8 +323,6 @@ export class SliderComponent
 
   private slideTo(index: number): void {
     // if (this.isDragging) return;
-
-    console.log('received index', index);
 
     this.lockNavigation();
 
