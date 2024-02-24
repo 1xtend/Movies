@@ -1,21 +1,9 @@
 import { SharedService } from '@app/shared/services/shared.service';
 import { MediaService } from './../shared/services/media.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  map,
-  of,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
-import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { environment } from 'src/environment/environment';
-import { Platform } from '@angular/cdk/platform';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
@@ -24,6 +12,7 @@ import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   popularMovies$?: Observable<IMoviesResponse>;
@@ -70,6 +59,8 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
 
         if (result.breakpoints['(max-width: 480px)']) {
           this.slidesValue = 2;
+          console.log('480');
+          console.log(this.slidesValue);
         }
 
         if (result.breakpoints['(min-width: 991px)']) {

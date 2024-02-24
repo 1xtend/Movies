@@ -117,6 +117,16 @@ export class SliderComponent
   private mouseUp$ = fromEvent<MouseEvent>(this.document, 'mouseup').pipe(
     takeUntil(this.ngUnsubscribe$)
   );
+  private touchStart$ = fromEvent<TouchEvent>(
+    this.el.nativeElement,
+    'touchstart'
+  ).pipe(takeUntil(this.ngUnsubscribe$));
+  private touchMove$ = fromEvent<TouchEvent>(this.document, 'touchmove').pipe(
+    takeUntil(this.ngUnsubscribe$)
+  );
+  private touchEnd$ = fromEvent<TouchEvent>(this.document, 'touchend').pipe(
+    takeUntil(this.ngUnsubscribe$)
+  );
 
   constructor(
     private el: ElementRef<HTMLElement>,
@@ -132,6 +142,7 @@ export class SliderComponent
 
     this.onNavigationButtonClick();
     this.onMouseEvents();
+    this.onTouchEvents();
   }
 
   // On resize
@@ -196,55 +207,97 @@ export class SliderComponent
 
   // Drag
   private onMouseEvents(): void {
-    const dragMove$ = this.mouseDown$.pipe(
-      switchMap((startEvent) => {
-        this.startDragging = true;
+    this.mouseDown$
+      .pipe(
+        switchMap((mouseDown) => {
+          this.dragStart();
 
-        this.handleNavigation(true);
-
-        return this.mouseMove$.pipe(
-          map((moveEvent) => {
-            return {
-              startEvent,
-              moveEvent,
-            };
-          }),
-          takeUntil(this.mouseUp$)
-        );
-      }),
-      tap(({ startEvent, moveEvent }) => {
-        this.draggedPath =
-          this.translate + (startEvent.pageX - moveEvent.pageX);
-
-        this.isDraggingSubject.next(true);
-
-        if (
-          this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
-          this.draggedPath < (this.slideWidth + this.gap) * -1
-        ) {
-          return;
-        }
-
-        this.setTranslate(this.draggedPath);
-      }),
-      takeUntil(this.ngUnsubscribe$)
-    );
-    dragMove$.subscribe();
+          return this.mouseMove$.pipe(
+            map((mouseMove) => {
+              return {
+                mouseDown,
+                mouseMove,
+              };
+            }),
+            takeUntil(this.mouseUp$)
+          );
+        }),
+        tap(({ mouseDown, mouseMove }) => {
+          this.dragMove(mouseDown.pageX, mouseMove.pageX);
+        }),
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe();
 
     this.mouseUp$.subscribe(() => {
-      if (!this.startDragging) return;
-
-      this.startDragging = false;
-
-      this.isDraggingSubject.next(false);
-      this.handleNavigation(false);
-
-      this.activeIndex = Math.round(
-        this.draggedPath / (this.slideWidth + this.gap)
-      );
-
-      this.handleSlideScroll();
+      this.dragEnd();
     });
+  }
+
+  private onTouchEvents(): void {
+    this.touchStart$
+      .pipe(
+        switchMap((touchStart) => {
+          this.dragStart();
+
+          return this.touchMove$.pipe(
+            map((touchMove) => {
+              return {
+                touchStart,
+                touchMove,
+              };
+            }),
+            takeUntil(this.touchEnd$)
+          );
+        }),
+        tap(({ touchStart, touchMove }) => {
+          this.dragMove(
+            touchStart.touches[0].clientX,
+            touchMove.touches[0].clientX
+          );
+        }),
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe();
+
+    this.touchEnd$.subscribe(() => {
+      this.dragEnd();
+    });
+  }
+
+  private dragStart(): void {
+    this.startDragging = true;
+    this.handleNavigation(true);
+  }
+
+  private dragMove(start: number, move: number): void {
+    this.draggedPath = this.translate + (start - move);
+
+    this.isDraggingSubject.next(true);
+
+    if (
+      this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
+      this.draggedPath < (this.slideWidth + this.gap) * -1
+    ) {
+      return;
+    }
+
+    this.setTranslate(this.draggedPath);
+  }
+
+  private dragEnd(): void {
+    if (!this.startDragging) return;
+
+    this.startDragging = false;
+
+    this.isDraggingSubject.next(false);
+    this.handleNavigation(false);
+
+    this.activeIndex = Math.round(
+      this.draggedPath / (this.slideWidth + this.gap)
+    );
+
+    this.handleSlideScroll();
   }
 
   // Update values

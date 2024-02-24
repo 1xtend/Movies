@@ -1,16 +1,10 @@
 import {
-  AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChildren,
   ElementRef,
-  QueryList,
-  ViewChildren,
 } from '@angular/core';
 import { ISlideStyle } from '../models/slide-style.interface';
-import { takeUntil } from 'rxjs';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 
 @Component({
   selector: 'app-slide',
@@ -18,13 +12,8 @@ import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
   styleUrls: ['./slide.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SlideComponent
-  extends UnsubscribeAbstract
-  implements AfterViewInit
-{
-  constructor(private el: ElementRef<HTMLElement>) {
-    super();
-  }
+export class SlideComponent implements AfterViewInit {
+  constructor(private el: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit(): void {
     this.setAttributes();
