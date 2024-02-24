@@ -9,14 +9,14 @@
   <div class="home__box" *ngIf="popularMovies$ | async as movies">
     <h2 class="home__title">Popular movies</h2>
 
-    <div class="home__slider">
+    <div class="home__slider" *ngIf="slides$ | async as slides">
       <app-slider
         [prevBtn]="slidePrevPopularMovie._elementRef"
         [nextBtn]="slideNextPopularMovie._elementRef"
-        [slidesPerView]="slidesValue"
+        [slidesPerView]="slides"
         [gap]="16"
         [speed]="350"
-        [slidesToScroll]="slidesValue"
+        [slidesToScroll]="slides"
       >
         <app-slide *ngFor="let movie of movies.results">
           <app-media-card
@@ -52,14 +52,14 @@
   <div class="home__box" *ngIf="popularTVs$ | async as tvs">
     <h2 class="home__title">Popular TV Shows</h2>
 
-    <div class="home__slider">
+    <div class="home__slider" *ngIf="slides$ | async as slides">
       <app-slider
         [prevBtn]="slidePrevPopularTV._elementRef"
         [nextBtn]="slideNextPopularTV._elementRef"
-        [slidesPerView]="slidesValue"
+        [slidesPerView]="slides"
         [gap]="16"
         [speed]="350"
-        [slidesToScroll]="slidesValue"
+        [slidesToScroll]="slides"
       >
         <app-slide *ngFor="let tv of tvs.results">
           <app-media-card

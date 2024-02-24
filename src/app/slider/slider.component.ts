@@ -7,6 +7,7 @@ import {
   Inject,
   Input,
   QueryList,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
@@ -137,7 +138,6 @@ export class SliderComponent
 
   ngAfterViewInit(): void {
     this.onResize();
-
     this.updateWidth();
 
     this.onNavigationButtonClick();

@@ -1,7 +1,15 @@
 import { SharedService } from '@app/shared/services/shared.service';
 import { MediaService } from './../shared/services/media.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  of,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { environment } from 'src/environment/environment';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
@@ -19,11 +27,12 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   popularTVs$?: Observable<ITVsResponse>;
   popularPeople$?: Observable<ITVsResponse>;
 
-  posterPath = environment.imagePaths.original;
+  posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
   profilePath = environment.imagePaths.h632Profile;
 
-  slidesValue: number = 6;
+  private slidesSubject = new BehaviorSubject<number>(6);
+  slides$ = this.slidesSubject.asObservable();
 
   constructor(
     private mediaService: MediaService,
@@ -50,21 +59,19 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((result: BreakpointState) => {
         if (result.breakpoints['(max-width: 991px)']) {
-          this.slidesValue = 4;
+          this.slidesSubject.next(4);
         }
 
         if (result.breakpoints['(max-width: 768px)']) {
-          this.slidesValue = 3;
+          this.slidesSubject.next(3);
         }
 
         if (result.breakpoints['(max-width: 480px)']) {
-          this.slidesValue = 2;
-          console.log('480');
-          console.log(this.slidesValue);
+          this.slidesSubject.next(2);
         }
 
         if (result.breakpoints['(min-width: 991px)']) {
-          this.slidesValue = 6;
+          this.slidesSubject.next(6);
         }
       });
   }
