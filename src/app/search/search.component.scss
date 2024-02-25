@@ -3,7 +3,7 @@
   grid-template-columns: 200px 1fr;
   gap: 1rem;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
 
@@ -24,12 +24,14 @@
   }
 
   &__group {
-    @media (min-width: 769px) {
-      width: 100%;
-    }
+    width: 100%;
 
     &:not(:last-child) {
       margin-bottom: 1rem;
     }
+  }
+
+  &__item {
+    width: 100%;
   }
 }

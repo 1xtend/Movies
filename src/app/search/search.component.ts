@@ -1,5 +1,6 @@
 import { MediaService } from '../shared/services/media.service';
 import {
+  BehaviorSubject,
   EMPTY,
   Subject,
   combineLatest,
@@ -23,6 +24,7 @@ import { ISearchPeopleResponse } from '@app/shared/models/person/people-response
 import { ITV } from '@app/shared/models/tv/tv.interface';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-search',
@@ -54,6 +56,9 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   private filtersSubject = new Subject<IMediaFilters>();
   filters$ = this.filtersSubject.asObservable();
 
+  private isTabletSubject = new BehaviorSubject<boolean>(false);
+  isTablet$ = this.isTabletSubject.asObservable();
+
   includeAdultControl = new FormControl<boolean>(this.filters.include_adult, {
     nonNullable: true,
   });
@@ -66,7 +71,8 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     private sharedService: SharedService,
     private mediaService: MediaService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private breakpointObserver: BreakpointObserver
   ) {
     super();
   }
@@ -79,6 +85,8 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.includeAdultChanges();
 
     this.filtersChanges();
+
+    this.breakpointChanges();
   }
 
   private paramsChanges(): void {
@@ -173,6 +181,17 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       console.log('filters changes');
       this.setQueryParams();
     });
+  }
+
+  private breakpointChanges(): void {
+    this.breakpointObserver
+      .observe(['(max-width: 768px)'])
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((result: BreakpointState) => {
+        this.isTabletSubject.next(result.matches);
+
+        console.log('matches', result.matches);
+      });
   }
 
   handleTabEvent(e: MatButtonToggleChange): void {
