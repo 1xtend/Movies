@@ -60,17 +60,19 @@ export class SearchFieldComponent
   }
 
   private setQuery(): void {
-    this.query = this.route.snapshot.queryParams['q'];
+    this.query = this.route.snapshot.queryParams['query'];
 
     if (this.query) {
-      this.searchControl.setValue(this.query);
+      this.searchControl.setValue(this.query, {
+        emitEvent: false,
+      });
     }
   }
 
   private navigate(): void {
     this.router.navigate(['/search', this.mediaType], {
       queryParams: {
-        q: this.query,
+        query: this.query,
         page: 1,
       },
     });

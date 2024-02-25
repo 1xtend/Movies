@@ -16,6 +16,7 @@ export class MediaCardComponent {
   @Input() title = '';
   @Input() id = 0;
   @Input() titleSize?: number;
+  @Input() textCut?: number;
 
   readonly imgUrl =
     this.mediaType === 'person'

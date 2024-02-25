@@ -22,20 +22,10 @@ import {
   Observable,
   ReplaySubject,
   Subject,
-  catchError,
   combineLatest,
-  concatMap,
   debounceTime,
-  defaultIfEmpty,
-  distinctUntilChanged,
-  filter,
-  finalize,
-  generate,
   map,
   of,
-  shareReplay,
-  skip,
-  startWith,
   switchMap,
   take,
   takeUntil,
@@ -98,7 +88,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   // Other
   readonly pageSize = 20;
   noResult: boolean = false;
-  private readonly debounceTime = 1000;
+  private readonly debounceTime = this.sharedService.fetchDebounceTime;
 
   constructor(
     private route: ActivatedRoute,

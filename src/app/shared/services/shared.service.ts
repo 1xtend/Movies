@@ -9,6 +9,7 @@ import { IGenre } from './../models/genres.interface';
 import { ILanguage } from '../models/languages.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
+import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,8 @@ export class SharedService {
     undefined
   );
   popularTVs$ = this.popularTVsSubject.asObservable();
+
+  readonly fetchDebounceTime: number = 1000;
 
   constructor(private viewport: ViewportScroller, private router: Router) {}
 
@@ -72,7 +75,7 @@ export class SharedService {
   }
 
   setParams(
-    params: IDiscoverParams | ISearchParams,
+    params: IMediaFilters | IDiscoverFilters,
     path: string,
     mediaType: MediaType
   ): void {

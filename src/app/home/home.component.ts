@@ -34,6 +34,8 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   private slidesSubject = new BehaviorSubject<number>(6);
   slides$ = this.slidesSubject.asObservable();
 
+  readonly textCut: number = 30;
+
   constructor(
     private mediaService: MediaService,
     private sharedService: SharedService,

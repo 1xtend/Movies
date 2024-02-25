@@ -1,5 +1,13 @@
 import { MediaService } from '../shared/services/media.service';
-import { EMPTY, Subject, combineLatest, switchMap, takeUntil, tap } from 'rxjs';
+import {
+  EMPTY,
+  Subject,
+  combineLatest,
+  debounceTime,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { SharedService } from './../shared/services/shared.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
@@ -41,13 +49,19 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   filters: IMediaFilters = {
     page: 1,
     query: '',
+    include_adult: false,
   };
 
   private filtersSubject = new Subject<IMediaFilters>();
   filters$ = this.filtersSubject.asObservable();
 
+  includeAdultControl = new FormControl<boolean>(this.filters.include_adult, {
+    nonNullable: true,
+  });
+
   readonly pageSize = 20;
   noResult: boolean = false;
+  private readonly debounceTime = this.sharedService.fetchDebounceTime;
 
   constructor(
     private sharedService: SharedService,
@@ -63,6 +77,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
     this.searchChanges();
     this.mediaTypeChanges();
+    this.includeAdultChanges();
     this.filtersChanges();
   }
 
@@ -74,7 +89,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       .pipe(
         takeUntil(this.ngUnsubscribe$),
         switchMap(({ data, queryParams }) => {
-          if (!queryParams.has('q')) {
+          if (!queryParams.has('query')) {
             return EMPTY;
           }
 
@@ -82,14 +97,23 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
           if (!navigation || navigation.trigger === 'popstate') {
             this.filters = {
-              query: queryParams.get('q') || '',
+              query: queryParams.get('query') || '',
               page: Number(queryParams.get('page')) || 1,
+              include_adult: JSON.parse(
+                queryParams.get('include_adult') ?? 'false'
+              ),
             };
 
             this.mediaType = data['type'];
+
             this.mediaTypeControl.setValue(this.mediaType, {
               emitEvent: false,
             });
+
+            this.includeAdultControl.setValue(
+              this.filters.include_adult ?? false,
+              { emitEvent: false }
+            );
           }
 
           return this.fetchMedia();
@@ -111,6 +135,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((query) => {
         this.filtersSubject.next({
+          ...this.filters,
           query,
           page: 1,
         });
@@ -130,10 +155,22 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       });
   }
 
+  private includeAdultChanges(): void {
+    this.includeAdultControl.valueChanges
+      .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(this.debounceTime))
+      .subscribe((include) => {
+        this.filtersSubject.next({
+          ...this.filters,
+          include_adult: include,
+        });
+      });
+  }
+
   private filtersChanges(): void {
     this.filters$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((filters) => {
       this.filters = filters;
 
+      console.log('filters changes');
       this.setQueryParams();
     });
   }
@@ -182,10 +219,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   private setQueryParams(): void {
-    const params: ISearchParams = {
-      q: this.filters.query,
-      page: this.filters.page,
-    };
+    const params = this.filters;
 
     this.sharedService.setParams(params, '/search', this.mediaType);
   }

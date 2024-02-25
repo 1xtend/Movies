@@ -18,6 +18,13 @@
           <mat-button-toggle value="movie">Movies</mat-button-toggle>
           <mat-button-toggle value="person">People</mat-button-toggle>
         </mat-button-toggle-group>
+
+        <mat-slide-toggle
+          [formControl]="includeAdultControl"
+          class="discover-aside__toggler"
+        >
+          Include adult
+        </mat-slide-toggle>
       </mat-card-content>
     </mat-card>
   </aside>

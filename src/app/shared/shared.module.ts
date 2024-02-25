@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { MediaCardComponent } from './components/media-card/media-card.component';
 import { RoundPipe } from './pipes/round.pipe';
 import { TimePipe } from './pipes/time.pipe';
+import { TextCutPipe } from './pipes/text-cut.pipe';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { TimePipe } from './pipes/time.pipe';
     MediaCardComponent,
     RoundPipe,
     TimePipe,
+    TextCutPipe,
   ],
   imports: [
     CommonModule,
@@ -30,6 +32,7 @@ import { TimePipe } from './pipes/time.pipe';
     MediaCardComponent,
     RoundPipe,
     TimePipe,
+    TextCutPipe,
   ],
 })
 export class SharedModule {}
