@@ -47,10 +47,10 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   ngOnInit(): void {
     this.getPopularMovies();
     this.getPopularTVs();
-    this.resize();
+    this.breakpointChanges();
   }
 
-  private resize(): void {
+  private breakpointChanges(): void {
     this.breakpointObserver
       .observe([
         '(max-width: 991px)',

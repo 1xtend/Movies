@@ -299,7 +299,6 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
         takeUntil(this.ngUnsubscribe$)
       )
       .subscribe(([min, max]) => {
-        console.log([min, max]);
         this.filtersSubject.next({
           ...this.filters,
           'vote_average.gte': min,

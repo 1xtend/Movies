@@ -3,7 +3,10 @@
     <div class="wrapper">
       <app-loader></app-loader>
 
-      <app-header (toggleSidebar)="onToggle()"></app-header>
+      <app-header
+        (toggleDrawer)="toggleDrawer()"
+        [isTablet]="isTablet"
+      ></app-header>
 
       <main class="main">
         <div class="container">
@@ -15,7 +18,12 @@
     </div>
   </mat-sidenav-content>
 
-  <mat-sidenav mode="over" position="end" [opened]="openDrawer" #drawer>
-    <app-sidebar></app-sidebar>
+  <mat-sidenav
+    mode="over"
+    position="end"
+    [opened]="openDrawer"
+    *ngIf="isTablet"
+  >
+    <app-sidebar (closeDrawer)="closeDrawer()"></app-sidebar>
   </mat-sidenav>
 </mat-sidenav-container>

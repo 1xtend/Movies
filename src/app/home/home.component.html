@@ -5,93 +5,98 @@
   </h1>
 </section>
 
-<section class="home">
-  <div class="home__box" *ngIf="popularMovies$ | async as movies">
-    <h2 class="home__title">Popular movies</h2>
+<section class="media" *ngIf="popularMovies$ | async as movies">
+  <h2 class="media__title">Popular movies</h2>
 
-    <div class="home__slider" *ngIf="slides$ | async as slides">
-      <app-slider
-        [prevBtn]="slidePrevPopularMovie._elementRef"
-        [nextBtn]="slideNextPopularMovie._elementRef"
-        [slidesPerView]="slides"
-        [gap]="16"
-        [speed]="350"
-        [slidesToScroll]="slides"
-      >
-        <app-slide *ngFor="let movie of movies.results">
-          <app-media-card
-            [imagePath]="movie.poster_path"
-            [mediaType]="'movie'"
-            [id]="movie.id"
-            [title]="movie.title"
-            [titleSize]="16"
-            [textCut]="textCut"
-          ></app-media-card>
-        </app-slide>
-      </app-slider>
+  <div class="media__slider" *ngIf="slides$ | async as slides">
+    <app-slider
+      [prevBtn]="slidePrevPopularMovie._elementRef"
+      [nextBtn]="slideNextPopularMovie._elementRef"
+      [slidesPerView]="slides"
+      [gap]="16"
+      [speed]="350"
+      [slidesToScroll]="slides"
+    >
+      <app-slide *ngFor="let movie of movies.results">
+        <app-media-card
+          [imagePath]="movie.poster_path"
+          [mediaType]="'movie'"
+          [id]="movie.id"
+          [title]="movie.title"
+          [titleSize]="16"
+          [textCut]="textCut"
+        ></app-media-card>
+      </app-slide>
+    </app-slider>
 
-      <button
-        type="button"
-        #slidePrevPopularMovie
-        mat-fab
-        color="primary"
-        class="home__slide-btn home__slide-btn--prev"
-      >
-        <mat-icon>navigate_next</mat-icon>
-      </button>
-      <button
-        type="button"
-        #slideNextPopularMovie
-        mat-fab
-        color="primary"
-        class="home__slide-btn home__slide-btn--next"
-      >
-        <mat-icon>navigate_next</mat-icon>
-      </button>
-    </div>
+    <button
+      type="button"
+      #slidePrevPopularMovie
+      mat-fab
+      color="primary"
+      class="media__slide-btn media__slide-btn--prev"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+    <button
+      type="button"
+      #slideNextPopularMovie
+      mat-fab
+      color="primary"
+      class="media__slide-btn media__slide-btn--next"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
   </div>
-  <div class="home__box" *ngIf="popularTVs$ | async as tvs">
-    <h2 class="home__title">Popular TV Shows</h2>
+</section>
 
-    <div class="home__slider" *ngIf="slides$ | async as slides">
-      <app-slider
-        [prevBtn]="slidePrevPopularTV._elementRef"
-        [nextBtn]="slideNextPopularTV._elementRef"
-        [slidesPerView]="slides"
-        [gap]="16"
-        [speed]="350"
-        [slidesToScroll]="slides"
-      >
-        <app-slide *ngFor="let tv of tvs.results">
-          <app-media-card
-            [imagePath]="tv.poster_path"
-            [mediaType]="'tv'"
-            [id]="tv.id"
-            [title]="tv.name"
-            [titleSize]="16"
-            [textCut]="textCut"
-          ></app-media-card>
-        </app-slide>
-      </app-slider>
+<section class="offer">
+  <h2 class="offer__title">
+    Customize your movie nights by sorting through genres and years.
+  </h2>
+</section>
 
-      <button
-        type="button"
-        #slidePrevPopularTV
-        mat-fab
-        color="primary"
-        class="home__slide-btn home__slide-btn--prev"
-      >
-        <mat-icon>navigate_next</mat-icon>
-      </button>
-      <button
-        type="button"
-        #slideNextPopularTV
-        mat-fab
-        color="primary"
-        class="home__slide-btn home__slide-btn--next"
-      >
-        <mat-icon>navigate_next</mat-icon>
-      </button>
-    </div>
+<section class="media" *ngIf="popularTVs$ | async as tvs">
+  <h2 class="media__title">Popular TV Shows</h2>
+
+  <div class="media__slider" *ngIf="slides$ | async as slides">
+    <app-slider
+      [prevBtn]="slidePrevPopularTV._elementRef"
+      [nextBtn]="slideNextPopularTV._elementRef"
+      [slidesPerView]="slides"
+      [gap]="16"
+      [speed]="350"
+      [slidesToScroll]="slides"
+    >
+      <app-slide *ngFor="let tv of tvs.results">
+        <app-media-card
+          [imagePath]="tv.poster_path"
+          [mediaType]="'tv'"
+          [id]="tv.id"
+          [title]="tv.name"
+          [titleSize]="16"
+          [textCut]="textCut"
+        ></app-media-card>
+      </app-slide>
+    </app-slider>
+
+    <button
+      type="button"
+      #slidePrevPopularTV
+      mat-fab
+      color="primary"
+      class="media__slide-btn media__slide-btn--prev"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+    <button
+      type="button"
+      #slideNextPopularTV
+      mat-fab
+      color="primary"
+      class="media__slide-btn media__slide-btn--next"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
   </div>
 </section>

@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatListModule } from '@angular/material/list';
 
 const Material = [
   MatToolbarModule,
@@ -41,6 +42,7 @@ const Material = [
   MatSelectModule,
   MatChipsModule,
   MatSliderModule,
+  MatListModule,
 ];
 
 @NgModule({

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Input,
   Output,
 } from '@angular/core';
 
@@ -12,7 +13,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleDrawer = new EventEmitter<void>();
+  @Input({ required: true }) isTablet: boolean = false;
 
   show: boolean = false;
 
