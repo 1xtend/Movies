@@ -23,7 +23,6 @@ import { ISearchPeopleResponse } from '@app/shared/models/person/people-response
 import { ITV } from '@app/shared/models/tv/tv.interface';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
-import { ISearchParams } from '@app/shared/models/params.interface';
 
 @Component({
   selector: 'app-search',
@@ -78,6 +77,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.searchChanges();
     this.mediaTypeChanges();
     this.includeAdultChanges();
+
     this.filtersChanges();
   }
 

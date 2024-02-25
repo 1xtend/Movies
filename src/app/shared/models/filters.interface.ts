@@ -14,4 +14,6 @@ export interface IDiscoverFilters {
   with_genres?: string | undefined;
   year?: number | undefined;
   language?: string | undefined;
+  'vote_average.gte'?: number;
+  'vote_average.lte'?: number;
 }

@@ -62,9 +62,15 @@
         <div>
           <h3>Vote average</h3>
 
-          <mat-slider min="0" max="10" step="1" class="discover-aside__slide">
-            <input value="0" matSliderStartThumb />
-            <input value="10" matSliderEndThumb />
+          <mat-slider
+            min="0"
+            max="10"
+            step="1"
+            class="discover-aside__slide"
+            discrete
+          >
+            <input matSliderStartThumb [formControl]="voteMinControl" />
+            <input matSliderEndThumb [formControl]="voteMaxControl" />
           </mat-slider>
         </div>
       </mat-card-content>

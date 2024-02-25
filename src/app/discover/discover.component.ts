@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ISortBy, sortBy } from '@app/shared/helpers/sort-by';
@@ -23,14 +23,25 @@ import {
   ReplaySubject,
   Subject,
   combineLatest,
+  combineLatestWith,
+  concat,
   debounceTime,
+  first,
+  firstValueFrom,
+  forkJoin,
   map,
+  merge,
   of,
+  skip,
+  skipWhile,
+  startWith,
   switchMap,
   take,
   takeUntil,
   tap,
+  zip,
 } from 'rxjs';
+import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
 
 @Component({
   selector: 'app-discover',
@@ -73,6 +84,15 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     nonNullable: true,
   });
 
+  voteMinControl = new FormControl<number>(0, {
+    nonNullable: true,
+    validators: [Validators.min(0), Validators.max(10)],
+  });
+  voteMaxControl = new FormControl<number>(10, {
+    nonNullable: true,
+    validators: [Validators.min(0), Validators.max(10)],
+  });
+
   // States
   private filtersSubject = new Subject<IDiscoverFilters>();
   filters$ = this.filtersSubject.asObservable();
@@ -106,6 +126,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     this.sortByChanges();
     this.includeAdultChanges();
     this.languageChanges();
+    this.voteAverageChanges();
 
     this.filtersChanges();
   }
@@ -132,6 +153,10 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
                 queryParams.get('include_adult') ?? 'false'
               ),
               language: queryParams.get('language') || undefined,
+              'vote_average.gte':
+                Number(queryParams.get('vote_average.gte')) || undefined,
+              'vote_average.lte':
+                Number(queryParams.get('vote_average.lte')) || undefined,
             };
 
             this.mediaType = data['type'];
@@ -158,6 +183,16 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
             this.languageControl.setValue(this.filters.language ?? 'xx', {
               emitEvent: false,
             });
+
+            this.voteMinControl.setValue(
+              this.filters['vote_average.gte'] ?? 0,
+              { emitEvent: false }
+            );
+
+            this.voteMaxControl.setValue(
+              this.filters['vote_average.lte'] ?? 10,
+              { emitEvent: false }
+            );
           }
 
           return this.fetchMedia();
@@ -246,6 +281,29 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
           ...this.filters,
           language,
           page: 1,
+        });
+      });
+  }
+
+  private voteAverageChanges(): void {
+    combineLatest([
+      this.voteMinControl.valueChanges.pipe(startWith(null)),
+      this.voteMaxControl.valueChanges.pipe(startWith(null)),
+    ])
+      .pipe(
+        skip(1),
+        map(([min, max]) => {
+          return [min === null ? 0 : min, max === null ? 10 : max];
+        }),
+        debounceTime(this.debounceTime),
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe(([min, max]) => {
+        console.log([min, max]);
+        this.filtersSubject.next({
+          ...this.filters,
+          'vote_average.gte': min,
+          'vote_average.lte': max,
         });
       });
   }

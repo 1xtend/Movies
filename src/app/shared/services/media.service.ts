@@ -105,6 +105,15 @@ export class MediaService {
       params = params.append('language', filters.language);
     }
 
+    if (filters['vote_average.gte']) {
+      console.log('has');
+      params = params.append('vote_average.gte', filters['vote_average.gte']);
+    }
+
+    if (filters['vote_average.lte']) {
+      params = params.append('vote_average.lte', filters['vote_average.lte']);
+    }
+
     return this.http.get<T>(`/discover/${type}`, {
       params,
     });
