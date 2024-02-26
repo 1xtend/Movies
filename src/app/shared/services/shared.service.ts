@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MediaType } from '../models/media.type';
-import { ViewportScroller } from '@angular/common';
+import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { Router } from '@angular/router';
-import { IDiscoverParams, ISearchParams } from '../models/params.interface';
-import { IGenres, SavedGenresType } from '../models/genres.interface';
+import { SavedGenresType } from '../models/genres.interface';
 import { IGenre } from './../models/genres.interface';
 import { ILanguage } from '../models/languages.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
