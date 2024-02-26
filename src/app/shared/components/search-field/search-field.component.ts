@@ -1,10 +1,15 @@
 import { FormControl } from '@angular/forms';
 import { SharedService } from './../../services/shared.service';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-search',
@@ -12,10 +17,7 @@ import { MediaType } from '@app/shared/models/media.type';
   styleUrls: ['./search-field.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchFieldComponent
-  extends UnsubscribeAbstract
-  implements OnInit
-{
+export class SearchFieldComponent implements OnInit {
   private query = '';
   searchControl = new FormControl<string>(this.query);
   private readonly mediaType: MediaType = 'tv';
@@ -23,10 +25,9 @@ export class SearchFieldComponent
   constructor(
     private sharedService: SharedService,
     private router: Router,
-    private route: ActivatedRoute
-  ) {
-    super();
-  }
+    private route: ActivatedRoute,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit(): void {
     this.setQuery();
@@ -39,7 +40,7 @@ export class SearchFieldComponent
         map((query) => query?.trim()),
         debounceTime(500),
         distinctUntilChanged(),
-        takeUntil(this.ngUnsubscribe$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((query) => {
         if (!query) {

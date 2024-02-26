@@ -3,14 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
+  DestroyRef,
   ElementRef,
   Inject,
   Input,
   QueryList,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import {
   BehaviorSubject,
   debounceTime,
@@ -25,6 +24,7 @@ import {
 import { SlideComponent } from './slide/slide.component';
 import { ISlideStyle } from './models/slide-style.interface';
 import { DOCUMENT } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-slider',
@@ -32,10 +32,7 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SliderComponent
-  extends UnsubscribeAbstract
-  implements AfterViewInit
-{
+export class SliderComponent implements AfterViewInit {
   @ContentChildren(SlideComponent) slides!: QueryList<SlideComponent>;
   @ViewChild('wrapper') wrapper!: ElementRef<HTMLElement>;
 
@@ -105,36 +102,33 @@ export class SliderComponent
   private draggedPath: number = 0;
 
   // Event listeners
-  private resize$ = fromEvent(window, 'resize').pipe(
-    takeUntil(this.ngUnsubscribe$)
-  );
+  private resize$ = fromEvent(window, 'resize').pipe(takeUntilDestroyed());
   private mouseDown$ = fromEvent<MouseEvent>(
     this.el.nativeElement,
     'mousedown'
-  ).pipe(takeUntil(this.ngUnsubscribe$));
+  ).pipe(takeUntilDestroyed());
   private mouseMove$ = fromEvent<MouseEvent>(this.document, 'mousemove').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed()
   );
   private mouseUp$ = fromEvent<MouseEvent>(this.document, 'mouseup').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed()
   );
   private touchStart$ = fromEvent<TouchEvent>(
     this.el.nativeElement,
     'touchstart'
-  ).pipe(takeUntil(this.ngUnsubscribe$));
+  ).pipe(takeUntilDestroyed());
   private touchMove$ = fromEvent<TouchEvent>(this.document, 'touchmove').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed()
   );
   private touchEnd$ = fromEvent<TouchEvent>(this.document, 'touchend').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed()
   );
 
   constructor(
     private el: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) private document: Document
-  ) {
-    super();
-  }
+    @Inject(DOCUMENT) private document: Document,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngAfterViewInit(): void {
     this.onResize();
@@ -147,17 +141,19 @@ export class SliderComponent
 
   // On resize
   private onResize(): void {
-    this.resize$.pipe(debounceTime(500)).subscribe((e) => {
-      this.updateWidth();
-      this.handleSlideScroll();
-    });
+    this.resize$
+      .pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef))
+      .subscribe((e) => {
+        this.updateWidth();
+        this.handleSlideScroll();
+      });
   }
 
   // Navigation
   private onNavigationButtonClick(): void {
     if (this.prevBtnEl) {
       fromEvent(this.prevBtnEl, 'click')
-        .pipe(takeUntil(this.ngUnsubscribe$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.handleSlideScroll('prev');
         });
@@ -165,7 +161,7 @@ export class SliderComponent
 
     if (this.nextBtnEl) {
       fromEvent(this.nextBtnEl, 'click')
-        .pipe(takeUntil(this.ngUnsubscribe$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.handleSlideScroll('next');
         });
@@ -199,7 +195,7 @@ export class SliderComponent
     this.handleNavigation(true);
 
     timer(this.speed)
-      .pipe(takeUntil(this.ngUnsubscribe$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.handleNavigation(false);
       });
@@ -225,7 +221,7 @@ export class SliderComponent
         tap(({ mouseDown, mouseMove }) => {
           this.dragMove(mouseDown.pageX, mouseMove.pageX);
         }),
-        takeUntil(this.ngUnsubscribe$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
 
@@ -256,7 +252,7 @@ export class SliderComponent
             touchMove.touches[0].clientX
           );
         }),
-        takeUntil(this.ngUnsubscribe$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
 

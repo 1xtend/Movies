@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { MediaType } from '@app/shared/models/media.type';
 import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
 import { IDetailsPerson } from '@app/shared/models/person/person.interface';
@@ -15,10 +14,7 @@ import { environment } from 'src/environment/environment';
   styleUrls: ['./media-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MediaDetailsComponent
-  extends UnsubscribeAbstract
-  implements OnInit
-{
+export class MediaDetailsComponent implements OnInit {
   private resSubject = new Subject<
     Partial<{ movie: IDetailsMovie; tv: IDetailsTV; person: IDetailsPerson }>
   >();
@@ -34,9 +30,7 @@ export class MediaDetailsComponent
   constructor(
     private route: ActivatedRoute,
     private mediaService: MediaService
-  ) {
-    super();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.fetchMedia().subscribe((res) => {
