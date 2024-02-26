@@ -10,6 +10,7 @@ import { ILanguage } from '../models/languages.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
 import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
+import { IPeopleResponse } from '../models/person/people-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -32,10 +33,16 @@ export class SharedService {
     IMoviesResponse | undefined
   >(undefined);
   popularMovies$ = this.popularMoviesSubject.asObservable();
+
   private popularTVsSubject = new BehaviorSubject<ITVsResponse | undefined>(
     undefined
   );
   popularTVs$ = this.popularTVsSubject.asObservable();
+
+  private popularPeopleSubject = new BehaviorSubject<
+    IPeopleResponse | undefined
+  >(undefined);
+  popularPeople$ = this.popularPeopleSubject.asObservable();
 
   readonly fetchDebounceTime: number = 1000;
 
@@ -68,6 +75,10 @@ export class SharedService {
 
   setPopularTVsSubject(tvs: ITVsResponse): void {
     this.popularTVsSubject.next(tvs);
+  }
+
+  setPopularPeopleSubject(people: IPeopleResponse): void {
+    this.popularPeopleSubject.next(people);
   }
 
   scrollToTop(): void {

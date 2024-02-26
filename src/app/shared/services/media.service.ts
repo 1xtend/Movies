@@ -1,13 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
-import { ISearchPeopleResponse } from '../models/person/people-response.interface';
+import { IPeopleResponse } from '../models/person/people-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
-import { IDetailsTV, ITV } from '../models/tv/tv.interface';
-import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
+import { IDetailsTV } from '../models/tv/tv.interface';
+import { IDetailsMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson, IPerson } from '../models/person/person.interface';
 import { IGenres } from '../models/genres.interface';
 import { ILanguage } from '../models/languages.interface';
@@ -31,8 +31,8 @@ export class MediaService {
     });
   }
 
-  searchPeople(filters: IMediaFilters): Observable<ISearchPeopleResponse> {
-    return this.search<ISearchPeopleResponse>('person', filters);
+  searchPeople(filters: IMediaFilters): Observable<IPeopleResponse> {
+    return this.search<IPeopleResponse>('person', filters);
   }
 
   searchTV(filters: IMediaFilters): Observable<ITVsResponse> {
@@ -78,7 +78,7 @@ export class MediaService {
   }
 
   getPopularPeople() {
-    return this.getPopular<IPerson>('person');
+    return this.getPopular<IPeopleResponse>('person');
   }
 
   // Discover

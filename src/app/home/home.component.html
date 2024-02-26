@@ -50,19 +50,6 @@
   </div>
 </section>
 
-<mat-toolbar color="accent" class="offer">
-  <h2 class="offer__title">
-    Customize your movie nights by sorting through genres and years.
-  </h2>
-
-  <span class="spacer"></span>
-
-  <a [routerLink]="['/discover', 'movie']" mat-button color="primary">
-    Movies
-    <mat-icon iconPositionEnd>arrow_right_alt</mat-icon>
-  </a>
-</mat-toolbar>
-
 <section class="media" *ngIf="popularTVs$ | async as tvs">
   <h2 class="media__title">Popular TV Shows</h2>
 
@@ -107,3 +94,60 @@
     </button>
   </div>
 </section>
+<section class="media" *ngIf="popularPeople$ | async as people">
+  <h2 class="media__title">Popular People</h2>
+
+  <div class="media__slider" *ngIf="slides$ | async as slides">
+    <app-slider
+      [prevBtn]="slidePrevPopularPeople._elementRef"
+      [nextBtn]="slideNextPopularPeople._elementRef"
+      [slidesPerView]="slides"
+      [gap]="16"
+      [speed]="350"
+      [slidesToScroll]="slides"
+    >
+      <app-slide *ngFor="let person of people.results">
+        <app-media-card
+          [imagePath]="person.profile_path"
+          [mediaType]="'person'"
+          [id]="person.id"
+          [title]="person.name"
+          [titleSize]="16"
+          [textCut]="textCut"
+        ></app-media-card>
+      </app-slide>
+    </app-slider>
+
+    <button
+      type="button"
+      #slidePrevPopularPeople
+      mat-fab
+      color="primary"
+      class="media__slide-btn media__slide-btn--prev"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+    <button
+      type="button"
+      #slideNextPopularPeople
+      mat-fab
+      color="primary"
+      class="media__slide-btn media__slide-btn--next"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+  </div>
+</section>
+
+<mat-toolbar color="accent" class="offer">
+  <h2 class="offer__title">
+    Customize your movie nights by sorting through genres and years.
+  </h2>
+
+  <span class="spacer"></span>
+
+  <a [routerLink]="['/discover', 'movie']" mat-button color="primary">
+    Movies
+    <mat-icon iconPositionEnd>arrow_right_alt</mat-icon>
+  </a>
+</mat-toolbar>

@@ -21,7 +21,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
-import { ISearchPeopleResponse } from '@app/shared/models/person/people-response.interface';
+import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
 import { ITV } from '@app/shared/models/tv/tv.interface';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
@@ -38,7 +38,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     Partial<{
       movies: IMoviesResponse;
       tvs: ITVsResponse;
-      people: ISearchPeopleResponse;
+      people: IPeopleResponse;
     }>
   >();
   res$ = this.resSubject.asObservable();

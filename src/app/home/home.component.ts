@@ -15,6 +15,7 @@ import { environment } from 'src/environment/environment';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
+import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,7 @@ import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   popularMovies$?: Observable<IMoviesResponse>;
   popularTVs$?: Observable<ITVsResponse>;
-  popularPeople$?: Observable<ITVsResponse>;
+  popularPeople$?: Observable<IPeopleResponse>;
 
   posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
@@ -47,6 +48,7 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   ngOnInit(): void {
     this.getPopularMovies();
     this.getPopularTVs();
+    this.getPopularPeople();
     this.breakpointChanges();
   }
 
@@ -100,16 +102,35 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   private getPopularTVs(): void {
     this.popularTVs$ = this.sharedService.popularTVs$.pipe(
       take(1),
-      switchMap((tv) => {
-        if (tv && tv.results.length) {
+      switchMap((tvs) => {
+        if (tvs && tvs.results.length) {
           console.log('get saved');
-          return of(tv);
+          return of(tvs);
         }
 
         return this.mediaService.getPopularTVs().pipe(
-          tap((tv) => {
+          tap((tvs) => {
             console.log('get fetched');
-            this.sharedService.setPopularTVsSubject(tv);
+            this.sharedService.setPopularTVsSubject(tvs);
+          })
+        );
+      })
+    );
+  }
+
+  private getPopularPeople(): void {
+    this.popularPeople$ = this.sharedService.popularPeople$.pipe(
+      take(1),
+      switchMap((people) => {
+        if (people && people.results.length) {
+          console.log('get saved');
+          return of(people);
+        }
+
+        return this.mediaService.getPopularPeople().pipe(
+          tap((people) => {
+            console.log('get fetched');
+            this.sharedService.setPopularPeopleSubject(people);
           })
         );
       })
