@@ -46,16 +46,16 @@
 }
 
 .media {
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
   &__title {
     font-size: 2rem;
 
     @media (max-width: 768px) {
       font-size: 1.5rem;
     }
-  }
-
-  &__box:not(:last-child) {
-    margin-bottom: 1rem;
   }
 
   &__slider {
@@ -80,4 +80,14 @@
       right: 1rem;
     }
   }
+}
+
+.offer {
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
 }

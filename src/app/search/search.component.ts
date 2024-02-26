@@ -5,6 +5,7 @@ import {
   Subject,
   combineLatest,
   debounceTime,
+  distinctUntilChanged,
   switchMap,
   takeUntil,
   tap,
@@ -140,7 +141,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
   private searchChanges(): void {
     this.sharedService.search$
-      .pipe(takeUntil(this.ngUnsubscribe$))
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$))
       .subscribe((query) => {
         this.filtersSubject.next({
           ...this.filters,
@@ -178,7 +179,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     this.filters$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((filters) => {
       this.filters = filters;
 
-      console.log('filters changes');
       this.setQueryParams();
     });
   }
@@ -189,8 +189,6 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       .pipe(takeUntil(this.ngUnsubscribe$))
       .subscribe((result: BreakpointState) => {
         this.isTabletSubject.next(result.matches);
-
-        console.log('matches', result.matches);
       });
   }
 

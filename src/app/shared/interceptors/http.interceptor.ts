@@ -19,6 +19,8 @@ export class MediaInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     this.loadingService.setLoading(true);
 
+    console.log('Request started', request);
+
     const url =
       request.url.indexOf('http://') === -1 &&
       request.url.indexOf('https://') === -1

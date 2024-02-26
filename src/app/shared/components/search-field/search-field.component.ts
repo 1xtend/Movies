@@ -1,4 +1,3 @@
-import { LoadingService } from './../../services/loading.service';
 import { FormControl } from '@angular/forms';
 import { SharedService } from './../../services/shared.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
@@ -24,7 +23,6 @@ export class SearchFieldComponent
   constructor(
     private sharedService: SharedService,
     private router: Router,
-    private loadingService: LoadingService,
     private route: ActivatedRoute
   ) {
     super();
@@ -48,8 +46,6 @@ export class SearchFieldComponent
           return;
         }
 
-        this.loadingService.setLoading(true);
-
         this.query = query;
         this.sharedService.setSearchSubject(query);
 
@@ -62,11 +58,9 @@ export class SearchFieldComponent
   private setQuery(): void {
     this.query = this.route.snapshot.queryParams['query'];
 
-    if (this.query) {
-      this.searchControl.setValue(this.query, {
-        emitEvent: false,
-      });
-    }
+    this.searchControl.setValue(this.query ?? '', {
+      emitEvent: false,
+    });
   }
 
   private navigate(): void {

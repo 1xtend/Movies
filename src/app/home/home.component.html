@@ -50,11 +50,18 @@
   </div>
 </section>
 
-<section class="offer">
+<mat-toolbar color="accent" class="offer">
   <h2 class="offer__title">
     Customize your movie nights by sorting through genres and years.
   </h2>
-</section>
+
+  <span class="spacer"></span>
+
+  <a [routerLink]="['/discover', 'movie']" mat-button color="primary">
+    Movies
+    <mat-icon iconPositionEnd>arrow_right_alt</mat-icon>
+  </a>
+</mat-toolbar>
 
 <section class="media" *ngIf="popularTVs$ | async as tvs">
   <h2 class="media__title">Popular TV Shows</h2>
