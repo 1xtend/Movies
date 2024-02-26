@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'TMDB Api url',
-  apiKey: 'Your api key',
+  apiUrl: 'https://api.themoviedb.org/3',
+  apiKey: 'd3edabab00eeb7f91f9363a560bdbe47',
   imagePaths: {
     w500Poster: 'https://image.tmdb.org/t/p/w500',
     w780Poster: 'https://image.tmdb.org/t/p/w780',
