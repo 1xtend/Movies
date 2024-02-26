@@ -1,6 +1,6 @@
 import { IResponse } from '../response.interface';
 import { ITV } from './tv.interface';
 
-export interface ISearchTVsResponse extends IResponse {
+export interface ITVsResponse extends IResponse {
   results: ITV[];
 }

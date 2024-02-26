@@ -1,16 +1,27 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   ElementRef,
   Inject,
   Input,
-  OnInit,
   QueryList,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { fromEvent, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  distinctUntilChanged,
+  fromEvent,
+  map,
+  switchMap,
+  takeUntil,
+  tap,
+  timer,
+} from 'rxjs';
 import { SlideComponent } from './slide/slide.component';
 import { ISlideStyle } from './models/slide-style.interface';
 import { DOCUMENT } from '@angular/common';
@@ -19,10 +30,11 @@ import { DOCUMENT } from '@angular/common';
   selector: 'app-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderComponent
   extends UnsubscribeAbstract
-  implements AfterViewInit, OnInit
+  implements AfterViewInit
 {
   @ContentChildren(SlideComponent) slides!: QueryList<SlideComponent>;
   @ViewChild('wrapper') wrapper!: ElementRef<HTMLElement>;
@@ -35,28 +47,87 @@ export class SliderComponent
   @Input() speed: number = 500;
 
   // Slide buttons
-  @Input({ required: true }) nextBtn!: HTMLElement;
-  @Input({ required: true }) prevBtn!: HTMLElement;
+  @Input() nextBtn?: unknown;
+  @Input() prevBtn?: unknown;
 
-  private resize$ = fromEvent(window, 'resize');
+  get nextBtnEl() {
+    return !this.nextBtn
+      ? undefined
+      : this.nextBtn instanceof HTMLElement
+      ? this.nextBtn
+      : (<ElementRef<HTMLElement>>this.nextBtn).nativeElement;
+  }
+
+  get prevBtnEl() {
+    return !this.prevBtn
+      ? undefined
+      : this.prevBtn instanceof HTMLElement
+      ? this.prevBtn
+      : (<ElementRef<HTMLElement>>this.prevBtn).nativeElement;
+  }
 
   // Width
   private slideWidth: number = 0;
   private scrollWidth: number = 0;
   private trackWidth: number = 0;
 
+  get sliderWidth() {
+    return this.el.nativeElement.offsetWidth;
+  }
+  get defaultWidth() {
+    return this.sliderWidth / this.slidesPerView;
+  }
+  get widthWithGap() {
+    return (
+      (this.sliderWidth - this.gap * (this.slidesPerView - 1)) /
+      this.slidesPerView
+    );
+  }
+
   // Index
   private activeIndex: number = 0;
-  private maxIndex: number = 0;
+  get maxIndex() {
+    return this.slides.length - this.slidesPerView;
+  }
 
   // Translate
   private translate: number = 0;
-  translateX: string = '';
+  private translateSubject = new BehaviorSubject<string>('');
+  translate$ = this.translateSubject.asObservable();
 
   // Drag
-  isDragging: boolean = false;
-  private startX: number = 0;
+  private isDraggingSubject = new BehaviorSubject<boolean>(false);
+  isDragging$ = this.isDraggingSubject
+    .asObservable()
+    .pipe(distinctUntilChanged());
+
+  private startDragging: boolean = false;
   private draggedPath: number = 0;
+
+  // Event listeners
+  private resize$ = fromEvent(window, 'resize').pipe(
+    takeUntil(this.ngUnsubscribe$)
+  );
+  private mouseDown$ = fromEvent<MouseEvent>(
+    this.el.nativeElement,
+    'mousedown'
+  ).pipe(takeUntil(this.ngUnsubscribe$));
+  private mouseMove$ = fromEvent<MouseEvent>(this.document, 'mousemove').pipe(
+    takeUntil(this.ngUnsubscribe$)
+  );
+  private mouseUp$ = fromEvent<MouseEvent>(this.document, 'mouseup').pipe(
+    takeUntil(this.ngUnsubscribe$)
+  );
+  private touchStart$ = fromEvent<TouchEvent>(
+    this.el.nativeElement,
+    'touchstart'
+  ).pipe(takeUntil(this.ngUnsubscribe$));
+  private touchMove$ = fromEvent<TouchEvent>(this.document, 'touchmove').pipe(
+    takeUntil(this.ngUnsubscribe$)
+  );
+  private touchEnd$ = fromEvent<TouchEvent>(this.document, 'touchend').pipe(
+    takeUntil(this.ngUnsubscribe$)
+  );
 
   constructor(
     private el: ElementRef<HTMLElement>,
@@ -65,81 +136,144 @@ export class SliderComponent
     super();
   }
 
-  ngOnInit(): void {
-    this.onResize();
-  }
-
   ngAfterViewInit(): void {
+    this.onResize();
     this.updateWidth();
+
     this.onNavigationButtonClick();
-    this.onDocumentMouseUp();
+    this.onMouseEvents();
+    this.onTouchEvents();
   }
 
   // On resize
   private onResize(): void {
-    this.resize$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((e) => {
+    this.resize$.pipe(debounceTime(500)).subscribe((e) => {
       this.updateWidth();
+      this.handleSlideScroll();
     });
   }
 
   // Navigation
   private onNavigationButtonClick(): void {
-    fromEvent(this.prevBtn, 'click')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(() => {
-        this.handleSlideScroll('prev');
-      });
+    if (this.prevBtnEl) {
+      fromEvent(this.prevBtnEl, 'click')
+        .pipe(takeUntil(this.ngUnsubscribe$))
+        .subscribe(() => {
+          this.handleSlideScroll('prev');
+        });
+    }
 
-    fromEvent(this.nextBtn, 'click')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(() => {
-        this.handleSlideScroll('next');
-      });
+    if (this.nextBtnEl) {
+      fromEvent(this.nextBtnEl, 'click')
+        .pipe(takeUntil(this.ngUnsubscribe$))
+        .subscribe(() => {
+          this.handleSlideScroll('next');
+        });
+    }
   }
 
   private handleNavigation(disable: boolean, type?: 'prev' | 'next'): void {
-    const next = <HTMLButtonElement>this.nextBtn;
-    const prev = <HTMLButtonElement>this.prevBtn;
-
-    if (type === 'next') {
-      next.disabled = disable;
+    if (
+      !this.prevBtnEl ||
+      !this.nextBtnEl ||
+      !(this.prevBtnEl instanceof HTMLButtonElement) ||
+      !(this.nextBtnEl instanceof HTMLButtonElement)
+    ) {
       return;
     }
 
     if (type === 'prev') {
-      prev.disabled = disable;
-      return;
+      this.prevBtnEl.disabled = disable;
     }
 
-    prev.disabled = this.activeIndex <= 0 ? true : disable;
-    next.disabled = this.activeIndex >= this.maxIndex ? true : disable;
+    if (type === 'next') {
+      this.nextBtnEl.disabled = disable;
+    }
+
+    this.prevBtnEl.disabled = this.activeIndex <= 0 ? true : disable;
+    this.nextBtnEl.disabled =
+      this.activeIndex >= this.maxIndex ? true : disable;
   }
 
   private lockNavigation(): void {
     this.handleNavigation(true);
 
-    const timeout = setTimeout(() => {
-      this.handleNavigation(false);
-
-      return () => {
-        console.log('Clear timeout');
-        clearTimeout(timeout);
-      };
-    }, this.speed);
+    timer(this.speed)
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe(() => {
+        this.handleNavigation(false);
+      });
   }
 
   // Drag
-  dragStart(e: MouseEvent): void {
-    this.isDragging = true;
-    this.startX = e.pageX;
+  private onMouseEvents(): void {
+    this.mouseDown$
+      .pipe(
+        switchMap((mouseDown) => {
+          this.dragStart();
 
+          return this.mouseMove$.pipe(
+            map((mouseMove) => {
+              return {
+                mouseDown,
+                mouseMove,
+              };
+            }),
+            takeUntil(this.mouseUp$)
+          );
+        }),
+        tap(({ mouseDown, mouseMove }) => {
+          this.dragMove(mouseDown.pageX, mouseMove.pageX);
+        }),
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe();
+
+    this.mouseUp$.subscribe(() => {
+      this.dragEnd();
+    });
+  }
+
+  private onTouchEvents(): void {
+    this.touchStart$
+      .pipe(
+        switchMap((touchStart) => {
+          this.dragStart();
+
+          return this.touchMove$.pipe(
+            map((touchMove) => {
+              return {
+                touchStart,
+                touchMove,
+              };
+            }),
+            takeUntil(this.touchEnd$)
+          );
+        }),
+        tap(({ touchStart, touchMove }) => {
+          this.dragMove(
+            touchStart.touches[0].clientX,
+            touchMove.touches[0].clientX
+          );
+        }),
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe();
+
+    this.touchEnd$.subscribe(() => {
+      this.dragEnd();
+    });
+  }
+
+  private dragStart(): void {
+    this.startDragging = true;
     this.handleNavigation(true);
   }
 
-  dragging(e: MouseEvent): void {
-    if (!this.isDragging) return;
+  private dragMove(start: number, move: number): void {
+    this.draggedPath = this.translate + (start - move);
 
-    this.draggedPath = this.translate - (e.pageX - this.startX);
+    this.isDraggingSubject.next(true);
 
     if (
       this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
@@ -148,26 +282,16 @@ export class SliderComponent
       return;
     }
 
-    this.setTranslateX(this.draggedPath);
+    this.setTranslate(this.draggedPath);
   }
 
-  private dragStop(): void {
-    if (!this.isDragging) return;
+  private dragEnd(): void {
+    if (!this.startDragging) return;
 
-    this.isDragging = false;
+    this.startDragging = false;
+
+    this.isDraggingSubject.next(false);
     this.handleNavigation(false);
-
-    // if (this.draggedPath > (this.slideWidth + this.gap) * this.activeIndex) {
-    //   this.activeIndex = Math.round(
-    //     this.draggedPath / (this.slideWidth + this.gap)
-    //   );
-    // }
-
-    // if (this.draggedPath < (this.slideWidth + this.gap) * this.activeIndex) {
-    //   this.activeIndex = Math.round(
-    //     this.draggedPath / (this.slideWidth + this.gap)
-    //   );
-    // }
 
     this.activeIndex = Math.round(
       this.draggedPath / (this.slideWidth + this.gap)
@@ -176,25 +300,15 @@ export class SliderComponent
     this.handleSlideScroll();
   }
 
-  private onDocumentMouseUp(): void {
-    fromEvent(this.document, 'mouseup')
-      .pipe(takeUntil(this.ngUnsubscribe$))
-      .subscribe(() => {
-        this.dragStop();
-      });
-  }
-
   // Update values
   private updateWidth(): void {
     this.lockNavigation();
 
-    const parentWidth = this.wrapper.nativeElement.offsetWidth;
-    const defaultWidth = parentWidth / this.slidesPerView;
-    const widthWithGap =
-      parentWidth - (this.gap * (this.slidesPerView - 1)) / this.slidesPerView;
-
     this.slideWidth =
-      this.gap > 0 && this.slidesPerView > 1 ? widthWithGap : defaultWidth;
+      this.gap > 0 && this.slidesPerView > 1
+        ? this.widthWithGap
+        : this.defaultWidth;
+
     this.scrollWidth = this.slideWidth + this.gap;
     this.trackWidth =
       (this.slideWidth + this.gap) * (this.slides.length - this.slidesPerView) -
@@ -255,16 +369,16 @@ export class SliderComponent
   }
 
   private slideTo(index: number): void {
-    if (this.isDragging) return;
-
     this.lockNavigation();
 
     this.translate = Math.abs(this.scrollWidth * index);
-    this.setTranslateX(this.translate);
+    this.setTranslate(this.translate);
   }
 
-  // Slide styles
-  private setTranslateX(path: number): void {
-    this.translateX = `translateX(${path < 0 ? Math.abs(path) : '-' + path}px)`;
+  // Translate
+  private setTranslate(path: number): void {
+    this.translateSubject.next(
+      `translateX(${path < 0 ? Math.abs(path) : '-' + path}px)`
+    );
   }
 }

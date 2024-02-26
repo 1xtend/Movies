@@ -1,0 +1,93 @@
+.greeting {
+  padding: 8rem 2rem;
+  background: url("../../assets/images/home-bg-min.jpg") center no-repeat,
+    rgb(197, 175, 149);
+  background-size: cover;
+  position: relative;
+
+  @media (max-width: 480px) {
+    padding: 4rem 1rem;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &__title {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-size: 2rem;
+    line-height: 1.2;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__bold {
+    font-size: 1.25em;
+    font-weight: 700;
+  }
+}
+
+.media {
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 2rem;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__slider {
+    position: relative;
+  }
+
+  &__slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+
+    &--prev {
+      left: 1rem;
+
+      mat-icon {
+        transform: rotate((-180deg));
+      }
+    }
+
+    &--next {
+      right: 1rem;
+    }
+  }
+}
+
+.offer {
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

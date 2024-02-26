@@ -1,9 +1,12 @@
-<mat-sidenav-container autosize hasBackdrop="true">
-  <mat-sidenav-content>
+<mat-drawer-container autosize hasBackdrop="true">
+  <mat-drawer-content>
     <div class="wrapper">
       <app-loader></app-loader>
 
-      <app-header (toggleSidebar)="onToggle()"></app-header>
+      <app-header
+        (toggleDrawer)="drawer.toggle()"
+        [isTablet]="isTablet"
+      ></app-header>
 
       <main class="main">
         <div class="container">
@@ -13,9 +16,9 @@
 
       <app-footer></app-footer>
     </div>
-  </mat-sidenav-content>
+  </mat-drawer-content>
 
-  <mat-sidenav mode="over" position="end" [opened]="openDrawer" #drawer>
-    <app-sidebar></app-sidebar>
-  </mat-sidenav>
-</mat-sidenav-container>
+  <mat-drawer mode="over" position="end" [opened]="opened" #drawer>
+    <app-sidebar (closeDrawer)="drawer.close()"></app-sidebar>
+  </mat-drawer>
+</mat-drawer-container>

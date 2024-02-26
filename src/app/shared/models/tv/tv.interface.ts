@@ -2,6 +2,7 @@ import { IGenre } from '../genres.interface';
 import { INetwork } from '../network.interface';
 import { IProductionCountry } from '../production-country.interface';
 import { ISeason } from '../season.interface';
+import { ITVsResponse } from './tvs-response.interface';
 
 export interface ITV {
   adult: boolean;
@@ -53,6 +54,7 @@ export interface IDetailsTV {
   type: string;
   vote_average: number;
   vote_count: number;
+  similar?: ITVsResponse;
 }
 
 // Parts

@@ -1,32 +1,19 @@
-import { getMultipleValuesInSingleSelectionError } from '@angular/cdk/collections';
-import { LocationStrategy, PathLocationStrategy } from '@angular/common';
-import {
-  AfterContentChecked,
-  AfterContentInit,
-  AfterViewInit,
-  Component,
-  OnInit,
-} from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  NavigationStart,
-  Router,
-} from '@angular/router';
-import { ISortBy, movieSortBy, sortBy } from '@app/shared/helpers/sort-by';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ISortBy, sortBy } from '@app/shared/helpers/sort-by';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { IDiscoverFilters } from '@app/shared/models/filters.interface';
-import { IGenre, SavedGenresType } from '@app/shared/models/genres.interface';
+import { IGenre } from '@app/shared/models/genres.interface';
 import { MediaType } from '@app/shared/models/media.type';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
-import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
+import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { IDiscoverParams } from '@app/shared/models/params.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
 import { MovieSortByType, TVSortByType } from '@app/shared/models/sort-by.type';
 import { ITV } from '@app/shared/models/tv/tv.interface';
-import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface';
+import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { MediaService } from '@app/shared/services/media.service';
 import { SharedService } from '@app/shared/services/shared.service';
 import {
@@ -35,36 +22,38 @@ import {
   Observable,
   ReplaySubject,
   Subject,
-  catchError,
   combineLatest,
-  concatMap,
+  combineLatestWith,
+  concat,
   debounceTime,
-  defaultIfEmpty,
-  distinctUntilChanged,
-  filter,
-  finalize,
-  generate,
+  first,
+  firstValueFrom,
+  forkJoin,
   map,
+  merge,
   of,
-  shareReplay,
   skip,
+  skipWhile,
   startWith,
   switchMap,
   take,
   takeUntil,
   tap,
+  zip,
 } from 'rxjs';
+import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
 
 @Component({
   selector: 'app-discover',
   templateUrl: './discover.component.html',
   styleUrls: ['./discover.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   private resSubject = new Subject<
     Partial<{
-      movies: ISearchMoviesResponse;
-      tvs: ISearchTVsResponse;
+      movies: IMoviesResponse;
+      tvs: ITVsResponse;
     }>
   >();
   res$ = this.resSubject.asObservable();
@@ -95,6 +84,15 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     nonNullable: true,
   });
 
+  voteMinControl = new FormControl<number>(0, {
+    nonNullable: true,
+    validators: [Validators.min(0), Validators.max(10)],
+  });
+  voteMaxControl = new FormControl<number>(10, {
+    nonNullable: true,
+    validators: [Validators.min(0), Validators.max(10)],
+  });
+
   // States
   private filtersSubject = new Subject<IDiscoverFilters>();
   filters$ = this.filtersSubject.asObservable();
@@ -110,7 +108,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   // Other
   readonly pageSize = 20;
   noResult: boolean = false;
-  private readonly debounceTime = 1000;
+  private readonly debounceTime = this.sharedService.fetchDebounceTime;
 
   constructor(
     private route: ActivatedRoute,
@@ -128,6 +126,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     this.sortByChanges();
     this.includeAdultChanges();
     this.languageChanges();
+    this.voteAverageChanges();
 
     this.filtersChanges();
   }
@@ -154,6 +153,10 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
                 queryParams.get('include_adult') ?? 'false'
               ),
               language: queryParams.get('language') || undefined,
+              'vote_average.gte':
+                Number(queryParams.get('vote_average.gte')) || undefined,
+              'vote_average.lte':
+                Number(queryParams.get('vote_average.lte')) || undefined,
             };
 
             this.mediaType = data['type'];
@@ -180,6 +183,16 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
             this.languageControl.setValue(this.filters.language ?? 'xx', {
               emitEvent: false,
             });
+
+            this.voteMinControl.setValue(
+              this.filters['vote_average.gte'] ?? 0,
+              { emitEvent: false }
+            );
+
+            this.voteMaxControl.setValue(
+              this.filters['vote_average.lte'] ?? 10,
+              { emitEvent: false }
+            );
           }
 
           return this.fetchMedia();
@@ -272,6 +285,28 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
       });
   }
 
+  private voteAverageChanges(): void {
+    combineLatest([
+      this.voteMinControl.valueChanges.pipe(startWith(null)),
+      this.voteMaxControl.valueChanges.pipe(startWith(null)),
+    ])
+      .pipe(
+        skip(1),
+        map(([min, max]) => {
+          return [min === null ? 0 : min, max === null ? 10 : max];
+        }),
+        debounceTime(this.debounceTime),
+        takeUntil(this.ngUnsubscribe$)
+      )
+      .subscribe(([min, max]) => {
+        this.filtersSubject.next({
+          ...this.filters,
+          'vote_average.gte': min,
+          'vote_average.lte': max,
+        });
+      });
+  }
+
   private fetchLanguages() {
     return this.sharedService.languages$.pipe(
       take(1),
@@ -313,7 +348,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     );
   }
 
-  private fetchMedia(): Observable<ISearchTVsResponse | ISearchMoviesResponse> {
+  private fetchMedia(): Observable<ITVsResponse | IMoviesResponse> {
     if (this.mediaType === 'tv') {
       return this.mediaService.discoverTVs(this.filters).pipe(
         tap((res) => {

@@ -19,8 +19,10 @@
       [routerLink]="['/details', mediaType, id]"
       mat-card-title
       class="card__title"
-      >{{ title }}</a
+      [matTooltip]="!textCut || title.length <= 30 ? '' : title"
     >
+      {{ textCut ? (title | textCut : 0 : textCut) : title }}
+    </a>
   </mat-card-content>
 </mat-card>
 
@@ -51,8 +53,11 @@
         mat-card-title
         class="card__title"
         *ngIf="title"
-        >{{ title }}</a
+        [style.fontSize.px]="titleSize"
+        [matTooltip]="!textCut || title.length <= 30 ? '' : title"
       >
+        {{ textCut ? (title | textCut : 0 : textCut) : title }}
+      </a>
 
       <div class="card__bottom">
         <span class="card__year" *ngIf="releaseDate">

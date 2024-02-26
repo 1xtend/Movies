@@ -1,13 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
-import { ISearchPeopleResponse } from '../models/person/people-response.interface';
-import { ISearchTVsResponse } from '../models/tv/tvs-response.interface';
-import { ISearchMoviesResponse } from '../models/movie/movies-response.interface';
-import { IDetailsTV, ITV } from '../models/tv/tv.interface';
-import { IDetailsMovie, IMovie } from '../models/movie/movie.interface';
+import { IPeopleResponse } from '../models/person/people-response.interface';
+import { ITVsResponse } from '../models/tv/tvs-response.interface';
+import { IMoviesResponse } from '../models/movie/movies-response.interface';
+import { IDetailsTV } from '../models/tv/tv.interface';
+import { IDetailsMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson, IPerson } from '../models/person/person.interface';
 import { IGenres } from '../models/genres.interface';
 import { ILanguage } from '../models/languages.interface';
@@ -31,33 +31,39 @@ export class MediaService {
     });
   }
 
-  searchPeople(filters: IMediaFilters): Observable<ISearchPeopleResponse> {
-    return this.search<ISearchPeopleResponse>('person', filters);
+  searchPeople(filters: IMediaFilters): Observable<IPeopleResponse> {
+    return this.search<IPeopleResponse>('person', filters);
   }
 
-  searchTV(filters: IMediaFilters): Observable<ISearchTVsResponse> {
-    return this.search<ISearchTVsResponse>('tv', filters);
+  searchTV(filters: IMediaFilters): Observable<ITVsResponse> {
+    return this.search<ITVsResponse>('tv', filters);
   }
 
-  searchMovie(filters: IMediaFilters): Observable<ISearchMoviesResponse> {
-    return this.search<ISearchMoviesResponse>('movie', filters);
+  searchMovie(filters: IMediaFilters): Observable<IMoviesResponse> {
+    return this.search<IMoviesResponse>('movie', filters);
   }
 
   // Details
-  private getDetails<T>(type: MediaType, id: number): Observable<T> {
-    let params = new HttpParams();
-
+  private getDetails<T>(
+    type: MediaType,
+    id: number,
+    params?: HttpParams
+  ): Observable<T> {
     return this.http.get<T>(`/${type}/${id}`, {
       params,
     });
   }
 
   getTVDetails(id: number): Observable<IDetailsTV> {
-    return this.getDetails<IDetailsTV>('tv', id);
+    const params = new HttpParams().set('append_to_response', 'similar');
+
+    return this.getDetails<IDetailsTV>('tv', id, params);
   }
 
   getMovieDetails(id: number): Observable<IDetailsMovie> {
-    return this.getDetails<IDetailsMovie>('movie', id);
+    const params = new HttpParams().set('append_to_response', 'similar');
+
+    return this.getDetails<IDetailsMovie>('movie', id, params);
   }
 
   getPersonDetails(id: number): Observable<IDetailsPerson> {
@@ -70,15 +76,15 @@ export class MediaService {
   }
 
   getPopularMovies() {
-    return this.getPopular<IMovie>('movie');
+    return this.getPopular<IMoviesResponse>('movie');
   }
 
   getPopularTVs() {
-    return this.getPopular<ITV>('tv');
+    return this.getPopular<ITVsResponse>('tv');
   }
 
   getPopularPeople() {
-    return this.getPopular<IPerson>('person');
+    return this.getPopular<IPeopleResponse>('person');
   }
 
   // Discover
@@ -105,17 +111,26 @@ export class MediaService {
       params = params.append('language', filters.language);
     }
 
+    if (filters['vote_average.gte']) {
+      console.log('has');
+      params = params.append('vote_average.gte', filters['vote_average.gte']);
+    }
+
+    if (filters['vote_average.lte']) {
+      params = params.append('vote_average.lte', filters['vote_average.lte']);
+    }
+
     return this.http.get<T>(`/discover/${type}`, {
       params,
     });
   }
 
-  discoverMovies(filters: IDiscoverFilters): Observable<ISearchMoviesResponse> {
-    return this.discover<ISearchMoviesResponse>('movie', filters);
+  discoverMovies(filters: IDiscoverFilters): Observable<IMoviesResponse> {
+    return this.discover<IMoviesResponse>('movie', filters);
   }
 
-  discoverTVs(filters: IDiscoverFilters): Observable<ISearchTVsResponse> {
-    return this.discover<ISearchTVsResponse>('tv', filters);
+  discoverTVs(filters: IDiscoverFilters): Observable<ITVsResponse> {
+    return this.discover<ITVsResponse>('tv', filters);
   }
 
   // Genres

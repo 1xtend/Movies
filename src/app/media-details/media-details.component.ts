@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { MediaType } from '@app/shared/models/media.type';
@@ -13,6 +13,7 @@ import { environment } from 'src/environment/environment';
   selector: 'app-media-details',
   templateUrl: './media-details.component.html',
   styleUrls: ['./media-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaDetailsComponent
   extends UnsubscribeAbstract
@@ -26,7 +27,7 @@ export class MediaDetailsComponent
   private mediaType: MediaType = this.route.snapshot.data['mediaType'];
   private id: number = Number(this.route.snapshot.params['id']);
 
-  posterPath = environment.imagePaths.original;
+  posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
   profilePath = environment.imagePaths.h632Profile;
 

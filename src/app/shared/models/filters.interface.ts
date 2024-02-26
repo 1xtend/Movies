@@ -3,7 +3,7 @@ import { MovieSortByType, TVSortByType } from '@app/shared/models/sort-by.type';
 export interface IMediaFilters {
   query: string;
   page: number;
-  includeAdult?: boolean | undefined;
+  include_adult: boolean;
   year?: number | undefined;
 }
 
@@ -14,4 +14,6 @@ export interface IDiscoverFilters {
   with_genres?: string | undefined;
   year?: number | undefined;
   language?: string | undefined;
+  'vote_average.gte'?: number;
+  'vote_average.lte'?: number;
 }

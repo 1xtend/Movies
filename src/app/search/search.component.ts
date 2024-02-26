@@ -1,8 +1,17 @@
-import { LoadingService } from './../shared/services/loading.service';
 import { MediaService } from '../shared/services/media.service';
-import { EMPTY, Subject, combineLatest, switchMap, takeUntil, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  EMPTY,
+  Subject,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { SharedService } from './../shared/services/shared.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
@@ -10,25 +19,26 @@ import { FormControl } from '@angular/forms';
 import { IMediaFilters } from '@app/shared/models/filters.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { ISearchMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
-import { ISearchTVsResponse } from '@app/shared/models/tv/tvs-response.interface';
-import { ISearchPeopleResponse } from '@app/shared/models/person/people-response.interface';
+import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
+import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
+import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
 import { ITV } from '@app/shared/models/tv/tv.interface';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
-import { ISearchParams } from '@app/shared/models/params.interface';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   private resSubject = new Subject<
     Partial<{
-      movies: ISearchMoviesResponse;
-      tvs: ISearchTVsResponse;
-      people: ISearchPeopleResponse;
+      movies: IMoviesResponse;
+      tvs: ITVsResponse;
+      people: IPeopleResponse;
     }>
   >();
   res$ = this.resSubject.asObservable();
@@ -41,20 +51,29 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   filters: IMediaFilters = {
     page: 1,
     query: '',
+    include_adult: false,
   };
 
   private filtersSubject = new Subject<IMediaFilters>();
   filters$ = this.filtersSubject.asObservable();
 
+  private isTabletSubject = new BehaviorSubject<boolean>(false);
+  isTablet$ = this.isTabletSubject.asObservable();
+
+  includeAdultControl = new FormControl<boolean>(this.filters.include_adult, {
+    nonNullable: true,
+  });
+
   readonly pageSize = 20;
   noResult: boolean = false;
+  private readonly debounceTime = this.sharedService.fetchDebounceTime;
 
   constructor(
     private sharedService: SharedService,
     private mediaService: MediaService,
     private route: ActivatedRoute,
     private router: Router,
-    private loadingService: LoadingService
+    private breakpointObserver: BreakpointObserver
   ) {
     super();
   }
@@ -64,7 +83,11 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
     this.searchChanges();
     this.mediaTypeChanges();
+    this.includeAdultChanges();
+
     this.filtersChanges();
+
+    this.breakpointChanges();
   }
 
   private paramsChanges(): void {
@@ -75,7 +98,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       .pipe(
         takeUntil(this.ngUnsubscribe$),
         switchMap(({ data, queryParams }) => {
-          if (!queryParams.has('q')) {
+          if (!queryParams.has('query')) {
             return EMPTY;
           }
 
@@ -83,14 +106,23 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
           if (!navigation || navigation.trigger === 'popstate') {
             this.filters = {
-              query: queryParams.get('q') || '',
+              query: queryParams.get('query') || '',
               page: Number(queryParams.get('page')) || 1,
+              include_adult: JSON.parse(
+                queryParams.get('include_adult') ?? 'false'
+              ),
             };
 
             this.mediaType = data['type'];
+
             this.mediaTypeControl.setValue(this.mediaType, {
               emitEvent: false,
             });
+
+            this.includeAdultControl.setValue(
+              this.filters.include_adult ?? false,
+              { emitEvent: false }
+            );
           }
 
           return this.fetchMedia();
@@ -109,9 +141,10 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
   private searchChanges(): void {
     this.sharedService.search$
-      .pipe(takeUntil(this.ngUnsubscribe$))
+      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$))
       .subscribe((query) => {
         this.filtersSubject.next({
+          ...this.filters,
           query,
           page: 1,
         });
@@ -131,12 +164,32 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       });
   }
 
+  private includeAdultChanges(): void {
+    this.includeAdultControl.valueChanges
+      .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(this.debounceTime))
+      .subscribe((include) => {
+        this.filtersSubject.next({
+          ...this.filters,
+          include_adult: include,
+        });
+      });
+  }
+
   private filtersChanges(): void {
     this.filters$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((filters) => {
       this.filters = filters;
 
       this.setQueryParams();
     });
+  }
+
+  private breakpointChanges(): void {
+    this.breakpointObserver
+      .observe(['(max-width: 768px)'])
+      .pipe(takeUntil(this.ngUnsubscribe$))
+      .subscribe((result: BreakpointState) => {
+        this.isTabletSubject.next(result.matches);
+      });
   }
 
   handleTabEvent(e: MatButtonToggleChange): void {
@@ -183,10 +236,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   private setQueryParams(): void {
-    const params: ISearchParams = {
-      q: this.filters.query,
-      page: this.filters.page,
-    };
+    const params = this.filters;
 
     this.sharedService.setParams(params, '/search', this.mediaType);
   }

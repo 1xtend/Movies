@@ -1,18 +1,9 @@
-import { LoadingService } from './../../services/loading.service';
 import { FormControl } from '@angular/forms';
 import { SharedService } from './../../services/shared.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  from,
-  map,
-  switchMap,
-  take,
-  takeUntil,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 
 @Component({
@@ -32,7 +23,6 @@ export class SearchFieldComponent
   constructor(
     private sharedService: SharedService,
     private router: Router,
-    private loadingService: LoadingService,
     private route: ActivatedRoute
   ) {
     super();
@@ -56,8 +46,6 @@ export class SearchFieldComponent
           return;
         }
 
-        this.loadingService.setLoading(true);
-
         this.query = query;
         this.sharedService.setSearchSubject(query);
 
@@ -68,17 +56,17 @@ export class SearchFieldComponent
   }
 
   private setQuery(): void {
-    this.query = this.route.snapshot.queryParams['q'];
+    this.query = this.route.snapshot.queryParams['query'];
 
-    if (this.query) {
-      this.searchControl.setValue(this.query);
-    }
+    this.searchControl.setValue(this.query ?? '', {
+      emitEvent: false,
+    });
   }
 
   private navigate(): void {
     this.router.navigate(['/search', this.mediaType], {
       queryParams: {
-        q: this.query,
+        query: this.query,
         page: 1,
       },
     });

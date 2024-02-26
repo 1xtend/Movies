@@ -1,16 +1,30 @@
-import { AfterViewInit, Component, ElementRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+} from '@angular/core';
 import { ISlideStyle } from '../models/slide-style.interface';
 
 @Component({
   selector: 'app-slide',
   templateUrl: './slide.component.html',
   styleUrls: ['./slide.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SlideComponent implements AfterViewInit {
   constructor(private el: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit(): void {
+    this.setAttributes();
+  }
+
+  private setAttributes(): void {
     this.el.nativeElement.querySelectorAll('img').forEach((img) => {
+      img.draggable = false;
+      img.loading = 'lazy';
+    });
+    this.el.nativeElement.querySelectorAll('a').forEach((img) => {
       img.draggable = false;
     });
   }

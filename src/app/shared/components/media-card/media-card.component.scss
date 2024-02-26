@@ -24,6 +24,7 @@
     text-decoration: none;
     color: inherit;
     line-height: 1.2;
+    padding-top: 0.5rem;
 
     &:hover {
       text-decoration: underline;
@@ -43,4 +44,8 @@
     align-items: center;
     column-gap: 0.2rem;
   }
+}
+
+::ng-deep .small mat-card-title {
+  font-size: 12px;
 }

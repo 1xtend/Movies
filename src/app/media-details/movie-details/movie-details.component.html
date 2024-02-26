@@ -1,5 +1,5 @@
-<section class="movie">
-  <div class="movie__poster">
+<section class="info">
+  <div class="info__poster">
     <img
       *ngIf="movie.poster_path; else noImage"
       [src]="posterPath + movie.poster_path"
@@ -12,15 +12,15 @@
     </ng-template>
   </div>
 
-  <div class="movie__content">
-    <div class="movie__group">
-      <h1 class="movie__main-title">
+  <div class="info__content">
+    <div class="info__group">
+      <h1 class="info__main-title">
         <a
           *ngIf="movie.homepage; else noHomepage"
           [href]="movie.homepage"
           target="_blank"
           rel="noreferrer noopener"
-          class="movie__main-title-link"
+          class="info__main-title-link"
           matTooltip="Go to homepage"
         >
           {{ movie.title }}
@@ -28,23 +28,23 @@
 
         <ng-template #noHomepage>{{ movie.title }} </ng-template>
 
-        <span class="movie__year" *ngIf="movie.release_date">
+        <span class="info__year" *ngIf="movie.release_date">
           ({{ movie.release_date | date : "y" }})
         </span>
       </h1>
 
-      <span class="movie__subtitle" *ngIf="movie.tagline">{{
+      <span class="info__subtitle" *ngIf="movie.tagline">{{
         movie.tagline
       }}</span>
     </div>
 
-    <div class="movie__group" *ngIf="movie.overview">
-      <h2 class="movie__title">Overview</h2>
+    <div class="info__group" *ngIf="movie.overview">
+      <h2 class="info__title">Overview</h2>
       <p>{{ movie.overview }}</p>
     </div>
 
-    <div class="movie__group" *ngIf="movie.genres.length">
-      <h2 class="movie__title">Genres</h2>
+    <div class="info__group" *ngIf="movie.genres.length">
+      <h2 class="info__title">Genres</h2>
       <p>
         <span *ngFor="let genre of movie.genres">
           {{
@@ -56,7 +56,7 @@
       </p>
     </div>
 
-    <div class="movie__group movie-list">
+    <div class="info__group movie-list">
       <div class="movie-list__item" *ngIf="movie.release_date">
         <h4 class="movie-list__title">Release date</h4>
         <p class="movie-list__text">
@@ -85,4 +85,19 @@
       </div>
     </div>
   </div>
+</section>
+
+<section class="similar" *ngIf="movie.similar && movie.similar.results.length">
+  <app-slider [gap]="16" [slidesPerView]="6" [slidesToScroll]="6">
+    <app-slide *ngFor="let movie of movie.similar.results">
+      <app-media-card
+        [mediaType]="'movie'"
+        [id]="movie.id"
+        [imagePath]="movie.poster_path"
+        [textCut]="30"
+        [voteAverage]="movie.vote_average"
+        [title]="movie.title"
+      ></app-media-card>
+    </app-slide>
+  </app-slider>
 </section>

@@ -4,10 +4,12 @@
 
     <span class="spacer"></span>
 
-    <a routerLink="/discover/movie" mat-button>Movies</a>
-    <a routerLink="/discover/tv" routerLinkActive="mat-accent" mat-button>
-      TV Shows
-    </a>
+    <ng-container *ngIf="!isTablet">
+      <a routerLink="/discover/movie" mat-button>Movies</a>
+      <a routerLink="/discover/tv" routerLinkActive="mat-accent" mat-button>
+        TV Shows
+      </a>
+    </ng-container>
 
     <button
       type="button"
@@ -18,7 +20,12 @@
       <mat-icon>search</mat-icon>
     </button>
 
-    <button type="button" mat-icon-button (click)="toggleSidebar.emit()">
+    <button
+      type="button"
+      mat-icon-button
+      (click)="toggleDrawer.emit()"
+      *ngIf="isTablet"
+    >
       <mat-icon>menu</mat-icon>
     </button>
   </mat-toolbar-row>

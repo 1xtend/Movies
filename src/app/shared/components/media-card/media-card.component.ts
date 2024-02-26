@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ILanguage } from '@app/shared/models/languages.interface';
 import { MediaType } from '@app/shared/models/media.type';
 import { environment } from 'src/environment/environment';
 
@@ -16,6 +15,8 @@ export class MediaCardComponent {
   @Input() releaseDate? = '';
   @Input() title = '';
   @Input() id = 0;
+  @Input() titleSize?: number;
+  @Input() textCut?: number;
 
   readonly imgUrl =
     this.mediaType === 'person'

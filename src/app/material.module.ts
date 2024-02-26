@@ -19,8 +19,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const Material = [
   MatToolbarModule,
@@ -41,8 +42,9 @@ const Material = [
   MatProgressSpinnerModule,
   MatSelectModule,
   MatChipsModule,
-  MatAutocompleteModule,
   MatSliderModule,
+  MatListModule,
+  MatExpansionModule,
 ];
 
 @NgModule({

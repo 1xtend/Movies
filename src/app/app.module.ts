@@ -13,6 +13,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MediaInterceptor } from './shared/interceptors/http.interceptor';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
+import { SliderModule } from './slider/slider.module';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
     AppRoutingModule,
     SharedModule,
     HttpClientModule,
+    SliderModule,
   ],
   exports: [SharedModule, MaterialModule],
   bootstrap: [AppComponent],

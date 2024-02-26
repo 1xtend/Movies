@@ -7,14 +7,16 @@
   <div
     #wrapper
     class="slider__wrapper"
-    [style.transform]="translateX"
-    [style.transition-duration]="isDragging ? 0 + 'ms' : speed + 'ms'"
+    [style.transform]="translate$ | async"
+    [style.transition-duration]="
+      (isDragging$ | async) ? 0 + 'ms' : speed + 'ms'
+    "
     [ngClass]="{
-      dragging: isDragging
+      dragging: (isDragging$ | async)
     }"
-    (mousemove)="dragging($event)"
-    (mousedown)="dragStart($event)"
   >
     <ng-content></ng-content>
   </div>
 </div>
+
+<!-- [style.transform]="'translateX(' + (this.translate$ | async) + 'px)'" -->
