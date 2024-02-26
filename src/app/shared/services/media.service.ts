@@ -44,20 +44,26 @@ export class MediaService {
   }
 
   // Details
-  private getDetails<T>(type: MediaType, id: number): Observable<T> {
-    let params = new HttpParams();
-
+  private getDetails<T>(
+    type: MediaType,
+    id: number,
+    params?: HttpParams
+  ): Observable<T> {
     return this.http.get<T>(`/${type}/${id}`, {
       params,
     });
   }
 
   getTVDetails(id: number): Observable<IDetailsTV> {
-    return this.getDetails<IDetailsTV>('tv', id);
+    const params = new HttpParams().set('append_to_response', 'similar');
+
+    return this.getDetails<IDetailsTV>('tv', id, params);
   }
 
   getMovieDetails(id: number): Observable<IDetailsMovie> {
-    return this.getDetails<IDetailsMovie>('movie', id);
+    const params = new HttpParams().set('append_to_response', 'similar');
+
+    return this.getDetails<IDetailsMovie>('movie', id, params);
   }
 
   getPersonDetails(id: number): Observable<IDetailsPerson> {
