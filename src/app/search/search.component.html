@@ -1,39 +1,35 @@
 <section class="search">
-  <aside class="search-aside">
-    <mat-card class="search-aside__card">
-      <mat-card-header>
-        <mat-card-title class="search-aside__title">
-          Search Results
-        </mat-card-title>
-      </mat-card-header>
+  <mat-accordion class="search-aside">
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Search</mat-panel-title>
+      </mat-expansion-panel-header>
 
-      <mat-card-content>
-        <mat-button-toggle-group
-          [vertical]="!(isTablet$ | async)"
-          class="search-aside__group"
-          [formControl]="mediaTypeControl"
-          (change)="handleTabEvent($event)"
-        >
-          <mat-button-toggle value="tv" class="search-aside__item">
-            TV Shows
-          </mat-button-toggle>
-          <mat-button-toggle value="movie" class="search-aside__item">
-            Movies
-          </mat-button-toggle>
-          <mat-button-toggle value="person" class="search-aside__item">
-            People
-          </mat-button-toggle>
-        </mat-button-toggle-group>
+      <mat-button-toggle-group
+        [vertical]="!(isTablet$ | async)"
+        class="search-aside__group"
+        [formControl]="mediaTypeControl"
+        (change)="handleTabEvent($event)"
+      >
+        <mat-button-toggle value="tv" class="search-aside__item">
+          TV Shows
+        </mat-button-toggle>
+        <mat-button-toggle value="movie" class="search-aside__item">
+          Movies
+        </mat-button-toggle>
+        <mat-button-toggle value="person" class="search-aside__item">
+          People
+        </mat-button-toggle>
+      </mat-button-toggle-group>
 
-        <mat-slide-toggle
-          [formControl]="includeAdultControl"
-          class="discover-aside__toggler"
-        >
-          Include adult
-        </mat-slide-toggle>
-      </mat-card-content>
-    </mat-card>
-  </aside>
+      <mat-slide-toggle
+        [formControl]="includeAdultControl"
+        class="discover-aside__toggler"
+      >
+        Include adult
+      </mat-slide-toggle>
+    </mat-expansion-panel>
+  </mat-accordion>
 
   <ng-container *ngIf="res$ | async as res">
     <div class="search__content" *ngIf="res.tvs && res.tvs.total_results > 0">

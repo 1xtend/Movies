@@ -1,81 +1,77 @@
 <section class="discover">
-  <aside class="discover-aside">
-    <mat-card class="discover-aside__card">
-      <mat-card-header>
-        <mat-card-title class="discover-aside__title">
-          Discover
-        </mat-card-title>
-      </mat-card-header>
+  <mat-accordion class="discover-aside">
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Discover</mat-panel-title>
+      </mat-expansion-panel-header>
 
-      <mat-card-content>
-        <mat-form-field
-          *ngIf="sortByList$ | async as sortByList"
-          class="discover-aside__select"
+      <mat-form-field
+        *ngIf="sortByList$ | async as sortByList"
+        class="discover-aside__select"
+      >
+        <mat-label>Sort by</mat-label>
+
+        <mat-select [formControl]="sortByControl">
+          <mat-option *ngFor="let item of sortByList" [value]="item.value">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-chip-listbox
+        multiple
+        [formControl]="genreControl"
+        *ngIf="genresList$ | async as genres"
+        class="discover-aside__genres"
+      >
+        <mat-chip-option
+          *ngFor="let genre of genres"
+          color="primary"
+          [value]="genre.id.toString()"
         >
-          <mat-label>Sort by</mat-label>
+          {{ genre.name }}
+        </mat-chip-option>
+      </mat-chip-listbox>
 
-          <mat-select [formControl]="sortByControl">
-            <mat-option *ngFor="let item of sortByList" [value]="item.value">
-              {{ item.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <mat-slide-toggle
+        [formControl]="includeAdultControl"
+        class="discover-aside__toggler"
+      >
+        Include adult
+      </mat-slide-toggle>
 
-        <mat-chip-listbox
-          multiple
-          [formControl]="genreControl"
-          *ngIf="genresList$ | async as genres"
-          class="discover-aside__genres"
-        >
-          <mat-chip-option
-            *ngFor="let genre of genres"
-            color="primary"
-            [value]="genre.id.toString()"
+      <mat-form-field
+        *ngIf="sharedService.languages$ | async as languages"
+        class="discover-aside__language"
+      >
+        <mat-label>Language</mat-label>
+
+        <mat-select [formControl]="languageControl">
+          <mat-option
+            *ngFor="let language of languages"
+            [value]="language.iso_639_1"
           >
-            {{ genre.name }}
-          </mat-chip-option>
-        </mat-chip-listbox>
+            {{ language.english_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        <mat-slide-toggle
-          [formControl]="includeAdultControl"
-          class="discover-aside__toggler"
+      <div>
+        <h3>Vote average</h3>
+
+        <mat-slider
+          min="0"
+          max="10"
+          step="1"
+          class="discover-aside__slide"
+          discrete
         >
-          Include adult
-        </mat-slide-toggle>
-
-        <mat-form-field
-          *ngIf="sharedService.languages$ | async as languages"
-          class="discover-aside__language"
-        >
-          <mat-label>Language</mat-label>
-
-          <mat-select [formControl]="languageControl">
-            <mat-option
-              *ngFor="let language of languages"
-              [value]="language.iso_639_1"
-            >
-              {{ language.english_name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <div>
-          <h3>Vote average</h3>
-
-          <mat-slider
-            min="0"
-            max="10"
-            step="1"
-            class="discover-aside__slide"
-            discrete
-          >
-            <input matSliderStartThumb [formControl]="voteMinControl" />
-            <input matSliderEndThumb [formControl]="voteMaxControl" />
-          </mat-slider>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </aside>
+          <input matSliderStartThumb [formControl]="voteMinControl" />
+          <input matSliderEndThumb [formControl]="voteMaxControl" />
+        </mat-slider>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
   <ng-container *ngIf="res$ | async as res">
     <div class="discover__content" *ngIf="res.tvs && res.tvs.total_results > 0">

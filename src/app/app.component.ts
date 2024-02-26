@@ -1,8 +1,8 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
-import { skip, take, takeUntil } from 'rxjs';
+import { filter, skip, take, takeUntil } from 'rxjs';
 import { UnsubscribeAbstract } from './shared/helpers/unsubscribe.abstract';
-import { Router } from '@angular/router';
+import { NavigationEnd, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +10,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent extends UnsubscribeAbstract implements OnInit {
-  openDrawer: boolean = false;
+  opened: boolean = false;
   isTablet: boolean = false;
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private router: Router
+  ) {
     super();
   }
 
@@ -28,13 +31,5 @@ export class AppComponent extends UnsubscribeAbstract implements OnInit {
       .subscribe((result: BreakpointState) => {
         this.isTablet = result.matches;
       });
-  }
-
-  toggleDrawer() {
-    this.openDrawer = !this.openDrawer;
-  }
-
-  closeDrawer(): void {
-    this.openDrawer = false;
   }
 }

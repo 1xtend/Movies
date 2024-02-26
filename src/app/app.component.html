@@ -1,10 +1,10 @@
-<mat-sidenav-container autosize hasBackdrop="true">
-  <mat-sidenav-content>
+<mat-drawer-container autosize hasBackdrop="true">
+  <mat-drawer-content>
     <div class="wrapper">
       <app-loader></app-loader>
 
       <app-header
-        (toggleDrawer)="toggleDrawer()"
+        (toggleDrawer)="drawer.toggle()"
         [isTablet]="isTablet"
       ></app-header>
 
@@ -16,14 +16,9 @@
 
       <app-footer></app-footer>
     </div>
-  </mat-sidenav-content>
+  </mat-drawer-content>
 
-  <mat-sidenav
-    mode="over"
-    position="end"
-    [opened]="openDrawer"
-    *ngIf="isTablet"
-  >
-    <app-sidebar (closeDrawer)="closeDrawer()"></app-sidebar>
-  </mat-sidenav>
-</mat-sidenav-container>
+  <mat-drawer mode="over" position="end" [opened]="opened" #drawer>
+    <app-sidebar (closeDrawer)="drawer.close()"></app-sidebar>
+  </mat-drawer>
+</mat-drawer-container>
