@@ -47,23 +47,29 @@ export class MediaService {
   private getDetails<T>(
     type: MediaType,
     id: number,
-    params?: HttpParams
+    language?: string
   ): Observable<T> {
+    let params = new HttpParams();
+
+    if (type !== 'person') {
+      params = params.append('append_to_response', 'similar');
+    }
+
+    if (language) {
+      params = params.append('language', language);
+    }
+
     return this.http.get<T>(`/${type}/${id}`, {
       params,
     });
   }
 
-  getTVDetails(id: number): Observable<IDetailsTV> {
-    const params = new HttpParams().set('append_to_response', 'similar');
-
-    return this.getDetails<IDetailsTV>('tv', id, params);
+  getTVDetails(id: number, language?: string): Observable<IDetailsTV> {
+    return this.getDetails<IDetailsTV>('tv', id, language);
   }
 
-  getMovieDetails(id: number): Observable<IDetailsMovie> {
-    const params = new HttpParams().set('append_to_response', 'similar');
-
-    return this.getDetails<IDetailsMovie>('movie', id, params);
+  getMovieDetails(id: number, language?: string): Observable<IDetailsMovie> {
+    return this.getDetails<IDetailsMovie>('movie', id, language);
   }
 
   getPersonDetails(id: number): Observable<IDetailsPerson> {

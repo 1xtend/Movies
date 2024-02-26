@@ -1,5 +1,11 @@
 <mat-card class="card" *ngIf="mediaType === 'person'; else show">
-  <a [routerLink]="['/details', mediaType, id]" class="card__image-link">
+  <a
+    [routerLink]="['/details', mediaType, id]"
+    [queryParams]="{
+      language: language
+    }"
+    class="card__image-link"
+  >
     <img
       mat-card-image
       *ngIf="imagePath; else noImage"
@@ -17,6 +23,9 @@
   <mat-card-content class="card__content">
     <a
       [routerLink]="['/details', mediaType, id]"
+      [queryParams]="{
+        language: language
+      }"
       mat-card-title
       class="card__title"
       [matTooltip]="!textCut || title.length <= 30 ? '' : title"
@@ -28,7 +37,13 @@
 
 <ng-template #show>
   <mat-card class="card">
-    <a [routerLink]="['/details', mediaType, id]" class="card__image-link">
+    <a
+      [routerLink]="['/details', mediaType, id]"
+      [queryParams]="{
+        language: language
+      }"
+      class="card__image-link"
+    >
       <img
         mat-card-image
         *ngIf="imagePath; else noImage"
@@ -50,6 +65,9 @@
     <mat-card-content class="card__content">
       <a
         [routerLink]="['/details', mediaType, id]"
+        [queryParams]="{
+          language: language
+        }"
         mat-card-title
         class="card__title"
         *ngIf="title"

@@ -22,6 +22,7 @@ export class MediaDetailsComponent implements OnInit {
 
   private mediaType: MediaType = this.route.snapshot.data['mediaType'];
   private id: number = Number(this.route.snapshot.params['id']);
+  private language: string = this.route.snapshot.queryParams['language'];
 
   posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
@@ -42,7 +43,7 @@ export class MediaDetailsComponent implements OnInit {
     IDetailsMovie | IDetailsPerson | IDetailsTV
   > {
     if (this.mediaType === 'movie') {
-      return this.mediaService.getMovieDetails(this.id).pipe(
+      return this.mediaService.getMovieDetails(this.id, this.language).pipe(
         tap((res) => {
           this.resSubject.next({ movie: res });
         })
@@ -50,7 +51,7 @@ export class MediaDetailsComponent implements OnInit {
     }
 
     if (this.mediaType === 'tv') {
-      return this.mediaService.getTVDetails(this.id).pipe(
+      return this.mediaService.getTVDetails(this.id, this.language).pipe(
         tap((res) => {
           this.resSubject.next({ tv: res });
         })
