@@ -15,6 +15,19 @@ import { MediaInterceptor } from './shared/interceptors/http.interceptor';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 import { SliderModule } from './slider/slider.module';
 
+import { initializeApp } from 'firebase/app';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyB-FVP7-MH1QnKM7axHhYQeubxsXDHUt_Q',
+  authDomain: 'vmtv-cebe5.firebaseapp.com',
+  projectId: 'vmtv-cebe5',
+  storageBucket: 'vmtv-cebe5.appspot.com',
+  messagingSenderId: '878623284064',
+  appId: '1:878623284064:web:48b40134400552b7859c05',
+};
+
+const app = initializeApp(firebaseConfig);
+
 @NgModule({
   declarations: [
     AppComponent,
