@@ -1,9 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ISortBy, sortBy } from '@app/shared/helpers/sort-by';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { IDiscoverFilters } from '@app/shared/models/filters.interface';
 import { IGenre } from '@app/shared/models/genres.interface';
 import { MediaType } from '@app/shared/models/media.type';
@@ -23,25 +28,15 @@ import {
   ReplaySubject,
   Subject,
   combineLatest,
-  combineLatestWith,
-  concat,
   debounceTime,
-  first,
-  firstValueFrom,
-  forkJoin,
   map,
-  merge,
   of,
   skip,
-  skipWhile,
   startWith,
   switchMap,
   take,
-  takeUntil,
   tap,
-  zip,
 } from 'rxjs';
-import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
 
 @Component({
   selector: 'app-discover',
@@ -49,7 +44,7 @@ import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
   styleUrls: ['./discover.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
+export class DiscoverComponent implements OnInit {
   private resSubject = new Subject<
     Partial<{
       movies: IMoviesResponse;
@@ -114,10 +109,9 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
     private route: ActivatedRoute,
     private mediaService: MediaService,
     private router: Router,
-    public sharedService: SharedService
-  ) {
-    super();
-  }
+    public sharedService: SharedService,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit(): void {
     this.paramsChanges();
@@ -137,6 +131,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
       queryParams: this.route.queryParamMap,
     })
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         switchMap(({ data, queryParams }) => {
           const navigation = this.router.getCurrentNavigation();
 
@@ -212,12 +207,14 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   private filtersChanges(): void {
-    this.filters$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((filters) => {
-      this.filters = filters;
+    this.filters$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((filters) => {
+        this.filters = filters;
 
-      console.log('Filters changes');
-      this.setQueryParams();
-    });
+        console.log('Filters changes');
+        this.setQueryParams();
+      });
   }
 
   private genresChanges(): void {
@@ -227,7 +224,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
           this.genresListSubject.next(genres);
 
           return this.genreControl.valueChanges.pipe(
-            takeUntil(this.ngUnsubscribe$)
+            takeUntilDestroyed(this.destroyRef)
           );
         }),
         debounceTime(this.debounceTime)
@@ -245,7 +242,10 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
   private sortByChanges(): void {
     this.sortByControl.valueChanges
-      .pipe(debounceTime(this.debounceTime), takeUntil(this.ngUnsubscribe$))
+      .pipe(
+        debounceTime(this.debounceTime),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((value) => {
         this.filtersSubject.next({
           ...this.filters,
@@ -257,7 +257,10 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
 
   private includeAdultChanges(): void {
     this.includeAdultControl.valueChanges
-      .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(this.debounceTime))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(this.debounceTime)
+      )
       .subscribe((include) => {
         this.filtersSubject.next({
           ...this.filters,
@@ -271,7 +274,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
       .pipe(
         switchMap(() => {
           return this.languageControl.valueChanges.pipe(
-            takeUntil(this.ngUnsubscribe$)
+            takeUntilDestroyed(this.destroyRef)
           );
         }),
         debounceTime(this.debounceTime)
@@ -296,7 +299,7 @@ export class DiscoverComponent extends UnsubscribeAbstract implements OnInit {
           return [min === null ? 0 : min, max === null ? 10 : max];
         }),
         debounceTime(this.debounceTime),
-        takeUntil(this.ngUnsubscribe$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(([min, max]) => {
         this.filtersSubject.next({

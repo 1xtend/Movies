@@ -1,12 +1,27 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
 import { IDetailsPerson } from '@app/shared/models/person/person.interface';
 import { IDetailsTV } from '@app/shared/models/tv/tv.interface';
 import { MediaService } from '@app/shared/services/media.service';
-import { EMPTY, Observable, Subject, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  EMPTY,
+  Observable,
+  ReplaySubject,
+  Subject,
+  combineLatest,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { environment } from 'src/environment/environment';
 
 @Component({
@@ -15,40 +30,95 @@ import { environment } from 'src/environment/environment';
   styleUrls: ['./media-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MediaDetailsComponent
-  extends UnsubscribeAbstract
-  implements OnInit
-{
+export class MediaDetailsComponent implements OnInit {
   private resSubject = new Subject<
     Partial<{ movie: IDetailsMovie; tv: IDetailsTV; person: IDetailsPerson }>
   >();
   res$ = this.resSubject.asObservable();
 
-  private mediaType: MediaType = this.route.snapshot.data['mediaType'];
-  private id: number = Number(this.route.snapshot.params['id']);
+  private mediaType: MediaType = 'tv';
+  private id: number = 0;
+  language: string | undefined = undefined;
+
+  slides: number | undefined = undefined;
 
   posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
   profilePath = environment.imagePaths.h632Profile;
 
+  private slidesSubject = new BehaviorSubject<number>(8);
+  slides$ = this.slidesSubject.asObservable();
+
   constructor(
     private route: ActivatedRoute,
-    private mediaService: MediaService
-  ) {
-    super();
-  }
+    private mediaService: MediaService,
+    private destroyRef: DestroyRef,
+    private breakpointObserver: BreakpointObserver
+  ) {}
 
   ngOnInit(): void {
-    this.fetchMedia().subscribe((res) => {
-      console.log('Response: ', res);
-    });
+    this.breakpointChanges();
+    this.paramsChanges();
+  }
+
+  private paramsChanges(): void {
+    combineLatest({
+      data: this.route.data,
+      params: this.route.params,
+      queryParams: this.route.queryParamMap,
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap(({ data, params, queryParams }) => {
+          this.mediaType = data['type'];
+          this.language = queryParams.get('language') ?? undefined;
+          this.id = params['id'];
+
+          return this.fetchMedia();
+        })
+      )
+      .subscribe((res) => {
+        console.log('Respone: ', res);
+      });
+  }
+
+  private breakpointChanges(): void {
+    this.breakpointObserver
+      .observe([
+        '(max-width: 991px)',
+        '(max-width: 768px)',
+        '(max-width: 480px)',
+        '(min-width: 991px)',
+      ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result: BreakpointState) => {
+        if (result.breakpoints['(max-width: 991px)']) {
+          this.slidesSubject.next(6);
+          this.slides = 6;
+        }
+
+        if (result.breakpoints['(max-width: 768px)']) {
+          this.slidesSubject.next(5);
+          this.slides = 5;
+        }
+
+        if (result.breakpoints['(max-width: 480px)']) {
+          this.slidesSubject.next(4);
+          this.slides = 4;
+        }
+
+        if (result.breakpoints['(min-width: 991px)']) {
+          this.slidesSubject.next(8);
+          this.slides = 8;
+        }
+      });
   }
 
   private fetchMedia(): Observable<
     IDetailsMovie | IDetailsPerson | IDetailsTV
   > {
     if (this.mediaType === 'movie') {
-      return this.mediaService.getMovieDetails(this.id).pipe(
+      return this.mediaService.getMovieDetails(this.id, this.language).pipe(
         tap((res) => {
           this.resSubject.next({ movie: res });
         })
@@ -56,7 +126,7 @@ export class MediaDetailsComponent
     }
 
     if (this.mediaType === 'tv') {
-      return this.mediaService.getTVDetails(this.id).pipe(
+      return this.mediaService.getTVDetails(this.id, this.language).pipe(
         tap((res) => {
           this.resSubject.next({ tv: res });
         })

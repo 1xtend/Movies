@@ -5,6 +5,7 @@
 
 .slider {
   overflow: hidden;
+  touch-action: pan-y;
 
   &__wrapper {
     display: flex;
@@ -16,7 +17,6 @@
     &.dragging {
       user-select: none;
       scroll-snap-type: none;
-      cursor: grab;
       pointer-events: none;
     }
   }

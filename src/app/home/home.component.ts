@@ -1,21 +1,18 @@
 import { SharedService } from '@app/shared/services/shared.service';
 import { MediaService } from './../shared/services/media.service';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
-  BehaviorSubject,
-  Observable,
-  of,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs';
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
+import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { environment } from 'src/environment/environment';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +20,7 @@ import { IPeopleResponse } from '@app/shared/models/person/people-response.inter
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent extends UnsubscribeAbstract implements OnInit {
+export class HomeComponent implements OnInit {
   popularMovies$?: Observable<IMoviesResponse>;
   popularTVs$?: Observable<ITVsResponse>;
   popularPeople$?: Observable<IPeopleResponse>;
@@ -40,10 +37,9 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
   constructor(
     private mediaService: MediaService,
     private sharedService: SharedService,
-    private breakpointObserver: BreakpointObserver
-  ) {
-    super();
-  }
+    private breakpointObserver: BreakpointObserver,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit(): void {
     this.getPopularMovies();
@@ -60,7 +56,7 @@ export class HomeComponent extends UnsubscribeAbstract implements OnInit {
         '(max-width: 480px)',
         '(min-width: 991px)',
       ])
-      .pipe(takeUntil(this.ngUnsubscribe$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: BreakpointState) => {
         if (result.breakpoints['(max-width: 991px)']) {
           this.slidesSubject.next(4);

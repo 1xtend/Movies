@@ -1,16 +1,20 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
+  DestroyRef,
   ElementRef,
   Inject,
   Input,
+  NgZone,
+  OnChanges,
   QueryList,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
 import {
   BehaviorSubject,
   debounceTime,
@@ -23,8 +27,11 @@ import {
   timer,
 } from 'rxjs';
 import { SlideComponent } from './slide/slide.component';
-import { ISlideStyle } from './models/slide-style.interface';
+import { ISlideStyles } from './models/slide-styles.interface';
 import { DOCUMENT } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
+import { SliderService } from './services/slider.service';
 
 @Component({
   selector: 'app-slider',
@@ -32,10 +39,7 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SliderComponent
-  extends UnsubscribeAbstract
-  implements AfterViewInit
-{
+export class SliderComponent implements AfterViewInit {
   @ContentChildren(SlideComponent) slides!: QueryList<SlideComponent>;
   @ViewChild('wrapper') wrapper!: ElementRef<HTMLElement>;
 
@@ -106,40 +110,41 @@ export class SliderComponent
 
   // Event listeners
   private resize$ = fromEvent(window, 'resize').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed(this.destroyRef)
   );
   private mouseDown$ = fromEvent<MouseEvent>(
     this.el.nativeElement,
     'mousedown'
-  ).pipe(takeUntil(this.ngUnsubscribe$));
+  ).pipe(takeUntilDestroyed(this.destroyRef));
   private mouseMove$ = fromEvent<MouseEvent>(this.document, 'mousemove').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed(this.destroyRef)
   );
   private mouseUp$ = fromEvent<MouseEvent>(this.document, 'mouseup').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed(this.destroyRef)
   );
   private touchStart$ = fromEvent<TouchEvent>(
     this.el.nativeElement,
     'touchstart'
-  ).pipe(takeUntil(this.ngUnsubscribe$));
+  ).pipe(takeUntilDestroyed(this.destroyRef));
   private touchMove$ = fromEvent<TouchEvent>(this.document, 'touchmove').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed(this.destroyRef)
   );
   private touchEnd$ = fromEvent<TouchEvent>(this.document, 'touchend').pipe(
-    takeUntil(this.ngUnsubscribe$)
+    takeUntilDestroyed(this.destroyRef)
   );
 
   constructor(
     private el: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) private document: Document
-  ) {
-    super();
-  }
+    @Inject(DOCUMENT) private document: Document,
+    private destroyRef: DestroyRef,
+    private router: Router,
+    private sliderService: SliderService
+  ) {}
 
   ngAfterViewInit(): void {
-    this.onResize();
     this.updateWidth();
 
+    this.onResize();
     this.onNavigationButtonClick();
     this.onMouseEvents();
     this.onTouchEvents();
@@ -147,17 +152,19 @@ export class SliderComponent
 
   // On resize
   private onResize(): void {
-    this.resize$.pipe(debounceTime(500)).subscribe((e) => {
-      this.updateWidth();
-      this.handleSlideScroll();
-    });
+    this.resize$
+      .pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef))
+      .subscribe((e) => {
+        this.updateWidth();
+        this.handleSlideScroll();
+      });
   }
 
   // Navigation
   private onNavigationButtonClick(): void {
     if (this.prevBtnEl) {
       fromEvent(this.prevBtnEl, 'click')
-        .pipe(takeUntil(this.ngUnsubscribe$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.handleSlideScroll('prev');
         });
@@ -165,7 +172,7 @@ export class SliderComponent
 
     if (this.nextBtnEl) {
       fromEvent(this.nextBtnEl, 'click')
-        .pipe(takeUntil(this.ngUnsubscribe$))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.handleSlideScroll('next');
         });
@@ -199,7 +206,7 @@ export class SliderComponent
     this.handleNavigation(true);
 
     timer(this.speed)
-      .pipe(takeUntil(this.ngUnsubscribe$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.handleNavigation(false);
       });
@@ -225,7 +232,7 @@ export class SliderComponent
         tap(({ mouseDown, mouseMove }) => {
           this.dragMove(mouseDown.pageX, mouseMove.pageX);
         }),
-        takeUntil(this.ngUnsubscribe$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
 
@@ -256,7 +263,7 @@ export class SliderComponent
             touchMove.touches[0].clientX
           );
         }),
-        takeUntil(this.ngUnsubscribe$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
 
@@ -271,9 +278,9 @@ export class SliderComponent
   }
 
   private dragMove(start: number, move: number): void {
-    this.draggedPath = this.translate + (start - move);
-
     this.isDraggingSubject.next(true);
+
+    this.draggedPath = this.translate + (start - move);
 
     if (
       this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
@@ -314,15 +321,7 @@ export class SliderComponent
       (this.slideWidth + this.gap) * (this.slides.length - this.slidesPerView) -
       this.gap;
 
-    const style: ISlideStyle = {
-      width: this.slideWidth,
-      marginRight: this.gap,
-      speed: this.speed,
-    };
-
-    this.slides.forEach((slide) => {
-      slide.setStyle(style);
-    });
+    this.setSlideStyles();
   }
 
   // Slide scroll
@@ -373,6 +372,16 @@ export class SliderComponent
 
     this.translate = Math.abs(this.scrollWidth * index);
     this.setTranslate(this.translate);
+  }
+
+  private setSlideStyles(): void {
+    const style: ISlideStyles = {
+      width: this.slideWidth,
+      marginRight: this.gap,
+      speed: this.speed,
+    };
+
+    this.sliderService.setSlideStyleSubject(style);
   }
 
   // Translate

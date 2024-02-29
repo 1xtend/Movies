@@ -82,12 +82,6 @@
   }
 }
 
-.offer {
-  &:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-}
-
 .spacer {
   flex: 1 1 auto;
 }

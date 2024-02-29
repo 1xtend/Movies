@@ -11,8 +11,12 @@ import {
   tap,
 } from 'rxjs';
 import { SharedService } from './../shared/services/shared.service';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { UnsubscribeAbstract } from '@app/shared/helpers/unsubscribe.abstract';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { FormControl } from '@angular/forms';
@@ -26,6 +30,7 @@ import { ITV } from '@app/shared/models/tv/tv.interface';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-search',
@@ -33,7 +38,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent extends UnsubscribeAbstract implements OnInit {
+export class SearchComponent implements OnInit {
   private resSubject = new Subject<
     Partial<{
       movies: IMoviesResponse;
@@ -73,10 +78,9 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
     private mediaService: MediaService,
     private route: ActivatedRoute,
     private router: Router,
-    private breakpointObserver: BreakpointObserver
-  ) {
-    super();
-  }
+    private breakpointObserver: BreakpointObserver,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit(): void {
     this.paramsChanges();
@@ -96,7 +100,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
       queryParams: this.route.queryParamMap,
     })
       .pipe(
-        takeUntil(this.ngUnsubscribe$),
+        takeUntilDestroyed(this.destroyRef),
         switchMap(({ data, queryParams }) => {
           if (!queryParams.has('query')) {
             return EMPTY;
@@ -141,7 +145,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
   private searchChanges(): void {
     this.sharedService.search$
-      .pipe(distinctUntilChanged(), takeUntil(this.ngUnsubscribe$))
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((query) => {
         this.filtersSubject.next({
           ...this.filters,
@@ -153,7 +157,7 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
   private mediaTypeChanges(): void {
     this.sharedService.mediaType$
-      .pipe(takeUntil(this.ngUnsubscribe$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((type) => {
         this.mediaType = type;
 
@@ -166,7 +170,10 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
 
   private includeAdultChanges(): void {
     this.includeAdultControl.valueChanges
-      .pipe(takeUntil(this.ngUnsubscribe$), debounceTime(this.debounceTime))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(this.debounceTime)
+      )
       .subscribe((include) => {
         this.filtersSubject.next({
           ...this.filters,
@@ -176,17 +183,19 @@ export class SearchComponent extends UnsubscribeAbstract implements OnInit {
   }
 
   private filtersChanges(): void {
-    this.filters$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((filters) => {
-      this.filters = filters;
+    this.filters$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((filters) => {
+        this.filters = filters;
 
-      this.setQueryParams();
-    });
+        this.setQueryParams();
+      });
   }
 
   private breakpointChanges(): void {
     this.breakpointObserver
       .observe(['(max-width: 768px)'])
-      .pipe(takeUntil(this.ngUnsubscribe$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: BreakpointState) => {
         this.isTabletSubject.next(result.matches);
       });
