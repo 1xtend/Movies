@@ -236,8 +236,8 @@ export class SliderComponent implements AfterViewInit {
       )
       .subscribe();
 
-    this.mouseUp$.subscribe(() => {
-      this.dragEnd();
+    this.mouseUp$.subscribe((e) => {
+      this.dragEnd(e);
     });
   }
 
@@ -267,8 +267,8 @@ export class SliderComponent implements AfterViewInit {
       )
       .subscribe();
 
-    this.touchEnd$.subscribe(() => {
-      this.dragEnd();
+    this.touchEnd$.subscribe((e) => {
+      this.dragEnd(e);
     });
   }
 
@@ -292,7 +292,7 @@ export class SliderComponent implements AfterViewInit {
     this.setTranslate(this.draggedPath);
   }
 
-  private dragEnd(): void {
+  private dragEnd(e: TouchEvent | MouseEvent): void {
     if (!this.startDragging) return;
 
     this.startDragging = false;

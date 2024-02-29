@@ -83,3 +83,32 @@
     margin: 0;
   }
 }
+
+.similar {
+  &__slider {
+    position: relative;
+  }
+
+  &__title {
+    margin-bottom: 0.25rem;
+  }
+
+  &__slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+
+    &--prev {
+      left: 1rem;
+
+      mat-icon {
+        transform: rotate((-180deg));
+      }
+    }
+
+    &--next {
+      right: 1rem;
+    }
+  }
+}

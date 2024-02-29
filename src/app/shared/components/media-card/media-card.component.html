@@ -8,16 +8,14 @@
   >
     <img
       mat-card-image
-      *ngIf="imagePath; else noImage"
-      [src]="imgUrl + imagePath"
+      [src]="
+        imagePath
+          ? imgUrl + imagePath
+          : '../../../../assets/images/blank-image.jpg'
+      "
       [alt]="title"
       class="card__image"
     />
-
-    <ng-template #noImage>
-      <img src="./assets/images/blank.png" [alt]="title" class="card__image" />
-      <mat-icon>image</mat-icon>
-    </ng-template>
   </a>
 
   <mat-card-content class="card__content">
@@ -46,20 +44,14 @@
     >
       <img
         mat-card-image
-        *ngIf="imagePath; else noImage"
-        [src]="imgUrl + imagePath"
+        [src]="
+          imagePath
+            ? imgUrl + imagePath
+            : '../../../../assets/images/blank-image.jpg'
+        "
         [alt]="title"
         class="card__image"
       />
-
-      <ng-template #noImage>
-        <img
-          src="./assets/images/blank.png"
-          [alt]="title"
-          class="card__image"
-        />
-        <mat-icon>image</mat-icon>
-      </ng-template>
     </a>
 
     <mat-card-content class="card__content">

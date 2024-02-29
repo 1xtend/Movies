@@ -1,15 +1,13 @@
 <section class="info">
   <div class="info__poster">
     <img
-      *ngIf="movie.poster_path; else noImage"
-      [src]="posterPath + movie.poster_path"
+      [src]="
+        movie.poster_path
+          ? posterPath + movie.poster_path
+          : '../../../assets/images/blank-image.jpg'
+      "
       [alt]="movie.title"
     />
-
-    <ng-template #noImage>
-      <img src="./assets/images/blank.png" [alt]="movie.title" />
-      <mat-icon>image</mat-icon>
-    </ng-template>
   </div>
 
   <div class="info__content">
@@ -87,76 +85,60 @@
   </div>
 </section>
 
-<!-- <section
-  class="similar"
-  *ngIf="
-    movie.similar && movie.similar.results.length && (slides$ | async) as slides
-  "
->
-  <pre>slides{{ slides }}</pre>
-  <app-slider [gap]="16" [slidesPerView]="slides" [slidesToScroll]="slides">
-    <app-slide *ngFor="let movie of movie.similar.results">
-      <app-media-card
-        [mediaType]="'movie'"
-        [id]="movie.id"
-        [imagePath]="movie.poster_path"
-        [textCut]="30"
-        [voteAverage]="movie.vote_average"
-        [title]="movie.title"
-        [language]="language"
-      ></app-media-card>
-
-      <a
-        [routerLink]="['/details', 'movie', movie.id]"
-        [queryParams]="{
-          language: language && language !== 'xx' ? language : undefined
-        }"
-        [matTooltip]="movie.title"
-        matTooltipShowDelay="1000"
-      >
-        <img
-          mat-card-image
-          *ngIf="movie.poster_path; else noImage"
-          [src]="posterPath + movie.poster_path"
-          [alt]="movie.title"
-        />
-
-        <ng-template #noImage>
-          <img src="./assets/images/blank.png" [alt]="movie.title" />
-          <mat-icon>image</mat-icon>
-        </ng-template>
-      </a>
-    </app-slide>
-  </app-slider>
-</section> -->
-
 <section
   class="similar"
   *ngIf="movie.similar && movie.similar.total_results > 0"
 >
   <h2 class="similar__title">Similar</h2>
 
-  <app-slider
-    *ngIf="slides"
-    [gap]="16"
-    [slidesPerView]="slides"
-    [slidesToScroll]="slides"
-  >
-    <app-slide *ngFor="let movie of movie.similar.results">
-      <a
-        [routerLink]="['/details', 'movie', movie.id]"
-        [queryParams]="{
-          language: language && language !== 'xx' ? language : undefined
-        }"
-      >
-        <img
-          [src]="posterPath + movie.poster_path"
-          alt=""
-          *ngIf="movie.poster_path; else noImage"
-        />
+  <div class="similar__slider">
+    <app-slider
+      *ngIf="slides$ | async as slides"
+      [gap]="16"
+      [slidesPerView]="slides"
+      [slidesToScroll]="slides"
+      [prevBtn]="prev._elementRef"
+      [nextBtn]="next._elementRef"
+    >
+      <app-slide *ngFor="let movie of movie.similar.results">
+        <a
+          [routerLink]="['/details', 'movie', movie.id]"
+          [queryParams]="{
+            language: language && language !== 'xx' ? language : undefined
+          }"
+          [matTooltip]="movie.title"
+          matTooltipShowDelay="500"
+        >
+          <img
+            mat-card-image
+            [src]="
+              movie.poster_path
+                ? posterPath + movie.poster_path
+                : '../../../assets/images/blank-image.jpg'
+            "
+            [alt]="movie.title"
+          />
+        </a>
+      </app-slide>
+    </app-slider>
 
-        <ng-template #noImage>No Image</ng-template>
-      </a>
-    </app-slide>
-  </app-slider>
+    <button
+      type="button"
+      mat-mini-fab
+      color="primary"
+      class="similar__slide-btn similar__slide-btn--prev"
+      #prev
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+    <button
+      type="button"
+      mat-mini-fab
+      color="primary"
+      class="similar__slide-btn similar__slide-btn--next"
+      #next
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+  </div>
 </section>

@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
 import { IDetailsPerson } from '@app/shared/models/person/person.interface';
@@ -16,7 +16,6 @@ import {
   BehaviorSubject,
   EMPTY,
   Observable,
-  ReplaySubject,
   Subject,
   combineLatest,
   switchMap,
@@ -40,14 +39,12 @@ export class MediaDetailsComponent implements OnInit {
   private id: number = 0;
   language: string | undefined = undefined;
 
-  slides: number | undefined = undefined;
+  private slidesSubject = new BehaviorSubject<number>(6);
+  slides$ = this.slidesSubject.asObservable();
 
   posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
   profilePath = environment.imagePaths.h632Profile;
-
-  private slidesSubject = new BehaviorSubject<number>(8);
-  slides$ = this.slidesSubject.asObservable();
 
   constructor(
     private route: ActivatedRoute,
@@ -57,8 +54,8 @@ export class MediaDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.breakpointChanges();
     this.paramsChanges();
+    this.breakpointChanges();
   }
 
   private paramsChanges(): void {
@@ -94,22 +91,18 @@ export class MediaDetailsComponent implements OnInit {
       .subscribe((result: BreakpointState) => {
         if (result.breakpoints['(max-width: 991px)']) {
           this.slidesSubject.next(6);
-          this.slides = 6;
         }
 
         if (result.breakpoints['(max-width: 768px)']) {
           this.slidesSubject.next(5);
-          this.slides = 5;
         }
 
         if (result.breakpoints['(max-width: 480px)']) {
           this.slidesSubject.next(4);
-          this.slides = 4;
         }
 
         if (result.breakpoints['(min-width: 991px)']) {
           this.slidesSubject.next(8);
-          this.slides = 8;
         }
       });
   }
