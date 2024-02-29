@@ -87,8 +87,14 @@
   </div>
 </section>
 
-<section class="similar" *ngIf="movie.similar && movie.similar.results.length">
-  <app-slider [gap]="16" [slidesPerView]="6" [slidesToScroll]="6">
+<!-- <section
+  class="similar"
+  *ngIf="
+    movie.similar && movie.similar.results.length && (slides$ | async) as slides
+  "
+>
+  <pre>slides{{ slides }}</pre>
+  <app-slider [gap]="16" [slidesPerView]="slides" [slidesToScroll]="slides">
     <app-slide *ngFor="let movie of movie.similar.results">
       <app-media-card
         [mediaType]="'movie'"
@@ -97,7 +103,60 @@
         [textCut]="30"
         [voteAverage]="movie.vote_average"
         [title]="movie.title"
+        [language]="language"
       ></app-media-card>
+
+      <a
+        [routerLink]="['/details', 'movie', movie.id]"
+        [queryParams]="{
+          language: language && language !== 'xx' ? language : undefined
+        }"
+        [matTooltip]="movie.title"
+        matTooltipShowDelay="1000"
+      >
+        <img
+          mat-card-image
+          *ngIf="movie.poster_path; else noImage"
+          [src]="posterPath + movie.poster_path"
+          [alt]="movie.title"
+        />
+
+        <ng-template #noImage>
+          <img src="./assets/images/blank.png" [alt]="movie.title" />
+          <mat-icon>image</mat-icon>
+        </ng-template>
+      </a>
+    </app-slide>
+  </app-slider>
+</section> -->
+
+<section
+  class="similar"
+  *ngIf="movie.similar && movie.similar.total_results > 0"
+>
+  <h2 class="similar__title">Similar</h2>
+
+  <app-slider
+    *ngIf="slides"
+    [gap]="16"
+    [slidesPerView]="slides"
+    [slidesToScroll]="slides"
+  >
+    <app-slide *ngFor="let movie of movie.similar.results">
+      <a
+        [routerLink]="['/details', 'movie', movie.id]"
+        [queryParams]="{
+          language: language && language !== 'xx' ? language : undefined
+        }"
+      >
+        <img
+          [src]="posterPath + movie.poster_path"
+          alt=""
+          *ngIf="movie.poster_path; else noImage"
+        />
+
+        <ng-template #noImage>No Image</ng-template>
+      </a>
     </app-slide>
   </app-slider>
 </section>

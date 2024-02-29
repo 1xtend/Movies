@@ -1,13 +1,18 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   DestroyRef,
   ElementRef,
   Inject,
   Input,
+  NgZone,
+  OnChanges,
   QueryList,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {
@@ -22,9 +27,11 @@ import {
   timer,
 } from 'rxjs';
 import { SlideComponent } from './slide/slide.component';
-import { ISlideStyle } from './models/slide-style.interface';
+import { ISlideStyles } from './models/slide-styles.interface';
 import { DOCUMENT } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
+import { SliderService } from './services/slider.service';
 
 @Component({
   selector: 'app-slider',
@@ -102,38 +109,42 @@ export class SliderComponent implements AfterViewInit {
   private draggedPath: number = 0;
 
   // Event listeners
-  private resize$ = fromEvent(window, 'resize').pipe(takeUntilDestroyed());
+  private resize$ = fromEvent(window, 'resize').pipe(
+    takeUntilDestroyed(this.destroyRef)
+  );
   private mouseDown$ = fromEvent<MouseEvent>(
     this.el.nativeElement,
     'mousedown'
-  ).pipe(takeUntilDestroyed());
+  ).pipe(takeUntilDestroyed(this.destroyRef));
   private mouseMove$ = fromEvent<MouseEvent>(this.document, 'mousemove').pipe(
-    takeUntilDestroyed()
+    takeUntilDestroyed(this.destroyRef)
   );
   private mouseUp$ = fromEvent<MouseEvent>(this.document, 'mouseup').pipe(
-    takeUntilDestroyed()
+    takeUntilDestroyed(this.destroyRef)
   );
   private touchStart$ = fromEvent<TouchEvent>(
     this.el.nativeElement,
     'touchstart'
-  ).pipe(takeUntilDestroyed());
+  ).pipe(takeUntilDestroyed(this.destroyRef));
   private touchMove$ = fromEvent<TouchEvent>(this.document, 'touchmove').pipe(
-    takeUntilDestroyed()
+    takeUntilDestroyed(this.destroyRef)
   );
   private touchEnd$ = fromEvent<TouchEvent>(this.document, 'touchend').pipe(
-    takeUntilDestroyed()
+    takeUntilDestroyed(this.destroyRef)
   );
 
   constructor(
     private el: ElementRef<HTMLElement>,
     @Inject(DOCUMENT) private document: Document,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private router: Router,
+    private sliderService: SliderService
   ) {}
 
   ngAfterViewInit(): void {
-    this.onResize();
     this.updateWidth();
 
+    this.onResize();
     this.onNavigationButtonClick();
     this.onMouseEvents();
     this.onTouchEvents();
@@ -267,9 +278,9 @@ export class SliderComponent implements AfterViewInit {
   }
 
   private dragMove(start: number, move: number): void {
-    this.draggedPath = this.translate + (start - move);
-
     this.isDraggingSubject.next(true);
+
+    this.draggedPath = this.translate + (start - move);
 
     if (
       this.draggedPath > this.trackWidth + (this.slideWidth + this.gap) ||
@@ -310,15 +321,7 @@ export class SliderComponent implements AfterViewInit {
       (this.slideWidth + this.gap) * (this.slides.length - this.slidesPerView) -
       this.gap;
 
-    const style: ISlideStyle = {
-      width: this.slideWidth,
-      marginRight: this.gap,
-      speed: this.speed,
-    };
-
-    this.slides.forEach((slide) => {
-      slide.setStyle(style);
-    });
+    this.setSlideStyles();
   }
 
   // Slide scroll
@@ -369,6 +372,16 @@ export class SliderComponent implements AfterViewInit {
 
     this.translate = Math.abs(this.scrollWidth * index);
     this.setTranslate(this.translate);
+  }
+
+  private setSlideStyles(): void {
+    const style: ISlideStyles = {
+      width: this.slideWidth,
+      marginRight: this.gap,
+      speed: this.speed,
+    };
+
+    this.sliderService.setSlideStyleSubject(style);
   }
 
   // Translate

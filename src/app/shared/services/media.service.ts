@@ -55,7 +55,7 @@ export class MediaService {
       params = params.append('append_to_response', 'similar');
     }
 
-    if (language) {
+    if (language && language !== 'xx') {
       params = params.append('language', language);
     }
 

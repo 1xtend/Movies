@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-movie-details',
@@ -10,4 +11,7 @@ import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
 export class MovieDetailsComponent {
   @Input() movie!: IDetailsMovie;
   @Input() posterPath!: string;
+  @Input() language?: string;
+  @Input() slides$!: Observable<number>;
+  @Input() slides?: number;
 }

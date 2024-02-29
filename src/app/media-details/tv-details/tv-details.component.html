@@ -80,3 +80,22 @@
     </div>
   </div>
 </section>
+
+<section
+  class="similar"
+  *ngIf="tv.similar && tv.similar.results.length && (slides$ | async) as slides"
+>
+  <app-slider [gap]="16" [slidesPerView]="slides" [slidesToScroll]="slides">
+    <app-slide *ngFor="let tv of tv.similar.results">
+      <app-media-card
+        [mediaType]="'tv'"
+        [id]="tv.id"
+        [imagePath]="tv.poster_path"
+        [textCut]="30"
+        [voteAverage]="tv.vote_average"
+        [title]="tv.name"
+        [language]="language"
+      ></app-media-card>
+    </app-slide>
+  </app-slider>
+</section>

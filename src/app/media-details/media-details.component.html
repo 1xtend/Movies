@@ -3,9 +3,18 @@
     *ngIf="res.movie as movie"
     [movie]="movie"
     [posterPath]="posterPath"
+    [language]="language"
+    [slides$]="slides$"
+    [slides]="slides"
   ></app-movie-details>
 
-  <app-tv-details *ngIf="res.tv as tv" [tv]="tv" [posterPath]="posterPath">
+  <app-tv-details
+    *ngIf="res.tv as tv"
+    [tv]="tv"
+    [posterPath]="posterPath"
+    [language]="language"
+    [slides$]="slides$"
+  >
   </app-tv-details>
 
   <app-person-details
