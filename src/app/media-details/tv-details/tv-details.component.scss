@@ -2,6 +2,10 @@
   display: flex;
   gap: 1rem;
 
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
   @media screen and (max-width: 600px) {
     flex-direction: column;
   }
@@ -67,9 +71,6 @@
   flex-wrap: wrap;
   gap: 1rem;
 
-  // &__item {
-  // }
-
   &__title {
     font-weight: 700;
 
@@ -80,5 +81,34 @@
 
   &__text {
     margin: 0;
+  }
+}
+
+.similar {
+  &__slider {
+    position: relative;
+  }
+
+  &__title {
+    margin-bottom: 0.25rem;
+  }
+
+  &__slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+
+    &--prev {
+      left: 1rem;
+
+      mat-icon {
+        transform: rotate((-180deg));
+      }
+    }
+
+    &--next {
+      right: 1rem;
+    }
   }
 }

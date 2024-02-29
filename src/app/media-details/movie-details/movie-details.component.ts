@@ -12,6 +12,5 @@ export class MovieDetailsComponent {
   @Input() movie!: IDetailsMovie;
   @Input() posterPath!: string;
   @Input() language?: string;
-  @Input() slides$!: Observable<number>;
-  @Input() slides?: number;
+  @Input() slides$?: Observable<number>;
 }

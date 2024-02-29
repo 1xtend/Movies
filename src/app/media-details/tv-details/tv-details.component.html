@@ -81,21 +81,57 @@
   </div>
 </section>
 
-<section
-  class="similar"
-  *ngIf="tv.similar && tv.similar.results.length && (slides$ | async) as slides"
->
-  <app-slider [gap]="16" [slidesPerView]="slides" [slidesToScroll]="slides">
-    <app-slide *ngFor="let tv of tv.similar.results">
-      <app-media-card
-        [mediaType]="'tv'"
-        [id]="tv.id"
-        [imagePath]="tv.poster_path"
-        [textCut]="30"
-        [voteAverage]="tv.vote_average"
-        [title]="tv.name"
-        [language]="language"
-      ></app-media-card>
-    </app-slide>
-  </app-slider>
+<section class="similar" *ngIf="tv.similar && tv.similar.results.length">
+  <h2 class="similar__title">Similar</h2>
+
+  <div class="similar__slider">
+    <app-slider
+      *ngIf="slides$ | async as slides"
+      [gap]="16"
+      [slidesPerView]="slides"
+      [slidesToScroll]="slides"
+      [prevBtn]="prev._elementRef"
+      [nextBtn]="next._elementRef"
+    >
+      <app-slide *ngFor="let tv of tv.similar.results">
+        <a
+          [routerLink]="['/details', 'tv', tv.id]"
+          [queryParams]="{
+            language: language && language !== 'xx' ? language : undefined
+          }"
+          [matTooltip]="tv.name"
+          matTooltipShowDelay="500"
+        >
+          <img
+            mat-card-image
+            [src]="
+              tv.poster_path
+                ? posterPath + tv.poster_path
+                : '../../../assets/images/blank-image.jpg'
+            "
+            [alt]="tv.name"
+          />
+        </a>
+      </app-slide>
+    </app-slider>
+
+    <button
+      type="button"
+      mat-mini-fab
+      color="primary"
+      class="similar__slide-btn similar__slide-btn--prev"
+      #prev
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+    <button
+      type="button"
+      mat-mini-fab
+      color="primary"
+      class="similar__slide-btn similar__slide-btn--next"
+      #next
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+  </div>
 </section>

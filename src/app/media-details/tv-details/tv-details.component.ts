@@ -12,5 +12,5 @@ export class TvDetailsComponent {
   @Input() tv!: IDetailsTV;
   @Input() posterPath!: string;
   @Input() language?: string;
-  @Input() slides$!: Observable<number>;
+  @Input() slides$?: Observable<number>;
 }
