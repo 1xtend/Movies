@@ -8,6 +8,5 @@ import { SliderService } from './services/slider.service';
   declarations: [SliderComponent, SlideComponent],
   imports: [CommonModule],
   exports: [SliderComponent, SlideComponent],
-  providers: [SliderService],
 })
 export class SliderModule {}
