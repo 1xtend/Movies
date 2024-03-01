@@ -1,26 +1,24 @@
-<section class="person">
-  <div class="person__poster">
+<section class="info">
+  <div class="info__poster">
     <img
-      *ngIf="person.profile_path; else noImage"
-      [src]="profilePath + person.profile_path"
+      [src]="
+        person.profile_path
+          ? profilePath + person.profile_path
+          : '../../../assets/images/blank-image.jpg'
+      "
       [alt]="person.name"
     />
-
-    <ng-template #noImage>
-      <img src="./assets/images/blank.png" [alt]="person.name" />
-      <mat-icon>image</mat-icon>
-    </ng-template>
   </div>
 
-  <div class="person__content">
-    <div class="person__group">
-      <h1 class="person__main-title">
+  <div class="info__content">
+    <div class="info__group">
+      <h1 class="info__main-title">
         <a
           *ngIf="person.homepage; else noHomepage"
           [href]="person.homepage"
           target="_blank"
           rel="noreferrer noopener"
-          class="person__main-title-link"
+          class="info__main-title-link"
           matTooltip="Go to homepage"
         >
           {{ person.name }}
@@ -30,13 +28,13 @@
       </h1>
     </div>
 
-    <div class="person__group" *ngIf="person.biography">
-      <h2 class="person__title">Biography</h2>
+    <div class="info__group" *ngIf="person.biography">
+      <h2 class="info__title">Biography</h2>
       <p>{{ person.biography }}</p>
     </div>
 
-    <div class="person__group" *ngIf="person.also_known_as.length">
-      <h2 class="person__title">Alson known as</h2>
+    <div class="info__group" *ngIf="person.also_known_as.length">
+      <h2 class="info__title">Alson known as</h2>
       <p>
         <span *ngFor="let value of person.also_known_as">
           {{
@@ -49,37 +47,83 @@
       </p>
     </div>
 
-    <div class="person__group person-list">
-      <div class="person-list__item" *ngIf="person.birthday">
-        <h4 class="person-list__title">Birthday</h4>
-        <p class="person-list__text">
+    <div class="info__group info-list">
+      <div class="info-list__item" *ngIf="person.birthday">
+        <h4 class="info-list__title">Birthday</h4>
+        <p class="info-list__text">
           {{ person.birthday | date : "dd/MM/y" }}
         </p>
       </div>
-      <div class="person-list__item" *ngIf="person.deathday">
-        <h4 class="person-list__title">Deathday</h4>
-        <p class="person-list__text">
+      <div class="info-list__item" *ngIf="person.deathday">
+        <h4 class="info-list__title">Deathday</h4>
+        <p class="info-list__text">
           {{ person.deathday | date : "dd/MM/y" }}
         </p>
       </div>
-      <div class="person-list__item" *ngIf="person.place_of_birth">
-        <h4 class="person-list__title">Place of birth</h4>
-        <p class="person-list__text">
+      <div class="info-list__item" *ngIf="person.place_of_birth">
+        <h4 class="info-list__title">Place of birth</h4>
+        <p class="info-list__text">
           {{ person.place_of_birth }}
         </p>
       </div>
-      <div class="person-list__item" *ngIf="person.gender">
-        <h4 class="person-list__title">Gender</h4>
-        <p class="person-list__text">
+      <div class="info-list__item" *ngIf="person.gender">
+        <h4 class="info-list__title">Gender</h4>
+        <p class="info-list__text">
           {{ person.gender === 1 ? "Female" : "Male" }}
         </p>
       </div>
-      <div class="person-list__item" *ngIf="person.known_for_department">
-        <h4 class="person-list__title">Known for department</h4>
-        <p class="person-list__text">
+      <div class="info-list__item" *ngIf="person.known_for_department">
+        <h4 class="info-list__title">Known for department</h4>
+        <p class="info-list__text">
           {{ person.known_for_department }}
         </p>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="images" *ngIf="person.images && person.images.profiles.length">
+  <h2 class="images__title">Images</h2>
+
+  <div class="images__slider">
+    <app-slider
+      *ngIf="slides$ | async as slides"
+      [gap]="16"
+      [prevBtn]="prev._elementRef"
+      [nextBtn]="next._elementRef"
+      [slidesPerView]="slides"
+      [slidesToScroll]="slides"
+    >
+      <app-slide *ngFor="let image of person.images.profiles">
+        <img
+          [src]="
+            image.file_path
+              ? imagePath + image.file_path
+              : '../../../assets/images/blank-image.jpg'
+          "
+          [alt]="person.name"
+          style="height: 100%"
+        />
+      </app-slide>
+    </app-slider>
+
+    <button
+      type="button"
+      mat-mini-fab
+      color="primary"
+      class="images__slide-btn images__slide-btn--prev"
+      #prev
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+    <button
+      type="button"
+      mat-mini-fab
+      color="primary"
+      class="images__slide-btn images__slide-btn--next"
+      #next
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
   </div>
 </section>

@@ -53,6 +53,8 @@ export class MediaService {
 
     if (type !== 'person') {
       params = params.append('append_to_response', 'similar');
+    } else {
+      params = params.append('append_to_response', 'images');
     }
 
     if (language && language !== 'xx') {
