@@ -54,32 +54,32 @@
       </p>
     </div>
 
-    <div class="info__group movie-list">
-      <div class="movie-list__item" *ngIf="movie.release_date">
-        <h4 class="movie-list__title">Release date</h4>
-        <p class="movie-list__text">
+    <div class="info__group info-list">
+      <div class="info-list__item" *ngIf="movie.release_date">
+        <h4 class="info-list__title">Release date</h4>
+        <p class="info-list__text">
           {{ movie.release_date | date : "MM/dd/y" }}
         </p>
       </div>
-      <div class="movie-list__item" *ngIf="movie.runtime">
-        <h4 class="movie-list__title">Runtime</h4>
-        <p class="movie-list__text">{{ movie.runtime | time }}</p>
+      <div class="info-list__item" *ngIf="movie.runtime">
+        <h4 class="info-list__title">Runtime</h4>
+        <p class="info-list__text">{{ movie.runtime | time }}</p>
       </div>
-      <div class="movie-list__item" *ngIf="movie.status">
-        <h4 class="movie-list__title">Status</h4>
-        <p class="movie-list__text">{{ movie.status }}</p>
+      <div class="info-list__item" *ngIf="movie.status">
+        <h4 class="info-list__title">Status</h4>
+        <p class="info-list__text">{{ movie.status }}</p>
       </div>
-      <div class="movie-list__item" *ngIf="movie.original_title">
-        <h4 class="movie-list__title">Original title</h4>
-        <p class="movie-list__text">{{ movie.original_title }}</p>
+      <div class="info-list__item" *ngIf="movie.original_title">
+        <h4 class="info-list__title">Original title</h4>
+        <p class="info-list__text">{{ movie.original_title }}</p>
       </div>
-      <div class="movie-list__item" *ngIf="movie.budget">
-        <h4 class="movie-list__title">Budget</h4>
-        <p class="movie-list__text">{{ movie.budget | currency }}</p>
+      <div class="info-list__item" *ngIf="movie.budget">
+        <h4 class="info-list__title">Budget</h4>
+        <p class="info-list__text">{{ movie.budget | currency }}</p>
       </div>
-      <div class="movie-list__item" *ngIf="movie.revenue">
-        <h4 class="movie-list__title">Revenue</h4>
-        <p class="movie-list__text">{{ movie.revenue | currency }}</p>
+      <div class="info-list__item" *ngIf="movie.revenue">
+        <h4 class="info-list__title">Revenue</h4>
+        <p class="info-list__text">{{ movie.revenue | currency }}</p>
       </div>
     </div>
   </div>

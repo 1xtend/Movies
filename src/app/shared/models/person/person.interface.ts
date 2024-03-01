@@ -25,9 +25,22 @@ export interface IDetailsPerson {
   place_of_birth: string;
   popularity: number;
   profile_path: string | null;
+  images?: {
+    profiles: IProfiles[];
+  };
 }
 
 // Parts
+interface IProfiles {
+  aspect_ratio: number;
+  height: number;
+  iso_639_1: null;
+  file_path: string;
+  vote_average: number;
+  vote_count: number;
+  width: number;
+}
+
 interface IKnownFor {
   adult: boolean;
   backdrop_path: string | null;

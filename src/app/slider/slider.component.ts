@@ -19,10 +19,12 @@ import {
   BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
+  filter,
   fromEvent,
   map,
   switchMap,
   takeUntil,
+  takeWhile,
   tap,
   timer,
 } from 'rxjs';
@@ -137,7 +139,6 @@ export class SliderComponent implements AfterViewInit {
     private el: ElementRef<HTMLElement>,
     @Inject(DOCUMENT) private document: Document,
     private destroyRef: DestroyRef,
-    private router: Router,
     private sliderService: SliderService
   ) {}
 
@@ -145,6 +146,7 @@ export class SliderComponent implements AfterViewInit {
     this.updateWidth();
 
     this.onResize();
+
     this.onNavigationButtonClick();
     this.onMouseEvents();
     this.onTouchEvents();
