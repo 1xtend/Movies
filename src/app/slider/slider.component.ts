@@ -146,7 +146,6 @@ export class SliderComponent implements AfterViewInit {
     this.updateWidth();
 
     this.onResize();
-
     this.onNavigationButtonClick();
     this.onMouseEvents();
     this.onTouchEvents();
