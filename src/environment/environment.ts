@@ -9,4 +9,6 @@ export const environment = {
     w1280Backdrop: 'https://image.tmdb.org/t/p/w1280',
     original: 'https://image.tmdb.org/t/p/original',
   },
+  github: 'https://github.com/1xtend',
+  tmdb: 'https://developer.themoviedb.org/docs/getting-started',
 };
