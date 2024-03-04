@@ -1,3 +1,11 @@
+.title {
+  line-height: 1.2;
+
+  &:not(:last-child) {
+    margin-bottom: 0.25rem;
+  }
+}
+
 .info {
   display: flex;
   gap: 1rem;
@@ -56,10 +64,6 @@
     font-weight: 400;
     color: rgba(0, 0, 0, 0.7);
   }
-
-  &__title:not(:last-child) {
-    margin-bottom: 0.25rem;
-  }
 }
 
 .info-list {
@@ -69,10 +73,6 @@
 
   &__title {
     font-weight: 700;
-
-    &:not(:last-child) {
-      margin-bottom: 0.25rem;
-    }
   }
 
   &__text {
@@ -81,12 +81,12 @@
 }
 
 .similar {
-  &__slider {
-    position: relative;
+  &:not(:last-child) {
+    margin-bottom: 1rem;
   }
 
-  &__title {
-    margin-bottom: 0.25rem;
+  &__slider {
+    position: relative;
   }
 
   &__slide-btn {
@@ -107,4 +107,11 @@
       right: 1rem;
     }
   }
+}
+
+.reviews-grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.5rem;
 }

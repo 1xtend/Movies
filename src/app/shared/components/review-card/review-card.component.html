@@ -1,0 +1,23 @@
+<mat-card class="reviews-grid__item">
+  <mat-card-header>
+    <img
+      *ngIf="review.author_details.avatar_path as path; else noAvatar"
+      [src]="logoPath + path"
+      [alt]="review.author_details.username"
+      mat-card-avatar
+    />
+
+    <ng-template #noAvatar>
+      <div mat-card-avatar class="reviews-grid__no-avatar">
+        {{ review.author.slice(0, 1) | uppercase }}
+      </div>
+    </ng-template>
+
+    <mat-card-title>{{ review.author }}</mat-card-title>
+    <mat-card-subtitle>{{ review.author_details.username }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <app-truncate-text [text]="review.content"></app-truncate-text>
+  </mat-card-content>
+</mat-card>

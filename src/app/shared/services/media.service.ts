@@ -52,7 +52,7 @@ export class MediaService {
     let params = new HttpParams();
 
     if (type !== 'person') {
-      params = params.append('append_to_response', 'similar');
+      params = params.append('append_to_response', 'similar,reviews');
     } else {
       params = params.append('append_to_response', 'images');
     }

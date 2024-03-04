@@ -8,6 +8,7 @@ export const environment = {
     h632Profile: 'https://image.tmdb.org/t/p/h632',
     w1280Backdrop: 'https://image.tmdb.org/t/p/w1280',
     original: 'https://image.tmdb.org/t/p/original',
+    w45Logo: 'https://image.tmdb.org/t/p/w45',
   },
   github: 'https://github.com/1xtend',
   tmdb: 'https://developer.themoviedb.org/docs/getting-started',

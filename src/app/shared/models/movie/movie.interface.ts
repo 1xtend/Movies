@@ -2,6 +2,7 @@ import { IGenre } from '../genres.interface';
 import { ILanguage } from '../languages.interface';
 import { INetwork } from '../network.interface';
 import { IProductionCountry } from '../production-country.interface';
+import { IReviewsResponse } from '../review.interface';
 import { IMoviesResponse } from './movies-response.interface';
 
 export interface IMovie {
@@ -48,6 +49,7 @@ export interface IDetailsMovie {
   vote_average: number;
   vote_count: number;
   similar?: IMoviesResponse;
+  reviews?: IReviewsResponse;
 }
 
 // Parts
