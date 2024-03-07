@@ -9,6 +9,4 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 export class AvatarComponent {
   @Input() imagePath?: string = undefined;
   @Input({ required: true }) alt: string = '';
-
-  constructor() {}
 }

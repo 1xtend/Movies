@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { IReview, IReviewsResponse } from '@app/shared/models/review.interface';
+import { IReview } from '@app/shared/models/review.interface';
 import { environment } from 'src/environment/environment';
 
 @Component({

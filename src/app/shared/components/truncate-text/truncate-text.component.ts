@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-truncate-text',
   templateUrl: './truncate-text.component.html',
   styleUrls: ['./truncate-text.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TruncateTextComponent {
   @Input({ required: true }) text: string = '';
