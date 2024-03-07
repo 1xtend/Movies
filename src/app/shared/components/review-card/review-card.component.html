@@ -1,0 +1,20 @@
+<mat-card class="reviews-grid__item">
+  <mat-card-header>
+    <app-avatar
+      [imagePath]="
+        review.author_details.avatar_path
+          ? logoPath + review.author_details.avatar_path
+          : undefined
+      "
+      [alt]="review.author"
+      mat-card-avatar
+    ></app-avatar>
+
+    <mat-card-title>{{ review.author }}</mat-card-title>
+    <mat-card-subtitle>{{ review.author_details.username }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <app-truncate-text [text]="review.content"></app-truncate-text>
+  </mat-card-content>
+</mat-card>

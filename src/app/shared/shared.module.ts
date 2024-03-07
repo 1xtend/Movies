@@ -9,6 +9,10 @@ import { MediaCardComponent } from './components/media-card/media-card.component
 import { RoundPipe } from './pipes/round.pipe';
 import { TimePipe } from './pipes/time.pipe';
 import { TextCutPipe } from './pipes/text-cut.pipe';
+import { ReviewCardComponent } from './components/review-card/review-card.component';
+import { TruncateTextComponent } from './components/truncate-text/truncate-text.component';
+import { AvatarComponent } from './components/avatar/avatar.component';
+import { RandomBgColorDirective } from './directives/random-bg-color.directive';
 
 @NgModule({
   declarations: [
@@ -18,6 +22,10 @@ import { TextCutPipe } from './pipes/text-cut.pipe';
     RoundPipe,
     TimePipe,
     TextCutPipe,
+    ReviewCardComponent,
+    TruncateTextComponent,
+    AvatarComponent,
+    RandomBgColorDirective,
   ],
   imports: [
     CommonModule,
@@ -33,6 +41,10 @@ import { TextCutPipe } from './pipes/text-cut.pipe';
     RoundPipe,
     TimePipe,
     TextCutPipe,
+    ReviewCardComponent,
+    TruncateTextComponent,
+    AvatarComponent,
+    RandomBgColorDirective,
   ],
 })
 export class SharedModule {}

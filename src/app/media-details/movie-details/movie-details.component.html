@@ -37,12 +37,12 @@
     </div>
 
     <div class="info__group" *ngIf="movie.overview">
-      <h2 class="info__title">Overview</h2>
+      <h2 class="info__title title">Overview</h2>
       <p>{{ movie.overview }}</p>
     </div>
 
     <div class="info__group" *ngIf="movie.genres.length">
-      <h2 class="info__title">Genres</h2>
+      <h2 class="info__title title">Genres</h2>
       <p>
         <span *ngFor="let genre of movie.genres">
           {{
@@ -56,7 +56,7 @@
 
     <div class="info__group info-list">
       <div class="info-list__item" *ngIf="movie.release_date">
-        <h4 class="info-list__title">Release date</h4>
+        <h4 class="info-list__title title">Release date</h4>
         <p class="info-list__text">
           {{ movie.release_date | date : "MM/dd/y" }}
         </p>
@@ -89,7 +89,7 @@
   class="similar"
   *ngIf="movie.similar && movie.similar.total_results > 0"
 >
-  <h2 class="similar__title">Similar</h2>
+  <h2 class="similar__title title">Similar</h2>
 
   <div class="similar__slider">
     <app-slider
@@ -140,5 +140,19 @@
     >
       <mat-icon>navigate_next</mat-icon>
     </button>
+  </div>
+</section>
+
+<section
+  class="reviews"
+  *ngIf="movie.reviews && movie.reviews.total_results > 0"
+>
+  <h2 class="reviews__title title">Reviews</h2>
+
+  <div class="reviews-grid">
+    <app-review-card
+      *ngFor="let review of movie.reviews.results"
+      [review]="review"
+    ></app-review-card>
   </div>
 </section>
