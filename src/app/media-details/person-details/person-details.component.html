@@ -107,6 +107,9 @@
               : '../../../assets/images/blank-image.jpg'
           "
           [alt]="person.name"
+          [largeImgSrc]="
+            image.file_path ? original + image.file_path : undefined
+          "
         ></app-image-enlarger>
       </app-slide>
     </app-slider>
