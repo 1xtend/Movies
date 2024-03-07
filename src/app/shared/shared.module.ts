@@ -13,6 +13,8 @@ import { ReviewCardComponent } from './components/review-card/review-card.compon
 import { TruncateTextComponent } from './components/truncate-text/truncate-text.component';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { RandomBgColorDirective } from './directives/random-bg-color.directive';
+import { ImageEnlargerComponent } from './components/image-enlarger/image-enlarger.component';
+import { ImageModalComponent } from './components/image-modal/image-modal.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { RandomBgColorDirective } from './directives/random-bg-color.directive';
     TruncateTextComponent,
     AvatarComponent,
     RandomBgColorDirective,
+    ImageEnlargerComponent,
+    ImageModalComponent,
   ],
   imports: [
     CommonModule,
@@ -45,6 +49,7 @@ import { RandomBgColorDirective } from './directives/random-bg-color.directive';
     TruncateTextComponent,
     AvatarComponent,
     RandomBgColorDirective,
+    ImageEnlargerComponent,
   ],
 })
 export class SharedModule {}

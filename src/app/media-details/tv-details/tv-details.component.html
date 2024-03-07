@@ -1,14 +1,14 @@
 <section class="info">
   <div class="info__poster">
-    <img
+    <app-image-enlarger
       *ngIf="tv.poster_path; else noImage"
-      [src]="posterPath + tv.poster_path"
+      [imgSrc]="posterPath + tv.poster_path"
       [alt]="tv.name"
-    />
+      [largeImgSrc]="original + tv.poster_path"
+    ></app-image-enlarger>
 
     <ng-template #noImage>
-      <img src="./assets/images/blank.png" [alt]="tv.name" />
-      <mat-icon>image</mat-icon>
+      <img [src]="'../../../assets/images/blank-image.jpg'" [alt]="tv.name" />
     </ng-template>
   </div>
 

@@ -1,0 +1,9 @@
+::ng-deep {
+  .mdc-dialog .mdc-dialog__content {
+    padding: 0;
+  }
+
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 0;
+  }
+}

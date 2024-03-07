@@ -1,13 +1,18 @@
 <section class="info">
   <div class="info__poster">
-    <img
-      [src]="
-        person.profile_path
-          ? profilePath + person.profile_path
-          : '../../../assets/images/blank-image.jpg'
-      "
+    <app-image-enlarger
+      *ngIf="person.profile_path; else noImage"
+      [imgSrc]="profilePath + person.profile_path"
       [alt]="person.name"
-    />
+      [largeImgSrc]="original + person.profile_path"
+    ></app-image-enlarger>
+
+    <ng-template #noImage>
+      <img
+        [src]="'../../../assets/images/blank-image.jpg'"
+        [alt]="person.name"
+      />
+    </ng-template>
   </div>
 
   <div class="info__content">
@@ -95,15 +100,17 @@
       [slidesToScroll]="slides"
     >
       <app-slide *ngFor="let image of person.images.profiles">
-        <img
-          [src]="
+        <app-image-enlarger
+          [imgSrc]="
             image.file_path
               ? imagePath + image.file_path
               : '../../../assets/images/blank-image.jpg'
           "
           [alt]="person.name"
-          style="height: 100%"
-        />
+          [largeImgSrc]="
+            image.file_path ? original + image.file_path : undefined
+          "
+        ></app-image-enlarger>
       </app-slide>
     </app-slider>
 

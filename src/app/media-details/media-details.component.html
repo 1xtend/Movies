@@ -3,6 +3,7 @@
     *ngIf="res.movie as movie"
     [movie]="movie"
     [posterPath]="posterPath"
+    [original]="original"
     [language]="language"
     [slides$]="slides$"
   ></app-movie-details>
@@ -11,6 +12,7 @@
     *ngIf="res.tv as tv"
     [tv]="tv"
     [posterPath]="posterPath"
+    [original]="original"
     [language]="language"
     [slides$]="slides$"
   >
@@ -20,6 +22,7 @@
     *ngIf="res.person as person"
     [person]="person"
     [profilePath]="profilePath"
+    [original]="original"
     [slides$]="slides$"
   ></app-person-details>
 </ng-container>

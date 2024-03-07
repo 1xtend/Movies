@@ -11,7 +11,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -22,6 +21,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const Material = [
   MatToolbarModule,
@@ -34,7 +34,6 @@ const Material = [
   MatProgressBarModule,
   MatSnackBarModule,
   MatGridListModule,
-  MatDialogModule,
   MatButtonToggleModule,
   MatPaginatorModule,
   MatTooltipModule,
@@ -45,6 +44,7 @@ const Material = [
   MatSliderModule,
   MatListModule,
   MatExpansionModule,
+  MatDialogModule,
 ];
 
 @NgModule({
