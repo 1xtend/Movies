@@ -12,6 +12,7 @@ import { environment } from 'src/environment/environment';
 export class PersonDetailsComponent {
   @Input() person!: IDetailsPerson;
   @Input() profilePath!: string;
+  @Input() original!: string;
   @Input() slides$?: Observable<number>;
 
   imagePath = environment.imagePaths.h632Profile;

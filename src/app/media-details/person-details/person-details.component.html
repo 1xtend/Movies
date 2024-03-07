@@ -1,13 +1,18 @@
 <section class="info">
   <div class="info__poster">
-    <img
-      [src]="
-        person.profile_path
-          ? profilePath + person.profile_path
-          : '../../../assets/images/blank-image.jpg'
-      "
+    <app-image-enlarger
+      *ngIf="person.profile_path; else noImage"
+      [imgSrc]="profilePath + person.profile_path"
       [alt]="person.name"
-    />
+      [largeImgSrc]="original + person.profile_path"
+    ></app-image-enlarger>
+
+    <ng-template #noImage>
+      <img
+        [src]="'../../../assets/images/blank-image.jpg'"
+        [alt]="person.name"
+      />
+    </ng-template>
   </div>
 
   <div class="info__content">

@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 export class TvDetailsComponent {
   @Input() tv!: IDetailsTV;
   @Input() posterPath!: string;
+  @Input() original!: string;
   @Input() language?: string;
   @Input() slides$?: Observable<number>;
 }

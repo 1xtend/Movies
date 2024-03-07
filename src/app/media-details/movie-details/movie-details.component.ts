@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 export class MovieDetailsComponent {
   @Input() movie!: IDetailsMovie;
   @Input() posterPath!: string;
+  @Input() original!: string;
   @Input() language?: string;
   @Input() slides$?: Observable<number>;
 }

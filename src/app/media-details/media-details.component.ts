@@ -42,9 +42,10 @@ export class MediaDetailsComponent implements OnInit {
   private slidesSubject = new BehaviorSubject<number>(6);
   slides$ = this.slidesSubject.asObservable();
 
-  posterPath = environment.imagePaths.w500Poster;
-  backdropPath = environment.imagePaths.w1280Backdrop;
-  profilePath = environment.imagePaths.h632Profile;
+  readonly posterPath = environment.imagePaths.w500Poster;
+  readonly backdropPath = environment.imagePaths.w1280Backdrop;
+  readonly profilePath = environment.imagePaths.h632Profile;
+  readonly original = environment.imagePaths.original;
 
   constructor(
     private route: ActivatedRoute,

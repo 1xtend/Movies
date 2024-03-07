@@ -18,7 +18,7 @@ export class ImageEnlargerComponent {
   openModal(): void {
     this.dialog.open(ImageModalComponent, {
       data: {
-        src: this.largeImgSrc ? this.largeImgSrc : this.imgSrc,
+        src: this.largeImgSrc ?? this.imgSrc,
         alt: this.alt,
       },
     });
