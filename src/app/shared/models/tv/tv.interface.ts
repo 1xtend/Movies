@@ -1,6 +1,7 @@
 import { IGenre } from '../genres.interface';
 import { INetwork } from '../network.interface';
 import { IProductionCountry } from '../production-country.interface';
+import { IReviewsResponse } from '../review.interface';
 import { ISeason } from '../season.interface';
 import { ITVsResponse } from './tvs-response.interface';
 
@@ -55,6 +56,7 @@ export interface IDetailsTV {
   vote_average: number;
   vote_count: number;
   similar?: ITVsResponse;
+  reviews?: IReviewsResponse;
 }
 
 // Parts

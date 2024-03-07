@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ContentChild,
-  ElementRef,
-  Input,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-truncate-text',
@@ -15,7 +6,6 @@ import {
   styleUrls: ['./truncate-text.component.scss'],
 })
 export class TruncateTextComponent {
-  // @ViewChild('text') textRef?: ElementRef<HTMLElement>;
   @Input({ required: true }) text: string = '';
   @Input() start: number = 0;
   @Input() end: number = 100;

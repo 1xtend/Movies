@@ -39,12 +39,12 @@
     </div>
 
     <div class="info__group" *ngIf="tv.overview">
-      <h2 class="info__title">Overview</h2>
+      <h2 class="info__title title">Overview</h2>
       <p>{{ tv.overview }}</p>
     </div>
 
     <div class="info__group" *ngIf="tv.genres.length">
-      <h2 class="info__title">Genres</h2>
+      <h2 class="info__title title">Genres</h2>
       <p>
         <span *ngFor="let genre of tv.genres">
           {{
@@ -84,7 +84,7 @@
 </section>
 
 <section class="similar" *ngIf="tv.similar && tv.similar.results.length">
-  <h2 class="similar__title">Similar</h2>
+  <h2 class="similar__title title">Similar</h2>
 
   <div class="similar__slider">
     <app-slider
@@ -135,5 +135,16 @@
     >
       <mat-icon>navigate_next</mat-icon>
     </button>
+  </div>
+</section>
+
+<section class="reviews" *ngIf="tv.reviews && tv.reviews.total_results > 0">
+  <h2 class="reviews__title title">Reviews</h2>
+
+  <div class="reviews-grid">
+    <app-review-card
+      *ngFor="let review of tv.reviews.results"
+      [review]="review"
+    ></app-review-card>
   </div>
 </section>
