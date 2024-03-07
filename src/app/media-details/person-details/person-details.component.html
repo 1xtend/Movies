@@ -95,15 +95,14 @@
       [slidesToScroll]="slides"
     >
       <app-slide *ngFor="let image of person.images.profiles">
-        <img
-          [src]="
+        <app-image-enlarger
+          [imgSrc]="
             image.file_path
               ? imagePath + image.file_path
               : '../../../assets/images/blank-image.jpg'
           "
           [alt]="person.name"
-          style="height: 100%"
-        />
+        ></app-image-enlarger>
       </app-slide>
     </app-slider>
 

@@ -1,6 +1,7 @@
 .no-avatar {
   display: grid;
   place-items: center;
+  user-select: none;
 }
 
 .letter {

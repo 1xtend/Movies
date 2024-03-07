@@ -14,5 +14,5 @@ export class PersonDetailsComponent {
   @Input() profilePath!: string;
   @Input() slides$?: Observable<number>;
 
-  imagePath = environment.imagePaths.original;
+  imagePath = environment.imagePaths.h632Profile;
 }
