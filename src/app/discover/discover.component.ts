@@ -200,8 +200,6 @@ export class DiscoverComponent implements OnInit {
           this.noResult = false;
         }
 
-        console.log('Params changes');
-
         this.sharedService.scrollToTop();
       });
   }
@@ -212,7 +210,6 @@ export class DiscoverComponent implements OnInit {
       .subscribe((filters) => {
         this.filters = filters;
 
-        console.log('Filters changes');
         this.setQueryParams();
       });
   }
@@ -230,8 +227,6 @@ export class DiscoverComponent implements OnInit {
         debounceTime(this.debounceTime)
       )
       .subscribe((genres) => {
-        console.log('Genres changes');
-
         this.filtersSubject.next({
           ...this.filters,
           with_genres: genres.length ? genres.join(',') : undefined,
@@ -315,14 +310,11 @@ export class DiscoverComponent implements OnInit {
       take(1),
       switchMap((languages) => {
         if (languages.length) {
-          console.log('Saved languages: ', languages);
           return of(languages);
         }
 
         return this.mediaService.getLanguages().pipe(
           tap((languages) => {
-            console.log('Fetched languages: ', languages);
-
             this.sharedService.setLanguagesSubject(languages);
           })
         );

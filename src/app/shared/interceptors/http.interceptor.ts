@@ -34,8 +34,6 @@ export class MediaInterceptor implements HttpInterceptor {
       params,
     });
 
-    console.log(request.urlWithParams);
-
     return next.handle(request).pipe(
       finalize(() => {
         this.loadingService.setLoading(false);

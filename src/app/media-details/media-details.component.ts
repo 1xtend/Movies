@@ -75,9 +75,7 @@ export class MediaDetailsComponent implements OnInit {
           return this.fetchMedia();
         })
       )
-      .subscribe((res) => {
-        console.log('Respone: ', res);
-      });
+      .subscribe();
   }
 
   private breakpointChanges(): void {
