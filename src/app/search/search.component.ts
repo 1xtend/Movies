@@ -260,7 +260,7 @@ export class SearchComponent implements OnInit {
 
         // Get fetched languages
         return this.mediaService.getLanguages().pipe(
-          map((languages) => {
+          tap((languages) => {
             this.sharedService.setLanguagesSubject(languages);
           })
         );
