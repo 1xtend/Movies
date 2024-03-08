@@ -2,11 +2,15 @@ import { MediaService } from '../shared/services/media.service';
 import {
   BehaviorSubject,
   EMPTY,
+  Observable,
   Subject,
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  map,
+  of,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 import { SharedService } from './../shared/services/shared.service';
@@ -19,7 +23,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { FormControl } from '@angular/forms';
-import { IMediaFilters } from '@app/shared/models/filters.interface';
+import { IFilters } from '@app/shared/models/filters.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
@@ -48,12 +52,13 @@ export class SearchComponent implements OnInit {
   res$ = this.resSubject.asObservable();
 
   // States
-  private filtersSubject = new Subject<IMediaFilters>();
+  private filtersSubject = new Subject<IFilters>();
   filters$ = this.filtersSubject.asObservable();
-  filters: IMediaFilters = {
+  filters: IFilters = {
     page: 1,
     query: '',
     include_adult: false,
+    language: '',
   };
 
   private isTabletSubject = new BehaviorSubject<boolean>(false);
@@ -69,12 +74,16 @@ export class SearchComponent implements OnInit {
     nonNullable: true,
   });
 
+  languageControl = new FormControl<string>('', {
+    nonNullable: true,
+  });
+
   readonly pageSize = 20;
   noResult: boolean = false;
   private readonly debounceTime = this.sharedService.fetchDebounceTime;
 
   constructor(
-    private sharedService: SharedService,
+    public sharedService: SharedService,
     private mediaService: MediaService,
     private route: ActivatedRoute,
     private router: Router,
@@ -88,7 +97,7 @@ export class SearchComponent implements OnInit {
     this.searchChanges();
     this.mediaTypeChanges();
     this.includeAdultChanges();
-
+    this.languageChanges();
     this.filtersChanges();
 
     this.breakpointChanges();
@@ -115,6 +124,7 @@ export class SearchComponent implements OnInit {
               include_adult: JSON.parse(
                 queryParams.get('include_adult') ?? 'false'
               ),
+              language: queryParams.get('language') || undefined,
             };
 
             this.mediaType = data['type'];
@@ -127,6 +137,10 @@ export class SearchComponent implements OnInit {
               this.filters.include_adult ?? false,
               { emitEvent: false }
             );
+
+            this.languageControl.setValue(this.filters.language ?? 'xx', {
+              emitEvent: false,
+            });
           }
 
           return this.fetchMedia();
@@ -192,6 +206,25 @@ export class SearchComponent implements OnInit {
       });
   }
 
+  private languageChanges(): void {
+    this.fetchLanguages()
+      .pipe(
+        switchMap(() => {
+          return this.languageControl.valueChanges.pipe(
+            takeUntilDestroyed(this.destroyRef)
+          );
+        }),
+        debounceTime(this.debounceTime)
+      )
+      .subscribe((language) => {
+        this.filtersSubject.next({
+          ...this.filters,
+          language,
+          page: 1,
+        });
+      });
+  }
+
   private breakpointChanges(): void {
     this.breakpointObserver
       .observe(['(max-width: 768px)'])
@@ -216,7 +249,28 @@ export class SearchComponent implements OnInit {
     return media.id;
   }
 
-  private fetchMedia() {
+  private fetchLanguages() {
+    return this.sharedService.languages$.pipe(
+      take(1),
+      switchMap((languages) => {
+        if (languages.length) {
+          // Get saved languages
+          return of(languages);
+        }
+
+        // Get fetched languages
+        return this.mediaService.getLanguages().pipe(
+          tap((languages) => {
+            this.sharedService.setLanguagesSubject(languages);
+          })
+        );
+      })
+    );
+  }
+
+  private fetchMedia(): Observable<
+    ITVsResponse | IMoviesResponse | IPeopleResponse
+  > {
     if (this.mediaType === 'tv') {
       return this.mediaService.searchTV(this.filters).pipe(
         tap((res) => {

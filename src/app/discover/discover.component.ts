@@ -10,12 +10,11 @@ import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { sortBy } from '@app/shared/helpers/sort-by';
 import { ISortBy } from '@app/shared/models/sort-by.type';
-import { IDiscoverFilters } from '@app/shared/models/filters.interface';
+import { IFilters } from '@app/shared/models/filters.interface';
 import { IGenre } from '@app/shared/models/genres.interface';
 import { MediaType } from '@app/shared/models/media.type';
 import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
-import { IDiscoverParams } from '@app/shared/models/params.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
 import { MovieSortByType, TVSortByType } from '@app/shared/models/sort-by.type';
 import { ITV } from '@app/shared/models/tv/tv.interface';
@@ -56,7 +55,7 @@ export class DiscoverComponent implements OnInit {
 
   // Filters
   mediaType: Exclude<MediaType, 'person'> = 'tv';
-  filters: IDiscoverFilters = {
+  filters: IFilters = {
     page: 1,
     sort_by: 'popularity.desc',
     include_adult: false,
@@ -90,7 +89,7 @@ export class DiscoverComponent implements OnInit {
   });
 
   // States
-  private filtersSubject = new Subject<IDiscoverFilters>();
+  private filtersSubject = new Subject<IFilters>();
   filters$ = this.filtersSubject.asObservable();
 
   private genresListSubject = new ReplaySubject<IGenre[]>();
@@ -376,7 +375,7 @@ export class DiscoverComponent implements OnInit {
   }
 
   private setQueryParams(): void {
-    const params: IDiscoverParams = {
+    const params: IFilters = {
       ...this.filters,
     };
 

@@ -1,5 +1,5 @@
 import { IGenre } from '../genres.interface';
-import { ILanguage } from '../languages.interface';
+import { ILanguage } from '../language.interface';
 import { INetwork } from '../network.interface';
 import { IProductionCountry } from '../production-country.interface';
 import { IReviewsResponse } from '../review.interface';

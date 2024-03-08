@@ -10,7 +10,5 @@ export interface IGenre {
 }
 
 export type SavedGenresType = {
-  // tv: IGenre[] | undefined;
-  // movie: IGenre[] | undefined;
   [T in Exclude<MediaType, 'person'>]: IGenre[] | undefined;
 };

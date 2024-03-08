@@ -5,10 +5,10 @@ import { ViewportScroller } from '@angular/common';
 import { Router } from '@angular/router';
 import { SavedGenresType } from '../models/genres.interface';
 import { IGenre } from './../models/genres.interface';
-import { ILanguage } from '../models/languages.interface';
+import { ILanguage } from '../models/language.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
-import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
+import { IFilters } from '../models/filters.interface';
 import { IPeopleResponse } from '../models/person/people-response.interface';
 
 @Injectable({
@@ -43,12 +43,12 @@ export class SharedService {
   >(undefined);
   popularPeople$ = this.popularPeopleSubject.asObservable();
 
+  private languagesSubject = new BehaviorSubject<ILanguage[]>([]);
+  languages$ = this.languagesSubject.asObservable();
+
   readonly fetchDebounceTime: number = 1000;
 
   constructor(private viewport: ViewportScroller, private router: Router) {}
-
-  private languagesSubject = new BehaviorSubject<ILanguage[]>([]);
-  languages$ = this.languagesSubject.asObservable();
 
   setSearchSubject(text: string): void {
     this.searchSubject.next(text);
@@ -84,11 +84,7 @@ export class SharedService {
     this.viewport.scrollToPosition([0, 0]);
   }
 
-  setParams(
-    params: IMediaFilters | IDiscoverFilters,
-    path: string,
-    mediaType: MediaType
-  ): void {
+  setParams(params: IFilters, path: string, mediaType: MediaType): void {
     this.router.navigate([path, mediaType], {
       queryParams: params,
     });
