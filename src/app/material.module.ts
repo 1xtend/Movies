@@ -10,12 +10,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
@@ -33,12 +31,10 @@ const Material = [
   MatCardModule,
   MatProgressBarModule,
   MatSnackBarModule,
-  MatGridListModule,
   MatButtonToggleModule,
   MatPaginatorModule,
   MatTooltipModule,
   MatSlideToggleModule,
-  MatProgressSpinnerModule,
   MatSelectModule,
   MatChipsModule,
   MatSliderModule,

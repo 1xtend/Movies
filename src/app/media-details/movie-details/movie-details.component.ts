@@ -1,7 +1,5 @@
-import { MediaService } from '@app/shared/services/media.service';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
-import { IReviewsResponse } from '@app/shared/models/review.interface';
 import { Observable } from 'rxjs';
 
 @Component({

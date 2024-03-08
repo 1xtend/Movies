@@ -1,7 +1,7 @@
 <mat-form-field class="full-width" subscriptSizing="dynamic">
   <mat-label>Search</mat-label>
 
-  <input type="search" matInput [formControl]="searchControl" />
+  <input type="text" matInput [formControl]="searchControl" />
 
   <button
     *ngIf="searchControl.value"

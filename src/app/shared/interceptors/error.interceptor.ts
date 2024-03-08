@@ -5,7 +5,7 @@ import {
   HttpEvent,
   HttpInterceptor,
 } from '@angular/common/http';
-import { EMPTY, EmptyError, Observable, catchError, map } from 'rxjs';
+import { EMPTY, Observable, catchError } from 'rxjs';
 import { NotificationService } from '../services/notification.service';
 
 @Injectable()

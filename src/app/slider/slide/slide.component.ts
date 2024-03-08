@@ -8,7 +8,6 @@ import {
 import { ISlideStyles } from '../models/slide-styles.interface';
 import { SliderService } from '../services/slider.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-slide',

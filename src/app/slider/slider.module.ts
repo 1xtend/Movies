@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SlideComponent } from './slide/slide.component';
 import { SliderComponent } from './slider.component';
-import { SliderService } from './services/slider.service';
 
 @NgModule({
   declarations: [SliderComponent, SlideComponent],

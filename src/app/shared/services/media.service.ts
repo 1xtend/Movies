@@ -8,10 +8,9 @@ import { ITVsResponse } from '../models/tv/tvs-response.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
 import { IDetailsTV } from '../models/tv/tv.interface';
 import { IDetailsMovie } from '../models/movie/movie.interface';
-import { IDetailsPerson, IPerson } from '../models/person/person.interface';
+import { IDetailsPerson } from '../models/person/person.interface';
 import { IGenres } from '../models/genres.interface';
 import { ILanguage } from '../models/languages.interface';
-import { IReviewsResponse } from '../models/review.interface';
 
 @Injectable({
   providedIn: 'root',

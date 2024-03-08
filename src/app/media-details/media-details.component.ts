@@ -35,12 +35,12 @@ export class MediaDetailsComponent implements OnInit {
   >();
   res$ = this.resSubject.asObservable();
 
+  private slidesSubject = new BehaviorSubject<number>(6);
+  slides$ = this.slidesSubject.asObservable();
+
   private mediaType: MediaType = 'tv';
   private id: number = 0;
   language: string | undefined = undefined;
-
-  private slidesSubject = new BehaviorSubject<number>(6);
-  slides$ = this.slidesSubject.asObservable();
 
   readonly posterPath = environment.imagePaths.w500Poster;
   readonly backdropPath = environment.imagePaths.w1280Backdrop;
@@ -75,9 +75,7 @@ export class MediaDetailsComponent implements OnInit {
           return this.fetchMedia();
         })
       )
-      .subscribe((res) => {
-        console.log('Respone: ', res);
-      });
+      .subscribe();
   }
 
   private breakpointChanges(): void {
