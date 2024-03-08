@@ -23,7 +23,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { FormControl } from '@angular/forms';
-import { IFilters, IMediaFilters } from '@app/shared/models/filters.interface';
+import { IFilters } from '@app/shared/models/filters.interface';
 import { PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';

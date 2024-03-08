@@ -1,11 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {
-  IDiscoverFilters,
-  IFilters,
-  IMediaFilters,
-} from '../models/filters.interface';
+import { IFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { IPeopleResponse } from '../models/person/people-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
@@ -14,7 +10,7 @@ import { IDetailsTV } from '../models/tv/tv.interface';
 import { IDetailsMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson } from '../models/person/person.interface';
 import { IGenres } from '../models/genres.interface';
-import { ILanguage } from '../models/languages.interface';
+import { ILanguage } from '../models/language.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -102,14 +98,17 @@ export class MediaService {
   // Discover
   private discover<T>(
     type: Exclude<MediaType, 'person'>,
-    filters: IDiscoverFilters
+    filters: IFilters
   ): Observable<T> {
     let params = new HttpParams({
       fromObject: {
         page: filters.page,
-        sort_by: filters.sort_by,
       },
     });
+
+    if (filters.sort_by) {
+      params = params.append('sort_by', filters.sort_by);
+    }
 
     if (filters.with_genres) {
       params = params.append('with_genres', filters.with_genres);
@@ -124,7 +123,6 @@ export class MediaService {
     }
 
     if (filters['vote_average.gte']) {
-      console.log('has');
       params = params.append('vote_average.gte', filters['vote_average.gte']);
     }
 
@@ -137,11 +135,11 @@ export class MediaService {
     });
   }
 
-  discoverMovies(filters: IDiscoverFilters): Observable<IMoviesResponse> {
+  discoverMovies(filters: IFilters): Observable<IMoviesResponse> {
     return this.discover<IMoviesResponse>('movie', filters);
   }
 
-  discoverTVs(filters: IDiscoverFilters): Observable<ITVsResponse> {
+  discoverTVs(filters: IFilters): Observable<ITVsResponse> {
     return this.discover<ITVsResponse>('tv', filters);
   }
 

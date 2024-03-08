@@ -5,14 +5,10 @@ import { ViewportScroller } from '@angular/common';
 import { Router } from '@angular/router';
 import { SavedGenresType } from '../models/genres.interface';
 import { IGenre } from './../models/genres.interface';
-import { ILanguage } from '../models/languages.interface';
+import { ILanguage } from '../models/language.interface';
 import { IMoviesResponse } from '../models/movie/movies-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
-import {
-  IDiscoverFilters,
-  IFilters,
-  IMediaFilters,
-} from '../models/filters.interface';
+import { IFilters } from '../models/filters.interface';
 import { IPeopleResponse } from '../models/person/people-response.interface';
 
 @Injectable({
