@@ -1,7 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IDiscoverFilters, IMediaFilters } from '../models/filters.interface';
+import {
+  IDiscoverFilters,
+  IFilters,
+  IMediaFilters,
+} from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { IPeopleResponse } from '../models/person/people-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
@@ -19,7 +23,7 @@ export class MediaService {
   constructor(private http: HttpClient) {}
 
   // Search
-  private search<T>(type: MediaType, filters: IMediaFilters): Observable<T> {
+  private search<T>(type: MediaType, filters: IFilters): Observable<T> {
     let params = new HttpParams({
       fromObject: {
         ...filters,
@@ -31,15 +35,15 @@ export class MediaService {
     });
   }
 
-  searchPeople(filters: IMediaFilters): Observable<IPeopleResponse> {
+  searchPeople(filters: IFilters): Observable<IPeopleResponse> {
     return this.search<IPeopleResponse>('person', filters);
   }
 
-  searchTV(filters: IMediaFilters): Observable<ITVsResponse> {
+  searchTV(filters: IFilters): Observable<ITVsResponse> {
     return this.search<ITVsResponse>('tv', filters);
   }
 
-  searchMovie(filters: IMediaFilters): Observable<IMoviesResponse> {
+  searchMovie(filters: IFilters): Observable<IMoviesResponse> {
     return this.search<IMoviesResponse>('movie', filters);
   }
 
