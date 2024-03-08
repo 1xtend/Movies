@@ -34,12 +34,12 @@
     </div>
 
     <div class="info__group" *ngIf="person.biography">
-      <h2 class="info__title">Biography</h2>
+      <h2 class="info__title title">Biography</h2>
       <p>{{ person.biography }}</p>
     </div>
 
     <div class="info__group" *ngIf="person.also_known_as.length">
-      <h2 class="info__title">Alson known as</h2>
+      <h2 class="info__title title">Alson known as</h2>
       <p>
         <span *ngFor="let value of person.also_known_as">
           {{
@@ -88,7 +88,7 @@
 </section>
 
 <section class="images" *ngIf="person.images && person.images.profiles.length">
-  <h2 class="images__title">Images</h2>
+  <h2 class="images__title title">Images</h2>
 
   <div class="images__slider">
     <app-slider
