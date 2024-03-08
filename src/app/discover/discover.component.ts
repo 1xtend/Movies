@@ -8,7 +8,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ISortBy, sortBy } from '@app/shared/helpers/sort-by';
+import { sortBy } from '@app/shared/helpers/sort-by';
+import { ISortBy } from '@app/shared/models/sort-by.type';
 import { IDiscoverFilters } from '@app/shared/models/filters.interface';
 import { IGenre } from '@app/shared/models/genres.interface';
 import { MediaType } from '@app/shared/models/media.type';
@@ -310,9 +311,11 @@ export class DiscoverComponent implements OnInit {
       take(1),
       switchMap((languages) => {
         if (languages.length) {
+          // Get saved languages
           return of(languages);
         }
 
+        // Get fetched languages
         return this.mediaService.getLanguages().pipe(
           tap((languages) => {
             this.sharedService.setLanguagesSubject(languages);
@@ -329,6 +332,7 @@ export class DiscoverComponent implements OnInit {
         const currentGenres = genres[this.mediaType];
 
         if (currentGenres && currentGenres.length) {
+          // Get saved genres
           return of(currentGenres);
         }
 
@@ -336,6 +340,7 @@ export class DiscoverComponent implements OnInit {
           map((res) => {
             this.sharedService.setGenresSubject(res.genres, this.mediaType);
 
+            // Get fetched genres
             return res.genres;
           })
         );

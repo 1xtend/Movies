@@ -1,10 +1,5 @@
 import { MediaType } from '../models/media.type';
-import { MovieSortByType, TVSortByType } from '../models/sort-by.type';
-
-export interface ISortBy<T extends MovieSortByType | TVSortByType> {
-  name: string;
-  value: T;
-}
+import { ISortBy, MovieSortByType, TVSortByType } from '../models/sort-by.type';
 
 export const movieSortBy: ISortBy<MovieSortByType>[] = [
   {

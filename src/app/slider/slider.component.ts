@@ -1,30 +1,23 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChildren,
   DestroyRef,
   ElementRef,
   Inject,
   Input,
-  NgZone,
-  OnChanges,
   QueryList,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {
   BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
-  filter,
   fromEvent,
   map,
   switchMap,
   takeUntil,
-  takeWhile,
   tap,
   timer,
 } from 'rxjs';
@@ -32,7 +25,6 @@ import { SlideComponent } from './slide/slide.component';
 import { ISlideStyles } from './models/slide-styles.interface';
 import { DOCUMENT } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router } from '@angular/router';
 import { SliderService } from './services/slider.service';
 
 @Component({

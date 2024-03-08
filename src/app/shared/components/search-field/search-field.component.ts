@@ -37,9 +37,9 @@ export class SearchFieldComponent implements OnInit {
   private searchChanges(): void {
     this.searchControl.valueChanges
       .pipe(
-        map((query) => query?.trim()),
         debounceTime(500),
         distinctUntilChanged(),
+        map((query) => query?.trim()),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((query) => {

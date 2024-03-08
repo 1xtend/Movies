@@ -7,7 +7,6 @@ import {
   debounceTime,
   distinctUntilChanged,
   switchMap,
-  takeUntil,
   tap,
 } from 'rxjs';
 import { SharedService } from './../shared/services/shared.service';
@@ -48,22 +47,23 @@ export class SearchComponent implements OnInit {
   >();
   res$ = this.resSubject.asObservable();
 
-  mediaType: MediaType = 'tv';
-  mediaTypeControl = new FormControl<MediaType>(this.mediaType, {
-    nonNullable: true,
-  });
-
+  // States
+  private filtersSubject = new Subject<IMediaFilters>();
+  filters$ = this.filtersSubject.asObservable();
   filters: IMediaFilters = {
     page: 1,
     query: '',
     include_adult: false,
   };
 
-  private filtersSubject = new Subject<IMediaFilters>();
-  filters$ = this.filtersSubject.asObservable();
-
   private isTabletSubject = new BehaviorSubject<boolean>(false);
   isTablet$ = this.isTabletSubject.asObservable();
+
+  // Controls
+  mediaType: MediaType = 'tv';
+  mediaTypeControl = new FormControl<MediaType>(this.mediaType, {
+    nonNullable: true,
+  });
 
   includeAdultControl = new FormControl<boolean>(this.filters.include_adult, {
     nonNullable: true,

@@ -25,3 +25,8 @@ export type TVSortByType =
   | 'first_air_date.desc'
   | 'first_air_date.asc'
   | SortByValueType;
+
+export interface ISortBy<T extends MovieSortByType | TVSortByType> {
+  name: string;
+  value: T;
+}

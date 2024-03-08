@@ -81,9 +81,11 @@ export class HomeComponent implements OnInit {
       take(1),
       switchMap((movies) => {
         if (movies && movies.results.length) {
+          // Get saved movies
           return of(movies);
         }
 
+        // Get fetched movies
         return this.mediaService.getPopularMovies().pipe(
           tap((movies) => {
             this.sharedService.setPopularMoviesSubject(movies);
@@ -98,9 +100,11 @@ export class HomeComponent implements OnInit {
       take(1),
       switchMap((tvs) => {
         if (tvs && tvs.results.length) {
+          // Get saved tv series
           return of(tvs);
         }
 
+        // Get fetched tv series
         return this.mediaService.getPopularTVs().pipe(
           tap((tvs) => {
             this.sharedService.setPopularTVsSubject(tvs);
@@ -115,9 +119,11 @@ export class HomeComponent implements OnInit {
       take(1),
       switchMap((people) => {
         if (people && people.results.length) {
+          // Get saved people
           return of(people);
         }
 
+        // Get fetched people
         return this.mediaService.getPopularPeople().pipe(
           tap((people) => {
             this.sharedService.setPopularPeopleSubject(people);

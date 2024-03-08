@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MediaType } from '../models/media.type';
-import { DOCUMENT, ViewportScroller } from '@angular/common';
+import { ViewportScroller } from '@angular/common';
 import { Router } from '@angular/router';
 import { SavedGenresType } from '../models/genres.interface';
 import { IGenre } from './../models/genres.interface';

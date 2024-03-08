@@ -18,7 +18,7 @@ export class HeaderComponent {
 
   show: boolean = false;
 
-  showSearchInput() {
+  toggleInput() {
     this.show = !this.show;
   }
 }
