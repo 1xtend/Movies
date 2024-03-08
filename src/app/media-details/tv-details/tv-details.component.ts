@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { IReviewsResponse } from '@app/shared/models/review.interface';
 import { IDetailsTV } from '@app/shared/models/tv/tv.interface';
+import { MediaService } from '@app/shared/services/media.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -14,4 +16,6 @@ export class TvDetailsComponent {
   @Input() original!: string;
   @Input() language?: string;
   @Input() slides$?: Observable<number>;
+
+  opened: boolean = false;
 }

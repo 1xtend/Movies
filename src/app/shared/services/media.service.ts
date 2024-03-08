@@ -11,6 +11,7 @@ import { IDetailsMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson, IPerson } from '../models/person/person.interface';
 import { IGenres } from '../models/genres.interface';
 import { ILanguage } from '../models/languages.interface';
+import { IReviewsResponse } from '../models/review.interface';
 
 @Injectable({
   providedIn: 'root',

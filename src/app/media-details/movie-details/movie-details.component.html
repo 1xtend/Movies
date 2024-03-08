@@ -148,16 +148,17 @@
   </div>
 </section>
 
-<section
-  class="reviews"
-  *ngIf="movie.reviews && movie.reviews.total_results > 0"
->
-  <h2 class="reviews__title title">Reviews</h2>
+<mat-accordion *ngIf="movie.reviews && movie.reviews.total_results > 0">
+  <mat-expansion-panel (opened)="opened = true" (closed)="opened = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ opened ? "Hide" : "Show" }} reviews</mat-panel-title>
+    </mat-expansion-panel-header>
 
-  <div class="reviews-grid">
-    <app-review-card
-      *ngFor="let review of movie.reviews.results"
-      [review]="review"
-    ></app-review-card>
-  </div>
-</section>
+    <div class="reviews-grid">
+      <app-review-card
+        *ngFor="let review of movie.reviews.results"
+        [review]="review"
+      ></app-review-card>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
