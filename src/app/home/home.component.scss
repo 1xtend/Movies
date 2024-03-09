@@ -1,3 +1,5 @@
+@import "../../assets/scss/variables";
+
 .greeting {
   padding: 8rem 2rem;
   background: url("../../assets/images/home-bg-min.jpg") center no-repeat,
@@ -5,12 +7,12 @@
   background-size: cover;
   position: relative;
 
-  @media (max-width: 480px) {
+  @media (max-width: $breakpoint-XS) {
     padding: 4rem 1rem;
   }
 
   &:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: $spacing-default;
   }
 
   &::after {
@@ -27,35 +29,31 @@
     position: relative;
     z-index: 1;
     color: #fff;
-    font-size: 2rem;
+    font-size: 2.5rem;
     line-height: 1.2;
 
-    @media (max-width: 768px) {
+    @media (max-width: $breakpoint-M) {
       font-size: 1.5rem;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: $breakpoint-XS) {
       font-size: 1.25rem;
     }
   }
 
-  &__bold {
-    font-size: 1.25em;
-    font-weight: 700;
+  &__thin {
+    font-size: 0.75em;
+    font-weight: 400;
   }
 }
 
 .media {
   &:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: $spacing-default;
   }
 
-  &__title {
-    font-size: 2rem;
-
-    @media (max-width: 768px) {
-      font-size: 1.5rem;
-    }
+  &__title:not(:last-child) {
+    margin-bottom: $spacing-M;
   }
 
   &__slider {

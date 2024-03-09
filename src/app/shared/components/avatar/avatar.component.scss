@@ -1,3 +1,5 @@
+@import "../../../../assets/scss/variables";
+
 .no-avatar {
   display: grid;
   place-items: center;
@@ -6,5 +8,5 @@
 
 .letter {
   font-size: 1.25rem;
-  color: #fff;
+  color: $color-light;
 }

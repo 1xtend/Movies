@@ -1,0 +1,24 @@
+@use "sass:map";
+@import "./palettes";
+
+// Colors
+$color-dark: #000;
+$color-light: #fff;
+
+$color-green: map.get($my-primary-palette, 500);
+
+// Width
+$container-width: 82rem;
+
+// Spacing
+$spacing-XL: 2rem; // 32px
+$spacing-default: 1rem; // 16px
+$spacing-L: 0.75rem; // 12px
+$spacing-M: 0.5rem; // 8px
+$spacing-S: 0.25rem; // 4px
+
+// Breakpoints
+$breakpoint-XS: 30em; // 480px
+$breakpoint-S: 36em; // 576px
+$breakpoint-M: 48em; // 768px
+$breakpoint-L: 62em; // 992px

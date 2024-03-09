@@ -1,0 +1,36 @@
+@use "@angular/material" as mat;
+@include mat.core();
+
+@import "@angular/material/theming";
+@import "./palettes";
+
+$my-primary: mat.define-palette($my-primary-palette);
+$my-accent: mat.define-palette($my-accent-palette);
+
+$my-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+    ),
+    density: 0,
+  )
+);
+
+$my-typography-config: mat.define-typography-config(
+  $headline-5:
+    mat.define-typography-level(
+      $font-size: 2rem,
+      $font-weight: 700,
+      $line-height: 1,
+    ),
+  $headline-6:
+    mat.define-typography-level(
+      $font-size: 1.5rem,
+      $font-weight: 500,
+      $line-height: 1,
+    ),
+);
+
+@include angular-material-theme($my-theme);
+@include angular-material-typography($my-typography-config);

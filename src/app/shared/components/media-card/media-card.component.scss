@@ -1,41 +1,28 @@
+@import "../../../../assets/scss/variables";
+
 .card {
   &__image-link {
     display: block;
     position: relative;
-
-    .mat-icon {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
   }
 
   &__image {
     max-width: 100%;
   }
 
-  &__blank-image {
-    display: grid;
-    place-items: center;
+  &__content {
+    padding-top: $spacing-L;
   }
 
-  &__title {
-    text-decoration: none;
-    color: inherit;
-    line-height: 1.2;
-    padding-top: 0.5rem;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  &__title:hover {
+    color: $color-green;
   }
 
   &__bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
+    gap: $spacing-M;
     flex-wrap: wrap;
   }
 
@@ -44,8 +31,4 @@
     align-items: center;
     column-gap: 0.2rem;
   }
-}
-
-::ng-deep .small mat-card-title {
-  font-size: 12px;
 }

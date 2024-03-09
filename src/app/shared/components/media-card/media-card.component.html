@@ -26,6 +26,7 @@
       }"
       mat-card-title
       class="card__title"
+      [style.fontSize.px]="titleSize"
       [matTooltip]="!textCut || title.length <= 30 ? '' : title"
     >
       {{ textCut ? (title | textCut : 0 : textCut) : title }}
