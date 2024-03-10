@@ -25,9 +25,7 @@
     width: 100%;
   }
 
-  &__group,
-  &__toggler,
-  &__language {
+  &__item {
     width: 100%;
 
     &:not(:last-child) {
@@ -35,7 +33,7 @@
     }
   }
 
-  &__item {
+  &__toggle {
     width: 100%;
   }
 }

@@ -7,31 +7,31 @@
 
       <mat-button-toggle-group
         [vertical]="!(isTablet$ | async)"
-        class="search-aside__group"
+        class="search-aside__item"
         [formControl]="mediaTypeControl"
         (change)="handleTabEvent($event)"
       >
-        <mat-button-toggle value="tv" class="search-aside__item">
+        <mat-button-toggle value="tv" class="search-aside__toggle">
           TV Shows
         </mat-button-toggle>
-        <mat-button-toggle value="movie" class="search-aside__item">
+        <mat-button-toggle value="movie" class="search-aside__toggle">
           Movies
         </mat-button-toggle>
-        <mat-button-toggle value="person" class="search-aside__item">
+        <mat-button-toggle value="person" class="search-aside__toggle">
           People
         </mat-button-toggle>
       </mat-button-toggle-group>
 
       <mat-slide-toggle
         [formControl]="includeAdultControl"
-        class="search-aside__toggler"
+        class="search-aside__item"
       >
         Include adult
       </mat-slide-toggle>
 
       <mat-form-field
         *ngIf="sharedService.languages$ | async as languages"
-        class="search-aside__language"
+        class="search-aside__item"
       >
         <mat-label>Language</mat-label>
 
