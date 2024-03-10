@@ -13,6 +13,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -38,10 +39,13 @@ export class HomeComponent implements OnInit {
     private mediaService: MediaService,
     private sharedService: SharedService,
     private breakpointObserver: BreakpointObserver,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('VMTV: Place for Movies and TV Series');
+
     this.getPopularMovies();
     this.getPopularTVs();
     this.getPopularPeople();

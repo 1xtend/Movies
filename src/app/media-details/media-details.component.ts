@@ -6,6 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
@@ -51,7 +52,8 @@ export class MediaDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private mediaService: MediaService,
     private destroyRef: DestroyRef,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -113,6 +115,7 @@ export class MediaDetailsComponent implements OnInit {
       return this.mediaService.getMovieDetails(this.id, this.language).pipe(
         tap((res) => {
           this.resSubject.next({ movie: res });
+          this.titleService.setTitle(res.title);
         })
       );
     }
@@ -121,6 +124,7 @@ export class MediaDetailsComponent implements OnInit {
       return this.mediaService.getTVDetails(this.id, this.language).pipe(
         tap((res) => {
           this.resSubject.next({ tv: res });
+          this.titleService.setTitle(res.name);
         })
       );
     }
@@ -129,6 +133,7 @@ export class MediaDetailsComponent implements OnInit {
       return this.mediaService.getPersonDetails(this.id).pipe(
         tap((res) => {
           this.resSubject.next({ person: res });
+          this.titleService.setTitle(res.name);
         })
       );
     }

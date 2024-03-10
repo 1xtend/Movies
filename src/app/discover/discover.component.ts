@@ -39,6 +39,7 @@ import {
   take,
   tap,
 } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-discover',
@@ -120,7 +121,8 @@ export class DiscoverComponent implements OnInit {
     private mediaService: MediaService,
     private router: Router,
     public sharedService: SharedService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
@@ -208,6 +210,10 @@ export class DiscoverComponent implements OnInit {
                 this.filters.first_air_date_year) ??
                 null,
               { emitEvent: false }
+            );
+
+            this.titleService.setTitle(
+              `Discover ${this.mediaType === 'movie' ? 'Movies' : 'TV Series'}`
             );
           }
 

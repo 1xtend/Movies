@@ -33,6 +33,7 @@ import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IPerson } from '@app/shared/models/person/person.interface';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-search',
@@ -87,10 +88,13 @@ export class SearchComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Search');
+
     this.paramsChanges();
 
     this.searchChanges();
