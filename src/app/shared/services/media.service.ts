@@ -122,6 +122,20 @@ export class MediaService {
       params = params.append('language', filters.language);
     }
 
+    if (filters.first_air_date_year) {
+      params = params.append(
+        'first_air_date_year',
+        filters.first_air_date_year
+      );
+    }
+
+    if (filters.primary_release_year) {
+      params = params.append(
+        'primary_release_year',
+        filters.primary_release_year
+      );
+    }
+
     if (filters['vote_average.gte']) {
       params = params.append('vote_average.gte', filters['vote_average.gte']);
     }

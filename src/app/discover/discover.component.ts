@@ -29,6 +29,8 @@ import {
   Subject,
   combineLatest,
   debounceTime,
+  distinctUntilChanged,
+  filter,
   map,
   of,
   skip,
@@ -88,6 +90,14 @@ export class DiscoverComponent implements OnInit {
     validators: [Validators.min(0), Validators.max(10)],
   });
 
+  yearControl = new FormControl<number | null>(null, {
+    validators: [
+      Validators.min(1000),
+      Validators.max(9999),
+      Validators.pattern('^[0-9]*$'),
+    ],
+  });
+
   // States
   private filtersSubject = new Subject<IFilters>();
   filters$ = this.filtersSubject.asObservable();
@@ -121,6 +131,7 @@ export class DiscoverComponent implements OnInit {
     this.includeAdultChanges();
     this.languageChanges();
     this.voteAverageChanges();
+    this.yearChanges();
 
     this.filtersChanges();
   }
@@ -143,15 +154,18 @@ export class DiscoverComponent implements OnInit {
                   | MovieSortByType
                   | TVSortByType) || 'popularity.desc',
               with_genres: queryParams.get('with_genres') || undefined,
-              year: Number(queryParams.get('year')) || undefined,
               include_adult: JSON.parse(
-                queryParams.get('include_adult') ?? 'false'
+                queryParams.get('include_adult') || 'false'
               ),
               language: queryParams.get('language') || undefined,
               'vote_average.gte':
                 Number(queryParams.get('vote_average.gte')) || undefined,
               'vote_average.lte':
                 Number(queryParams.get('vote_average.lte')) || undefined,
+              first_air_date_year:
+                Number(queryParams.get('first_air_date_year')) || undefined,
+              primary_release_year:
+                Number(queryParams.get('primary_release_year')) || undefined,
             };
 
             this.mediaType = data['type'];
@@ -186,6 +200,13 @@ export class DiscoverComponent implements OnInit {
 
             this.voteMaxControl.setValue(
               this.filters['vote_average.lte'] ?? 10,
+              { emitEvent: false }
+            );
+
+            this.yearControl.setValue(
+              (this.filters.primary_release_year ||
+                this.filters.first_air_date_year) ??
+                null,
               { emitEvent: false }
             );
           }
@@ -305,6 +326,25 @@ export class DiscoverComponent implements OnInit {
       });
   }
 
+  private yearChanges(): void {
+    this.yearControl.valueChanges
+      .pipe(
+        debounceTime(this.debounceTime),
+        distinctUntilChanged(),
+        filter(() => this.yearControl.valid),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((year) => {
+        this.filtersSubject.next({
+          ...this.filters,
+          page: 1,
+          [this.mediaType === 'movie'
+            ? 'primary_release_year'
+            : 'first_air_date_year']: year,
+        });
+      });
+  }
+
   private fetchLanguages() {
     return this.sharedService.languages$.pipe(
       take(1),
@@ -375,9 +415,7 @@ export class DiscoverComponent implements OnInit {
   }
 
   private setQueryParams(): void {
-    const params: IFilters = {
-      ...this.filters,
-    };
+    const params: IFilters = this.filters;
 
     this.sharedService.setParams(params, '/discover', this.mediaType);
   }

@@ -85,8 +85,38 @@ export class SharedService {
   }
 
   setParams(params: IFilters, path: string, mediaType: MediaType): void {
+    const queryParams: IFilters = {
+      page: params.page,
+      include_adult: params.include_adult,
+    };
+
+    if (params.query) {
+      queryParams.query = params.query;
+    }
+    if (params.language && params.language !== 'xx') {
+      queryParams.language = params.language;
+    }
+    if (params.sort_by) {
+      queryParams.sort_by = params.sort_by;
+    }
+    if (params.with_genres) {
+      queryParams.with_genres = params.with_genres;
+    }
+    if (params.primary_release_year) {
+      queryParams.primary_release_year = params.primary_release_year;
+    }
+    if (params.first_air_date_year) {
+      queryParams.first_air_date_year = params.first_air_date_year;
+    }
+    if (params['vote_average.gte'] && params['vote_average.gte'] !== 0) {
+      queryParams['vote_average.gte'] = params['vote_average.gte'];
+    }
+    if (params['vote_average.lte'] && params['vote_average.lte'] !== 10) {
+      queryParams['vote_average.lte'] = params['vote_average.lte'];
+    }
+
     this.router.navigate([path, mediaType], {
-      queryParams: params,
+      queryParams,
     });
   }
 }

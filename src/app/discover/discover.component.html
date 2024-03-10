@@ -7,7 +7,7 @@
 
       <mat-form-field
         *ngIf="sortByList$ | async as sortByList"
-        class="discover-aside__select"
+        class="discover-aside__item"
       >
         <mat-label>Sort by</mat-label>
 
@@ -22,7 +22,7 @@
         multiple
         [formControl]="genreControl"
         *ngIf="genresList$ | async as genres"
-        class="discover-aside__genres"
+        class="discover-aside__item"
       >
         <mat-chip-option
           *ngFor="let genre of genres"
@@ -35,14 +35,14 @@
 
       <mat-slide-toggle
         [formControl]="includeAdultControl"
-        class="discover-aside__toggler"
+        class="discover-aside__item"
       >
         Include adult
       </mat-slide-toggle>
 
       <mat-form-field
         *ngIf="sharedService.languages$ | async as languages"
-        class="discover-aside__language"
+        class="discover-aside__item"
       >
         <mat-label>Language</mat-label>
 
@@ -56,7 +56,7 @@
         </mat-select>
       </mat-form-field>
 
-      <div>
+      <div class="discover-aside__item">
         <h3 class="discover-aside__title">Vote average</h3>
 
         <mat-slider
@@ -70,6 +70,13 @@
           <input matSliderEndThumb [formControl]="voteMaxControl" />
         </mat-slider>
       </div>
+
+      <mat-form-field class="discover-aside__item">
+        <mat-label>{{
+          mediaType === "tv" ? "First air date year" : "Primary release year"
+        }}</mat-label>
+        <input type="text" matInput [formControl]="yearControl" />
+      </mat-form-field>
     </mat-expansion-panel>
   </mat-accordion>
 

@@ -25,10 +25,7 @@
     width: 100%;
   }
 
-  &__select,
-  &__genres,
-  &__language,
-  &__toggler {
+  &__item {
     width: 100%;
 
     &:not(:last-child) {
