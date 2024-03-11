@@ -10,7 +10,7 @@ export const environment = {
     original: 'https://image.tmdb.org/t/p/original',
     w45Logo: 'https://image.tmdb.org/t/p/w45',
   },
-  github: 'https://github.com/1xtend',
+  github: 'https://github.com/1xtend/Movies',
   tmdb: 'https://developer.themoviedb.org/docs/getting-started',
   firebase: {
     apiKey: 'AIzaSyB-FVP7-MH1QnKM7axHhYQeubxsXDHUt_Q',
