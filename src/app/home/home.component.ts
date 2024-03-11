@@ -7,7 +7,10 @@ import {
   OnInit,
 } from '@angular/core';
 import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
-import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
+import {
+  IMoviesResponse,
+  INowPlayingMoviesResponse,
+} from '@app/shared/models/movie/movies-response.interface';
 import { environment } from 'src/environment/environment';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
@@ -25,6 +28,8 @@ export class HomeComponent implements OnInit {
   popularMovies$?: Observable<IMoviesResponse>;
   popularTVs$?: Observable<ITVsResponse>;
   popularPeople$?: Observable<IPeopleResponse>;
+
+  nowPlayingMovies$?: Observable<INowPlayingMoviesResponse>;
 
   posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
@@ -49,6 +54,8 @@ export class HomeComponent implements OnInit {
     this.getPopularMovies();
     this.getPopularTVs();
     this.getPopularPeople();
+    this.getNowPlayingMovies();
+
     this.breakpointChanges();
   }
 
@@ -131,6 +138,25 @@ export class HomeComponent implements OnInit {
         return this.mediaService.getPopularPeople().pipe(
           tap((people) => {
             this.sharedService.setPopularPeopleSubject(people);
+          })
+        );
+      })
+    );
+  }
+
+  private getNowPlayingMovies(): void {
+    this.nowPlayingMovies$ = this.sharedService.nowPlayingMovies$.pipe(
+      take(1),
+      switchMap((movies) => {
+        if (movies && movies.results.length) {
+          // Get saved people
+          return of(movies);
+        }
+
+        // Get fetched people
+        return this.mediaService.getNowPlayingMovies().pipe(
+          tap((movies) => {
+            this.sharedService.setNowPlayingMoviesSubject(movies);
           })
         );
       })

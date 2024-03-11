@@ -6,7 +6,10 @@ import { Router } from '@angular/router';
 import { SavedGenresType } from '../models/genres.interface';
 import { IGenre } from './../models/genres.interface';
 import { ILanguage } from '../models/language.interface';
-import { IMoviesResponse } from '../models/movie/movies-response.interface';
+import {
+  IMoviesResponse,
+  INowPlayingMoviesResponse,
+} from '../models/movie/movies-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
 import { IFilters } from '../models/filters.interface';
 import { IPeopleResponse } from '../models/person/people-response.interface';
@@ -43,6 +46,11 @@ export class SharedService {
   >(undefined);
   popularPeople$ = this.popularPeopleSubject.asObservable();
 
+  private nowPlayingMoviesSubject = new BehaviorSubject<
+    INowPlayingMoviesResponse | undefined
+  >(undefined);
+  nowPlayingMovies$ = this.nowPlayingMoviesSubject.asObservable();
+
   private languagesSubject = new BehaviorSubject<ILanguage[]>([]);
   languages$ = this.languagesSubject.asObservable();
 
@@ -78,6 +86,10 @@ export class SharedService {
 
   setPopularPeopleSubject(people: IPeopleResponse): void {
     this.popularPeopleSubject.next(people);
+  }
+
+  setNowPlayingMoviesSubject(movies: INowPlayingMoviesResponse): void {
+    this.nowPlayingMoviesSubject.next(movies);
   }
 
   scrollToTop(): void {

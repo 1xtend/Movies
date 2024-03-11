@@ -140,3 +140,47 @@
     </button>
   </div>
 </section>
+<section class="media" *ngIf="nowPlayingMovies$ | async as movies">
+  <h2 class="media__title">Now Playing Movies</h2>
+
+  <div class="media__slider" *ngIf="slides$ | async as slides">
+    <app-slider
+      [prevBtn]="slidePrevNowPlayingMovies._elementRef"
+      [nextBtn]="slideNextNowPlayingMovies._elementRef"
+      [slidesPerView]="slides"
+      [gap]="16"
+      [speed]="350"
+      [slidesToScroll]="slides"
+    >
+      <app-slide *ngFor="let movie of movies.results">
+        <app-media-card
+          [imagePath]="movie.poster_path"
+          [mediaType]="'movie'"
+          [id]="movie.id"
+          [title]="movie.title"
+          [titleSize]="16"
+          [textCut]="textCut"
+        ></app-media-card>
+      </app-slide>
+    </app-slider>
+
+    <button
+      type="button"
+      #slidePrevNowPlayingMovies
+      mat-mini-fab
+      color="primary"
+      class="media__slide-btn media__slide-btn--prev"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+    <button
+      type="button"
+      #slideNextNowPlayingMovies
+      mat-mini-fab
+      color="primary"
+      class="media__slide-btn media__slide-btn--next"
+    >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+  </div>
+</section>

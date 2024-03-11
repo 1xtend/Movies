@@ -5,7 +5,10 @@ import { IFilters } from '../models/filters.interface';
 import { MediaType } from '../models/media.type';
 import { IPeopleResponse } from '../models/person/people-response.interface';
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
-import { IMoviesResponse } from '../models/movie/movies-response.interface';
+import {
+  IMoviesResponse,
+  INowPlayingMoviesResponse,
+} from '../models/movie/movies-response.interface';
 import { IDetailsTV } from '../models/tv/tv.interface';
 import { IDetailsMovie } from '../models/movie/movie.interface';
 import { IDetailsPerson } from '../models/person/person.interface';
@@ -93,6 +96,11 @@ export class MediaService {
 
   getPopularPeople() {
     return this.getPopular<IPeopleResponse>('person');
+  }
+
+  // Now playing
+  getNowPlayingMovies(): Observable<INowPlayingMoviesResponse> {
+    return this.http.get<INowPlayingMoviesResponse>('/movie/now_playing');
   }
 
   // Discover
