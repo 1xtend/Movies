@@ -140,6 +140,15 @@
     </button>
   </div>
 </section>
+
+<mat-toolbar color="accent" class="toolbar">
+  <h2 class="toolbar__title">Explore new movies with user-friendly filters</h2>
+
+  <a routerLink="/discover/movie" mat-mini-fab color="primary">
+    <mat-icon>navigate_next</mat-icon>
+  </a>
+</mat-toolbar>
+
 <section class="media" *ngIf="nowPlayingMovies$ | async as movies">
   <h2 class="media__title">Now Playing Movies</h2>
 

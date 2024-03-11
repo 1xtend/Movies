@@ -80,6 +80,16 @@
   }
 }
 
+.toolbar {
+  &:not(:last-child) {
+    margin-bottom: $spacing-default;
+  }
+
+  &__title:not(:last-child) {
+    margin-right: $spacing-default;
+  }
+}
+
 .spacer {
   flex: 1 1 auto;
 }
