@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit {
   popularPeople$?: Observable<IPeopleResponse>;
 
   nowPlayingMovies$?: Observable<INowPlayingMoviesResponse>;
+  topRatedMovies$?: Observable<IMoviesResponse>;
+  onTheAirTVs$?: Observable<ITVsResponse>;
 
   posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
@@ -55,6 +57,8 @@ export class HomeComponent implements OnInit {
     this.getPopularTVs();
     this.getPopularPeople();
     this.getNowPlayingMovies();
+    this.getTopRatedMovies();
+    this.getOnTheAirTVs();
 
     this.breakpointChanges();
   }
@@ -149,14 +153,52 @@ export class HomeComponent implements OnInit {
       take(1),
       switchMap((movies) => {
         if (movies && movies.results.length) {
-          // Get saved people
+          // Get saved movies
           return of(movies);
         }
 
-        // Get fetched people
+        // Get fetched movies
         return this.mediaService.getNowPlayingMovies().pipe(
           tap((movies) => {
             this.sharedService.setNowPlayingMoviesSubject(movies);
+          })
+        );
+      })
+    );
+  }
+
+  private getTopRatedMovies(): void {
+    this.topRatedMovies$ = this.sharedService.topRatedMovies$.pipe(
+      take(1),
+      switchMap((movies) => {
+        if (movies && movies.results.length) {
+          // Get saved movies
+          return of(movies);
+        }
+
+        // Get fetched movies
+        return this.mediaService.getTopRatedMovies().pipe(
+          tap((movies) => {
+            this.sharedService.setTopRatedMoviesSubject(movies);
+          })
+        );
+      })
+    );
+  }
+
+  private getOnTheAirTVs(): void {
+    this.onTheAirTVs$ = this.sharedService.onTheAirTV$.pipe(
+      take(1),
+      switchMap((tvs) => {
+        if (tvs && tvs.results.length) {
+          // Get saved tv series
+          return of(tvs);
+        }
+
+        // Get fetched tv series
+        return this.mediaService.getOnTheAirTV().pipe(
+          tap((tvs) => {
+            this.sharedService.setOnTheAirTVsSubject(tvs);
           })
         );
       })

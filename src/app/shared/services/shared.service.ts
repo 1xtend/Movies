@@ -51,6 +51,16 @@ export class SharedService {
   >(undefined);
   nowPlayingMovies$ = this.nowPlayingMoviesSubject.asObservable();
 
+  private topRatedMoviesSubject = new BehaviorSubject<
+    IMoviesResponse | undefined
+  >(undefined);
+  topRatedMovies$ = this.topRatedMoviesSubject.asObservable();
+
+  private onTheAirTVsSubject = new BehaviorSubject<ITVsResponse | undefined>(
+    undefined
+  );
+  onTheAirTV$ = this.onTheAirTVsSubject.asObservable();
+
   private languagesSubject = new BehaviorSubject<ILanguage[]>([]);
   languages$ = this.languagesSubject.asObservable();
 
@@ -90,6 +100,14 @@ export class SharedService {
 
   setNowPlayingMoviesSubject(movies: INowPlayingMoviesResponse): void {
     this.nowPlayingMoviesSubject.next(movies);
+  }
+
+  setTopRatedMoviesSubject(movies: IMoviesResponse): void {
+    this.topRatedMoviesSubject.next(movies);
+  }
+
+  setOnTheAirTVsSubject(tvs: ITVsResponse): void {
+    this.onTheAirTVsSubject.next(tvs);
   }
 
   scrollToTop(): void {
