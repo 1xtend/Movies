@@ -13,6 +13,9 @@ import {
 import { ITVsResponse } from '../models/tv/tvs-response.interface';
 import { IFilters } from '../models/filters.interface';
 import { IPeopleResponse } from '../models/person/people-response.interface';
+import { ITV } from '../models/tv/tv.interface';
+import { IMovie } from '../models/movie/movie.interface';
+import { IPerson } from '../models/person/person.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -148,5 +151,9 @@ export class SharedService {
     this.router.navigate([path, mediaType], {
       queryParams,
     });
+  }
+
+  mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
+    return media.id;
   }
 }

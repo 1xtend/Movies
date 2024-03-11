@@ -36,9 +36,7 @@
         </span>
       </h1>
 
-      <span class="info__subtitle" *ngIf="movie.tagline">{{
-        movie.tagline
-      }}</span>
+      <i *ngIf="movie.tagline">{{ movie.tagline }}</i>
     </div>
 
     <div class="info__group" *ngIf="movie.overview">
@@ -59,34 +57,34 @@
       </p>
     </div>
 
-    <div class="info__group info-list">
-      <div class="info-list__item" *ngIf="movie.release_date">
+    <ul class="info__group info-list">
+      <li class="info-list__item" *ngIf="movie.release_date">
         <h4 class="info-list__title">Release date</h4>
         <p class="info-list__text">
           {{ movie.release_date | date : "MM/dd/y" }}
         </p>
-      </div>
-      <div class="info-list__item" *ngIf="movie.runtime">
+      </li>
+      <li class="info-list__item" *ngIf="movie.runtime">
         <h4 class="info-list__title">Runtime</h4>
         <p class="info-list__text">{{ movie.runtime | time }}</p>
-      </div>
-      <div class="info-list__item" *ngIf="movie.status">
+      </li>
+      <li class="info-list__item" *ngIf="movie.status">
         <h4 class="info-list__title">Status</h4>
         <p class="info-list__text">{{ movie.status }}</p>
-      </div>
-      <div class="info-list__item" *ngIf="movie.original_title">
+      </li>
+      <li class="info-list__item" *ngIf="movie.original_title">
         <h4 class="info-list__title">Original title</h4>
         <p class="info-list__text">{{ movie.original_title }}</p>
-      </div>
-      <div class="info-list__item" *ngIf="movie.budget">
+      </li>
+      <li class="info-list__item" *ngIf="movie.budget">
         <h4 class="info-list__title">Budget</h4>
         <p class="info-list__text">{{ movie.budget | currency }}</p>
-      </div>
-      <div class="info-list__item" *ngIf="movie.revenue">
+      </li>
+      <li class="info-list__item" *ngIf="movie.revenue">
         <h4 class="info-list__title">Revenue</h4>
         <p class="info-list__text">{{ movie.revenue | currency }}</p>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </section>
 

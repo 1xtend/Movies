@@ -60,6 +60,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: $spacing-default;
+  list-style: none;
+  padding: 0;
 
   &__title:not(:last-child) {
     margin-bottom: $spacing-S;

@@ -1,9 +1,9 @@
-<div class="bg-box greeting">
+<section class="bg-box greeting">
   <h1 class="bg-box__title">
     Welcome to VMTV.
     <p class="bg-box__thin">Your Ultimate Destination for Movie Enthusiasts!</p>
   </h1>
-</div>
+</section>
 
 <section class="media" *ngIf="popularMovies$ | async as movies">
   <h2 class="media__title">Popular movies</h2>
@@ -17,7 +17,12 @@
       [speed]="350"
       [slidesToScroll]="slides"
     >
-      <app-slide *ngFor="let movie of movies.results">
+      <app-slide
+        *ngFor="
+          let movie of movies.results;
+          trackBy: sharedService.mediaTrackBy
+        "
+      >
         <app-media-card
           [imagePath]="movie.poster_path"
           [mediaType]="'movie'"
@@ -62,7 +67,9 @@
       [speed]="350"
       [slidesToScroll]="slides"
     >
-      <app-slide *ngFor="let tv of tvs.results">
+      <app-slide
+        *ngFor="let tv of tvs.results; trackBy: sharedService.mediaTrackBy"
+      >
         <app-media-card
           [imagePath]="tv.poster_path"
           [mediaType]="'tv'"
@@ -106,7 +113,12 @@
       [speed]="350"
       [slidesToScroll]="slides"
     >
-      <app-slide *ngFor="let person of people.results">
+      <app-slide
+        *ngFor="
+          let person of people.results;
+          trackBy: sharedService.mediaTrackBy
+        "
+      >
         <app-media-card
           [imagePath]="person.profile_path"
           [mediaType]="'person'"
@@ -139,7 +151,7 @@
   </div>
 </section>
 
-<div class="bg-box offer">
+<section class="bg-box offer">
   <h2 class="bg-box__title">
     Explore new
     <a routerLink="/discover/movie" color="accent" class="bg-box__link"
@@ -151,7 +163,7 @@
       >tv series</a
     >!
   </h2>
-</div>
+</section>
 
 <section class="media" *ngIf="nowPlayingMovies$ | async as movies">
   <h2 class="media__title">Now Playing Movies</h2>
@@ -165,7 +177,12 @@
       [speed]="350"
       [slidesToScroll]="slides"
     >
-      <app-slide *ngFor="let movie of movies.results">
+      <app-slide
+        *ngFor="
+          let movie of movies.results;
+          trackBy: sharedService.mediaTrackBy
+        "
+      >
         <app-media-card
           [imagePath]="movie.poster_path"
           [mediaType]="'movie'"
@@ -209,7 +226,12 @@
       [speed]="350"
       [slidesToScroll]="slides"
     >
-      <app-slide *ngFor="let movie of movies.results">
+      <app-slide
+        *ngFor="
+          let movie of movies.results;
+          trackBy: sharedService.mediaTrackBy
+        "
+      >
         <app-media-card
           [imagePath]="movie.poster_path"
           [mediaType]="'movie'"
@@ -253,7 +275,9 @@
       [speed]="350"
       [slidesToScroll]="slides"
     >
-      <app-slide *ngFor="let tv of tvs.results">
+      <app-slide
+        *ngFor="let tv of tvs.results; trackBy: sharedService.mediaTrackBy"
+      >
         <app-media-card
           [imagePath]="tv.poster_path"
           [mediaType]="'tv'"

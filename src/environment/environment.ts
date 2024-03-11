@@ -12,4 +12,12 @@ export const environment = {
   },
   github: 'https://github.com/1xtend',
   tmdb: 'https://developer.themoviedb.org/docs/getting-started',
+  firebase: {
+    apiKey: 'AIzaSyB-FVP7-MH1QnKM7axHhYQeubxsXDHUt_Q',
+    authDomain: 'vmtv-cebe5.firebaseapp.com',
+    projectId: 'vmtv-cebe5',
+    storageBucket: 'vmtv-cebe5.appspot.com',
+    messagingSenderId: '878623284064',
+    appId: '1:878623284064:web:48b40134400552b7859c05',
+  },
 };

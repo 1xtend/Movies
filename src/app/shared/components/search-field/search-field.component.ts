@@ -6,7 +6,7 @@ import {
   DestroyRef,
   OnInit,
 } from '@angular/core';
-import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

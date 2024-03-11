@@ -51,7 +51,10 @@
     <div class="search__content" *ngIf="res.tvs && res.tvs.total_results > 0">
       <div class="search__grid">
         <app-media-card
-          *ngFor="let tv of res.tvs.results; trackBy: mediaTrackBy"
+          *ngFor="
+            let tv of res.tvs.results;
+            trackBy: sharedService.mediaTrackBy
+          "
           [title]="tv.name"
           [mediaType]="mediaType"
           [imagePath]="tv.poster_path"
@@ -78,7 +81,10 @@
     >
       <div class="search__grid">
         <app-media-card
-          *ngFor="let movie of res.movies.results; trackBy: mediaTrackBy"
+          *ngFor="
+            let movie of res.movies.results;
+            trackBy: sharedService.mediaTrackBy
+          "
           [title]="movie.title"
           [mediaType]="mediaType"
           [imagePath]="movie.poster_path"
@@ -104,7 +110,10 @@
     >
       <div class="search__grid">
         <app-media-card
-          *ngFor="let person of res.people.results; trackBy: mediaTrackBy"
+          *ngFor="
+            let person of res.people.results;
+            trackBy: sharedService.mediaTrackBy
+          "
           [title]="person.name"
           [mediaType]="mediaType"
           [imagePath]="person.profile_path"

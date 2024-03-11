@@ -52,38 +52,38 @@
       </p>
     </div>
 
-    <div class="info__group info-list">
-      <div class="info-list__item" *ngIf="person.birthday">
+    <ul class="info__group info-list">
+      <li class="info-list__item" *ngIf="person.birthday">
         <h4 class="info-list__title">Birthday</h4>
         <p class="info-list__text">
           {{ person.birthday | date : "dd/MM/y" }}
         </p>
-      </div>
-      <div class="info-list__item" *ngIf="person.deathday">
+      </li>
+      <li class="info-list__item" *ngIf="person.deathday">
         <h4 class="info-list__title">Deathday</h4>
         <p class="info-list__text">
           {{ person.deathday | date : "dd/MM/y" }}
         </p>
-      </div>
-      <div class="info-list__item" *ngIf="person.place_of_birth">
+      </li>
+      <li class="info-list__item" *ngIf="person.place_of_birth">
         <h4 class="info-list__title">Place of birth</h4>
         <p class="info-list__text">
           {{ person.place_of_birth }}
         </p>
-      </div>
-      <div class="info-list__item" *ngIf="person.gender">
+      </li>
+      <li class="info-list__item" *ngIf="person.gender">
         <h4 class="info-list__title">Gender</h4>
         <p class="info-list__text">
           {{ person.gender === 1 ? "Female" : "Male" }}
         </p>
-      </div>
-      <div class="info-list__item" *ngIf="person.known_for_department">
+      </li>
+      <li class="info-list__item" *ngIf="person.known_for_department">
         <h4 class="info-list__title">Known for department</h4>
         <p class="info-list__text">
           {{ person.known_for_department }}
         </p>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </section>
 

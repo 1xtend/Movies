@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private mediaService: MediaService,
-    private sharedService: SharedService,
+    public sharedService: SharedService,
     private breakpointObserver: BreakpointObserver,
     private destroyRef: DestroyRef,
     private titleService: Title

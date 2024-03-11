@@ -5,7 +5,6 @@ import { SearchRoutingModule } from './search-routing.module';
 import { SearchComponent } from './search.component';
 import { MaterialModule } from '@app/material.module';
 import { SharedModule } from '@app/shared/shared.module';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -17,12 +16,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
-  ],
-  providers: [
-    {
-      provide: MAT_DIALOG_DATA,
-      useValue: {},
-    },
   ],
 })
 export class SearchModule {}

@@ -248,10 +248,6 @@ export class SearchComponent implements OnInit {
     });
   }
 
-  mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
-    return media.id;
-  }
-
   private fetchLanguages() {
     return this.sharedService.languages$.pipe(
       take(1),

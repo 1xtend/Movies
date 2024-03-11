@@ -425,8 +425,4 @@ export class DiscoverComponent implements OnInit {
 
     this.sharedService.setParams(params, '/discover', this.mediaType);
   }
-
-  mediaTrackBy(index: number, media: ITV | IMovie | IPerson) {
-    return media.id;
-  }
 }
