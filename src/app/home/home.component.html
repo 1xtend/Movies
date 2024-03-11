@@ -1,11 +1,9 @@
-<section class="greeting">
-  <h1 class="greeting__title">
+<div class="bg-box greeting">
+  <h1 class="bg-box__title">
     Welcome to VMTV.
-    <p class="greeting__thin">
-      Your Ultimate Destination for Movie Enthusiasts!
-    </p>
+    <p class="bg-box__thin">Your Ultimate Destination for Movie Enthusiasts!</p>
   </h1>
-</section>
+</div>
 
 <section class="media" *ngIf="popularMovies$ | async as movies">
   <h2 class="media__title">Popular movies</h2>
@@ -141,13 +139,19 @@
   </div>
 </section>
 
-<mat-toolbar color="primary" class="toolbar">
-  <h2 class="toolbar__title">Explore new movies with user-friendly filters</h2>
-
-  <a routerLink="/discover/movie" mat-mini-fab color="accent">
-    <mat-icon>navigate_next</mat-icon>
-  </a>
-</mat-toolbar>
+<div class="bg-box offer">
+  <h2 class="bg-box__title">
+    Explore new
+    <a routerLink="/discover/movie" color="accent" class="bg-box__link"
+      >movies</a
+    >
+    with user-friendly filters. <br />
+    Don't forget about your favorite
+    <a routerLink="/discover/tv" color="accent" class="bg-box__link"
+      >tv series</a
+    >!
+  </h2>
+</div>
 
 <section class="media" *ngIf="nowPlayingMovies$ | async as movies">
   <h2 class="media__title">Now Playing Movies</h2>

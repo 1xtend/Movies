@@ -1,11 +1,16 @@
 @import "../../assets/scss/variables";
 
-.greeting {
+.bg-box {
   padding: 8rem 2rem;
-  background: url("../../assets/images/home-bg-min.jpg") center no-repeat,
-    rgb(197, 175, 149);
-  background-size: cover;
   position: relative;
+
+  @media (max-width: $breakpoint-M) {
+    padding: 7rem 2rem;
+  }
+
+  @media (max-width: $breakpoint-S) {
+    padding: 5rem 1rem;
+  }
 
   @media (max-width: $breakpoint-XS) {
     padding: 4rem 1rem;
@@ -33,6 +38,10 @@
     line-height: 1.2;
 
     @media (max-width: $breakpoint-M) {
+      font-size: 2rem;
+    }
+
+    @media (max-width: $breakpoint-S) {
       font-size: 1.5rem;
     }
 
@@ -45,6 +54,21 @@
     font-size: 0.75em;
     font-weight: 400;
   }
+
+  &__link {
+    color: $color-accent;
+    transition: color 150ms ease-in-out;
+
+    &:hover {
+      color: $color-accent-dark;
+    }
+  }
+}
+
+.greeting {
+  background: url("../../assets/images/home-bg-2-min.jpg") center no-repeat,
+    rgb(197, 175, 149);
+  background-size: cover;
 }
 
 .media {
@@ -80,16 +104,13 @@
   }
 }
 
-.toolbar {
-  &:not(:last-child) {
-    margin-bottom: $spacing-default;
-  }
+.offer {
+  background: url("../../assets/images/home-bg-1-min.jpg") center no-repeat,
+    rgb(227, 158, 79);
+  background-size: cover;
 
-  &__title:not(:last-child) {
-    margin-right: $spacing-default;
-  }
-}
-
-.spacer {
-  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: $spacing-default;
+  flex-wrap: wrap;
 }
