@@ -18,8 +18,6 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((res) => {
-        console.log('error: ', res);
-
         this.notificationService.openSnackbar(
           res.error.status_message ?? 'Ooops, something went wrong',
           5000
