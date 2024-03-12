@@ -10,6 +10,8 @@ $color-green: map.get($my-primary-palette, 500);
 $color-accent: map.get($my-accent-palette, 500);
 $color-accent-dark: map.get($my-accent-palette, 600);
 
+$color-error: rgb(192, 0, 0);
+
 // Width
 $container-width: 82rem;
 

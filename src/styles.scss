@@ -1,6 +1,10 @@
 // @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "src/assets/scss/_variables.scss";
 
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: $color-error !important;
+}
+
 .main {
   flex: 1 0 auto;
   padding: $spacing-XL 0;

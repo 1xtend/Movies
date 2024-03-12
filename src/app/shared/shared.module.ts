@@ -15,6 +15,7 @@ import { AvatarComponent } from './components/avatar/avatar.component';
 import { RandomBgColorDirective } from './directives/random-bg-color.directive';
 import { ImageEnlargerComponent } from './components/image-enlarger/image-enlarger.component';
 import { ImageModalComponent } from './components/image-modal/image-modal.component';
+import { SnackbarComponent } from './components/snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ImageModalComponent } from './components/image-modal/image-modal.compon
     RandomBgColorDirective,
     ImageEnlargerComponent,
     ImageModalComponent,
+    SnackbarComponent,
   ],
   imports: [
     CommonModule,
