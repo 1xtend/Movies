@@ -19,8 +19,8 @@ export class SliderService {
     el.querySelectorAll('img').forEach((img) => {
       img.draggable = false;
     });
-    el.querySelectorAll('a').forEach((img) => {
-      img.draggable = false;
+    el.querySelectorAll('a').forEach((link) => {
+      link.draggable = false;
     });
   }
 }
