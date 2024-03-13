@@ -16,6 +16,7 @@ import { RandomBgColorDirective } from './directives/random-bg-color.directive';
 import { ImageEnlargerComponent } from './components/image-enlarger/image-enlarger.component';
 import { ImageModalComponent } from './components/image-modal/image-modal.component';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
+import { LazyImgDirective } from './directives/lazy-img.directive';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
     ImageEnlargerComponent,
     ImageModalComponent,
     SnackbarComponent,
+    LazyImgDirective,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
     AvatarComponent,
     RandomBgColorDirective,
     ImageEnlargerComponent,
+    LazyImgDirective,
   ],
 })
 export class SharedModule {}

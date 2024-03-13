@@ -16,10 +16,6 @@ export class SliderService {
   }
 
   setDragAttributes(el: HTMLElement): void {
-    el.querySelectorAll('img').forEach((img) => {
-      img.draggable = false;
-      img.loading = 'lazy';
-    });
     el.querySelectorAll('a').forEach((img) => {
       img.draggable = false;
     });
