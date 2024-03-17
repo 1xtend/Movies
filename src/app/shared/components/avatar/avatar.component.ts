@@ -7,6 +7,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
-  @Input() imagePath?: string = undefined;
+  @Input() imagePath?: string = '';
   @Input({ required: true }) alt: string = '';
 }
