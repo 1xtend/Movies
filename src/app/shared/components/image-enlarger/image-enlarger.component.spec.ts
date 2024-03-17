@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 const testPath = 'https://picsum.photos/200';
 const testAlt = 'test alt';
 
-fdescribe('ImageEnlargerComponent', () => {
+describe('ImageEnlargerComponent', () => {
   let fixture: ComponentFixture<ImageEnlargerComponent>;
   let component: ImageEnlargerComponent;
   let element: DebugElement;
