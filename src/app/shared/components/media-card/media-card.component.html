@@ -1,10 +1,15 @@
-<mat-card class="card" *ngIf="mediaType === 'person'; else show">
+<mat-card
+  class="card"
+  *ngIf="mediaType === 'person'; else show"
+  data-testid="person-card"
+>
   <a
     [routerLink]="['/details', mediaType, id]"
     [queryParams]="{
       language: language && language !== 'xx' ? language : undefined
     }"
     class="card__image-link"
+    data-testid="router-link"
   >
     <img
       mat-card-image
@@ -29,20 +34,21 @@
       class="card__title"
       [style.fontSize.px]="titleSize"
       [matTooltip]="!textCut || title.length <= 30 ? '' : title"
+      data-testid="router-link"
+      >{{ textCut ? (title | textCut : 0 : textCut) : title }}</a
     >
-      {{ textCut ? (title | textCut : 0 : textCut) : title }}
-    </a>
   </mat-card-content>
 </mat-card>
 
 <ng-template #show>
-  <mat-card class="card">
+  <mat-card class="card" data-testid="show-card">
     <a
       [routerLink]="['/details', mediaType, id]"
       [queryParams]="{
         language: language && language !== 'xx' ? language : undefined
       }"
       class="card__image-link"
+      data-testid="router-link"
     >
       <img
         mat-card-image
@@ -68,9 +74,9 @@
         *ngIf="title"
         [style.fontSize.px]="titleSize"
         [matTooltip]="!textCut || title.length <= 30 ? '' : title"
+        data-testid="router-link"
+        >{{ textCut ? (title | textCut : 0 : textCut) : title }}</a
       >
-        {{ textCut ? (title | textCut : 0 : textCut) : title }}
-      </a>
 
       <div class="card__bottom">
         <span class="card__year" *ngIf="releaseDate">
