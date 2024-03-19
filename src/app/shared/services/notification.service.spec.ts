@@ -30,10 +30,6 @@ describe('NotificationService', () => {
     });
 
     service = TestBed.inject(NotificationService);
-
-    snackBarServiceMock.openFromComponent.and.callFake(() =>
-      console.log('mock open func')
-    );
   });
 
   it('should create', () => {

@@ -1,5 +1,5 @@
+import { ListsService } from './../shared/services/media/lists.service';
 import { SharedService } from '@app/shared/services/shared.service';
-import { MediaService } from './../shared/services/media.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -43,11 +43,11 @@ export class HomeComponent implements OnInit {
   readonly textCut: number = 30;
 
   constructor(
-    private mediaService: MediaService,
     public sharedService: SharedService,
     private breakpointObserver: BreakpointObserver,
     private destroyRef: DestroyRef,
-    private titleService: Title
+    private titleService: Title,
+    private listsService: ListsService
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit {
         }
 
         // Get fetched movies
-        return this.mediaService.getPopularMovies().pipe(
+        return this.listsService.getPopularMovies().pipe(
           tap((movies) => {
             this.sharedService.setPopularMoviesSubject(movies);
           })
@@ -120,7 +120,7 @@ export class HomeComponent implements OnInit {
         }
 
         // Get fetched tv series
-        return this.mediaService.getPopularTVs().pipe(
+        return this.listsService.getPopularTVs().pipe(
           tap((tvs) => {
             this.sharedService.setPopularTVsSubject(tvs);
           })
@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
         }
 
         // Get fetched people
-        return this.mediaService.getPopularPeople().pipe(
+        return this.listsService.getPopularPeople().pipe(
           tap((people) => {
             this.sharedService.setPopularPeopleSubject(people);
           })
@@ -158,7 +158,7 @@ export class HomeComponent implements OnInit {
         }
 
         // Get fetched movies
-        return this.mediaService.getNowPlayingMovies().pipe(
+        return this.listsService.getNowPlayingMovies().pipe(
           tap((movies) => {
             this.sharedService.setNowPlayingMoviesSubject(movies);
           })
@@ -177,7 +177,7 @@ export class HomeComponent implements OnInit {
         }
 
         // Get fetched movies
-        return this.mediaService.getTopRatedMovies().pipe(
+        return this.listsService.getTopRatedMovies().pipe(
           tap((movies) => {
             this.sharedService.setTopRatedMoviesSubject(movies);
           })
@@ -196,7 +196,7 @@ export class HomeComponent implements OnInit {
         }
 
         // Get fetched tv series
-        return this.mediaService.getOnTheAirTV().pipe(
+        return this.listsService.getOnTheAirTV().pipe(
           tap((tvs) => {
             this.sharedService.setOnTheAirTVsSubject(tvs);
           })

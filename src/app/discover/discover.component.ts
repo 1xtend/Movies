@@ -1,3 +1,4 @@
+import { DiscoverService } from './../shared/services/media/discover.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,13 +14,9 @@ import { ISortBy } from '@app/shared/models/sort-by.type';
 import { IFilters } from '@app/shared/models/filters.interface';
 import { IGenre } from '@app/shared/models/genres.interface';
 import { MediaType } from '@app/shared/models/media.type';
-import { IMovie } from '@app/shared/models/movie/movie.interface';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
-import { IPerson } from '@app/shared/models/person/person.interface';
 import { MovieSortByType, TVSortByType } from '@app/shared/models/sort-by.type';
-import { ITV } from '@app/shared/models/tv/tv.interface';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
-import { MediaService } from '@app/shared/services/media.service';
 import { SharedService } from '@app/shared/services/shared.service';
 import {
   BehaviorSubject,
@@ -40,6 +37,7 @@ import {
   tap,
 } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { MediaService } from '@app/shared/services/media/media.service';
 
 @Component({
   selector: 'app-discover',
@@ -122,7 +120,8 @@ export class DiscoverComponent implements OnInit {
     private router: Router,
     public sharedService: SharedService,
     private destroyRef: DestroyRef,
-    private titleService: Title
+    private titleService: Title,
+    private discoverService: DiscoverService
   ) {}
 
   ngOnInit(): void {
@@ -395,7 +394,7 @@ export class DiscoverComponent implements OnInit {
 
   private fetchMedia(): Observable<ITVsResponse | IMoviesResponse> {
     if (this.mediaType === 'tv') {
-      return this.mediaService.discoverTVs(this.filters).pipe(
+      return this.discoverService.discoverTVs(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ tvs: res });
         })
@@ -403,7 +402,7 @@ export class DiscoverComponent implements OnInit {
     }
 
     if (this.mediaType === 'movie') {
-      return this.mediaService.discoverMovies(this.filters).pipe(
+      return this.discoverService.discoverMovies(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ movies: res });
         })

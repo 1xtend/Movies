@@ -12,7 +12,7 @@ import { MediaType } from '@app/shared/models/media.type';
 import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
 import { IDetailsPerson } from '@app/shared/models/person/person.interface';
 import { IDetailsTV } from '@app/shared/models/tv/tv.interface';
-import { MediaService } from '@app/shared/services/media.service';
+import { DetailsService } from '@app/shared/services/media/details.service';
 import {
   BehaviorSubject,
   EMPTY,
@@ -50,10 +50,10 @@ export class MediaDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private mediaService: MediaService,
     private destroyRef: DestroyRef,
     private breakpointObserver: BreakpointObserver,
-    private titleService: Title
+    private titleService: Title,
+    private detailsService: DetailsService
   ) {}
 
   ngOnInit(): void {
@@ -112,7 +112,7 @@ export class MediaDetailsComponent implements OnInit {
     IDetailsMovie | IDetailsPerson | IDetailsTV
   > {
     if (this.mediaType === 'movie') {
-      return this.mediaService.getMovieDetails(this.id, this.language).pipe(
+      return this.detailsService.getMovieDetails(this.id, this.language).pipe(
         tap((res) => {
           this.resSubject.next({ movie: res });
           this.titleService.setTitle(res.title);
@@ -121,7 +121,7 @@ export class MediaDetailsComponent implements OnInit {
     }
 
     if (this.mediaType === 'tv') {
-      return this.mediaService.getTVDetails(this.id, this.language).pipe(
+      return this.detailsService.getTVDetails(this.id, this.language).pipe(
         tap((res) => {
           this.resSubject.next({ tv: res });
           this.titleService.setTitle(res.name);
@@ -130,7 +130,7 @@ export class MediaDetailsComponent implements OnInit {
     }
 
     if (this.mediaType === 'person') {
-      return this.mediaService.getPersonDetails(this.id).pipe(
+      return this.detailsService.getPersonDetails(this.id).pipe(
         tap((res) => {
           this.resSubject.next({ person: res });
           this.titleService.setTitle(res.name);

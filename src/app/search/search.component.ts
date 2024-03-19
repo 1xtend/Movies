@@ -1,4 +1,3 @@
-import { MediaService } from '../shared/services/media.service';
 import {
   BehaviorSubject,
   EMPTY,
@@ -28,12 +27,11 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
 import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
-import { ITV } from '@app/shared/models/tv/tv.interface';
-import { IMovie } from '@app/shared/models/movie/movie.interface';
-import { IPerson } from '@app/shared/models/person/person.interface';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
+import { SearchService } from '@app/shared/services/media/search.service';
+import { MediaService } from '@app/shared/services/media/media.service';
 
 @Component({
   selector: 'app-search',
@@ -89,7 +87,8 @@ export class SearchComponent implements OnInit {
     private router: Router,
     private breakpointObserver: BreakpointObserver,
     private destroyRef: DestroyRef,
-    private titleService: Title
+    private titleService: Title,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -271,7 +270,7 @@ export class SearchComponent implements OnInit {
     ITVsResponse | IMoviesResponse | IPeopleResponse
   > {
     if (this.mediaType === 'tv') {
-      return this.mediaService.searchTV(this.filters).pipe(
+      return this.searchService.searchTV(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ tvs: res });
         })
@@ -279,7 +278,7 @@ export class SearchComponent implements OnInit {
     }
 
     if (this.mediaType === 'movie') {
-      return this.mediaService.searchMovie(this.filters).pipe(
+      return this.searchService.searchMovie(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ movies: res });
         })
@@ -287,7 +286,7 @@ export class SearchComponent implements OnInit {
     }
 
     if (this.mediaType === 'person') {
-      return this.mediaService.searchPeople(this.filters).pipe(
+      return this.searchService.searchPeople(this.filters).pipe(
         tap((res) => {
           this.resSubject.next({ people: res });
         })
