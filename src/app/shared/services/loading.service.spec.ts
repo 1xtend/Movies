@@ -2,7 +2,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { LoadingService } from './loading.service';
 import { first } from 'rxjs';
 
-fdescribe('LoadingService', () => {
+describe('LoadingService', () => {
   let service: LoadingService;
 
   beforeEach(() => {
