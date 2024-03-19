@@ -14,7 +14,7 @@ class HostComponent {
   number = 1.6;
 }
 
-fdescribe('RoundPipe', () => {
+describe('RoundPipe', () => {
   let fixture: ComponentFixture<HostComponent>;
   let component: HostComponent;
 
@@ -33,22 +33,22 @@ fdescribe('RoundPipe', () => {
 
   it('should round number if type is not provided', () => {
     const roundEl = fixture.debugElement.query(By.css('.round'));
-    expect(roundEl.nativeElement.textContent).toBe('');
+    expect(roundEl.nativeElement.textContent.trim()).toBe('');
     fixture.detectChanges();
-    expect(roundEl.nativeElement.textContent).toBe('2');
+    expect(roundEl.nativeElement.textContent.trim()).toBe('2');
   });
 
   it('should floor number if type is floor', () => {
     const floorEl = fixture.debugElement.query(By.css('.floor'));
-    expect(floorEl.nativeElement.textContent).toBe('');
+    expect(floorEl.nativeElement.textContent.trim()).toBe('');
     fixture.detectChanges();
-    expect(floorEl.nativeElement.textContent).toBe('1');
+    expect(floorEl.nativeElement.textContent.trim()).toBe('1');
   });
 
   it('should ceil number if type is floor', () => {
     const ceilEl = fixture.debugElement.query(By.css('.ceil'));
-    expect(ceilEl.nativeElement.textContent).toBe('');
+    expect(ceilEl.nativeElement.textContent.trim()).toBe('');
     fixture.detectChanges();
-    expect(ceilEl.nativeElement.textContent).toBe('2');
+    expect(ceilEl.nativeElement.textContent.trim()).toBe('2');
   });
 });
