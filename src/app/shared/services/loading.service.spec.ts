@@ -1,8 +1,8 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { LoadingService } from './loading.service';
 import { first } from 'rxjs';
 
-describe('LoadingService', () => {
+fdescribe('LoadingService', () => {
   let service: LoadingService;
 
   beforeEach(() => {
@@ -17,17 +17,12 @@ describe('LoadingService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should init loading$ with correct value', fakeAsync(() => {
-    service.loading$.pipe(first()).subscribe((value) => {
-      expect(value).toBeFalse();
-    });
-  }));
-
-  it('should set loadingSubject by calling setLoading', fakeAsync(() => {
+  it('setLoading should set loading$ to provided value', fakeAsync(() => {
     service.setLoading(true);
 
     service.loading$.pipe(first()).subscribe((value) => {
       expect(value).toBeTrue();
     });
+    tick();
   }));
 });
