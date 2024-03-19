@@ -36,7 +36,7 @@ describe('NotificationService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('openSnackbar should set message$ to provided value', fakeAsync(() => {
+  it('openSnackbar should set message$ to the provided value', fakeAsync(() => {
     service.openSnackbar('text');
 
     service.message$.pipe(first()).subscribe((value) => {

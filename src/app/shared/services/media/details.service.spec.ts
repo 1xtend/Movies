@@ -99,7 +99,7 @@ const mockMovieDetails: IDetailsMovie = {
   similar: undefined,
 };
 
-fdescribe('DetailsService', () => {
+describe('DetailsService', () => {
   let service: DetailsService;
   let controller: HttpTestingController;
 
