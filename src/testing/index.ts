@@ -17,7 +17,7 @@ export function expectError(err: HttpErrorResponse): void {
   expect(err.status).toBe(errorResponse.status);
 }
 
-export function getUrl(
+export function getSearchUrl(
   url: string,
   type: MediaType,
   filters: IFilters

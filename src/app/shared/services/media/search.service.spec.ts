@@ -4,7 +4,12 @@ import {
 } from '@angular/common/http/testing';
 import { SearchService } from './search.service';
 import { TestBed } from '@angular/core/testing';
-import { errorResponse, expectError, getUrl, mockFilters } from 'src/testing';
+import {
+  errorResponse,
+  expectError,
+  getSearchUrl,
+  mockFilters,
+} from 'src/testing';
 
 const mockSearchRes = {
   page: 1,
@@ -39,7 +44,7 @@ describe('SearchService', () => {
     let url: string;
 
     beforeEach(() => {
-      url = getUrl('/search', 'person', mockFilters);
+      url = getSearchUrl('/search', 'person', mockFilters);
     });
 
     it('should return people', () => {
@@ -69,7 +74,7 @@ describe('SearchService', () => {
     let url: string;
 
     beforeEach(() => {
-      url = getUrl('/search', 'tv', mockFilters);
+      url = getSearchUrl('/search', 'tv', mockFilters);
     });
 
     it('should return tv series', () => {
@@ -99,7 +104,7 @@ describe('SearchService', () => {
     let url: string;
 
     beforeEach(() => {
-      url = getUrl('/search', 'movie', mockFilters);
+      url = getSearchUrl('/search', 'movie', mockFilters);
     });
 
     it('should return movies', () => {

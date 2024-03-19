@@ -20,15 +20,15 @@ export class ListsService {
     return this.http.get<T>(`/${mediaType}/popular`);
   }
 
-  getPopularMovies() {
+  getPopularMovies(): Observable<IMoviesResponse> {
     return this.getPopular<IMoviesResponse>('movie');
   }
 
-  getPopularTVs() {
+  getPopularTVs(): Observable<ITVsResponse> {
     return this.getPopular<ITVsResponse>('tv');
   }
 
-  getPopularPeople() {
+  getPopularPeople(): Observable<IPeopleResponse> {
     return this.getPopular<IPeopleResponse>('person');
   }
 
