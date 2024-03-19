@@ -8,8 +8,8 @@ export const errorResponse = {
 };
 
 export const mockFilters: IFilters = {
-  include_adult: true,
   page: 2,
+  include_adult: true,
 };
 
 export function expectError(err: HttpErrorResponse): void {
@@ -17,7 +17,7 @@ export function expectError(err: HttpErrorResponse): void {
   expect(err.status).toBe(errorResponse.status);
 }
 
-export function getSearchUrl(
+export function getUrl(
   url: string,
   type: MediaType,
   filters: IFilters
