@@ -1,3 +1,4 @@
+import { errorResponse } from './../../../../testing/index';
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -7,9 +8,12 @@ import { MediaService } from './media.service';
 import { IGenres } from '@app/shared/models/genres.interface';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ILanguage } from '@app/shared/models/language.interface';
+import { expectError } from 'src/testing';
 
-const statusText = 'Not found';
-const status = 404;
+const mockGenresRes: IGenres = { genres: [{ id: 1, name: 'horror' }] };
+const mockLanguagesRes: ILanguage[] = [
+  { english_name: 'en', iso_639_1: 'value', name: 'English' },
+];
 
 describe('MediaService', () => {
   let service: MediaService;
@@ -34,14 +38,12 @@ describe('MediaService', () => {
   });
 
   it('getGenres should return genres', () => {
-    const mockGenres: IGenres = { genres: [{ id: 1, name: 'horror' }] };
-
     service.getGenres('movie').subscribe((value) => {
-      expect(value).toEqual(mockGenres);
+      expect(value).toEqual(mockGenresRes);
     });
 
     const request = controller.expectOne('/genre/movie/list');
-    request.flush(mockGenres);
+    request.flush(mockGenresRes);
 
     expect(request.request.method).toBe('GET');
   });
@@ -49,30 +51,22 @@ describe('MediaService', () => {
   it('should handle error if getGenres fails', () => {
     service.getGenres('movie').subscribe({
       error: (err: HttpErrorResponse) => {
-        expect(err.statusText).toBe(statusText);
-        expect(err.status).toBe(404);
+        expectError(err);
       },
     });
 
     const request = controller.expectOne('/genre/movie/list');
 
-    request.error(new ProgressEvent(statusText), {
-      status,
-      statusText,
-    });
+    request.error(new ProgressEvent('Error'), errorResponse);
   });
 
   it('getLanguages should return languages', () => {
-    const mockLanguages: ILanguage[] = [
-      { english_name: 'en', iso_639_1: 'value', name: 'English' },
-    ];
-
     service.getLanguages().subscribe((value) => {
-      expect(value).toEqual(mockLanguages);
+      expect(value).toEqual(mockLanguagesRes);
     });
 
     const request = controller.expectOne('/configuration/languages');
-    request.flush(mockLanguages);
+    request.flush(mockLanguagesRes);
 
     expect(request.request.method).toBe('GET');
   });
@@ -80,16 +74,12 @@ describe('MediaService', () => {
   it('should handle error if getLanguages fails', () => {
     service.getLanguages().subscribe({
       error: (err: HttpErrorResponse) => {
-        expect(err.statusText).toBe(statusText);
-        expect(err.status).toBe(404);
+        expectError(err);
       },
     });
 
     const request = controller.expectOne('/configuration/languages');
 
-    request.error(new ProgressEvent(statusText), {
-      status,
-      statusText,
-    });
+    request.error(new ProgressEvent('Error'), errorResponse);
   });
 });
