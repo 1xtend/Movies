@@ -60,7 +60,7 @@ export interface IDetailsTV {
 }
 
 // Parts
-interface ICreatedBy {
+export interface ICreatedBy {
   id: number;
   credit_id: string;
   name: string;
@@ -68,7 +68,7 @@ interface ICreatedBy {
   profile_path: string | null;
 }
 
-interface ILastEpisodeToAir {
+export interface ILastEpisodeToAir {
   id: number;
   name: string;
   overview: string;

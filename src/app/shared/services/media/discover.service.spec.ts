@@ -13,7 +13,7 @@ const mockDiscoverRes = {
   total_results: 1,
 };
 
-fdescribe('DiscoverService', () => {
+describe('DiscoverService', () => {
   let service: DiscoverService;
   let controller: HttpTestingController;
 

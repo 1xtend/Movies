@@ -53,7 +53,7 @@ export interface IDetailsMovie {
 }
 
 // Parts
-interface IBelongsToCollection {
+export interface IBelongsToCollection {
   id: number;
   name: string;
   poster_path: string | null;

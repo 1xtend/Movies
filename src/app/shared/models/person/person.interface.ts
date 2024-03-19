@@ -15,7 +15,7 @@ export interface IDetailsPerson {
   also_known_as: string[];
   biography: string;
   birthday: string;
-  deathday: null;
+  deathday: null | string;
   gender: number;
   homepage: null;
   id: number;
