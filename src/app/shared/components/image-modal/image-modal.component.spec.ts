@@ -1,11 +1,9 @@
 import { DebugElement } from '@angular/core';
 import { ImageModalComponent } from './image-modal.component';
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
-
-const testPath = 'https://picsum.photos/200';
-const testAlt = 'test alt';
+import { mockImgData } from 'src/testing';
 
 describe('ImageModalComponent', () => {
   let fixture: ComponentFixture<ImageModalComponent>;
@@ -14,23 +12,21 @@ describe('ImageModalComponent', () => {
 
   let imgEl: DebugElement;
 
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [ImageModalComponent],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
           useValue: {
-            src: testPath,
-            alt: testAlt,
+            src: mockImgData.src,
+            alt: mockImgData.alt,
           },
         },
       ],
       imports: [MatDialogModule],
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ImageModalComponent);
     component = fixture.componentInstance;
     element = fixture.debugElement;
@@ -49,7 +45,7 @@ describe('ImageModalComponent', () => {
   });
 
   it('should render img element with injected data properties', () => {
-    expect(imgEl.nativeElement.src).toBe(testPath);
-    expect(imgEl.nativeElement.alt).toBe(testAlt);
+    expect(imgEl.nativeElement.src).toBe(mockImgData.src);
+    expect(imgEl.nativeElement.alt).toBe(mockImgData.alt);
   });
 });

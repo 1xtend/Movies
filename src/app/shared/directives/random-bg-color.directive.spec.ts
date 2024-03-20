@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LazyImgDirective } from './lazy-img.directive';
+import { RandomBgColorDirective } from './random-bg-color.directive';
 
 @Component({
-  template: ` <img [src]="testPath" alt="alt" appLazyImg class="img" /> `,
+  template: ` <div class="random" appRandomBgColor>Color</div> `,
 })
 class HostComponent {}
 
-describe('LazyImgDirective', () => {
+describe('RandomBgColorDirective', () => {
   let fixture: ComponentFixture<HostComponent>;
   let component: HostComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HostComponent, LazyImgDirective],
+      declarations: [HostComponent, RandomBgColorDirective],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HostComponent);
@@ -25,8 +25,8 @@ describe('LazyImgDirective', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have lazy attribute if supports', () => {
-    const imgEl = fixture.debugElement.query(By.css('.img'));
-    expect(imgEl.nativeElement.getAttribute('loading')).toBe('lazy');
+  it('should have random background color', () => {
+    const divEl = fixture.debugElement.query(By.css('.random'));
+    expect(divEl.nativeElement.style.backgroundColor).not.toBe('');
   });
 });

@@ -12,15 +12,13 @@ describe('LoaderComponent', () => {
 
   let service: LoadingService;
 
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [LoaderComponent],
       imports: [MatProgressBarModule],
       providers: [LoadingService],
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LoaderComponent);
     component = fixture.componentInstance;
     element = fixture.debugElement;

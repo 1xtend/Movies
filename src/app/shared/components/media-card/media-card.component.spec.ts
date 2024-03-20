@@ -40,14 +40,12 @@ describe('MediaCardComponent', () => {
   let hostComponent: TestHostComponent;
   let hostElement: DebugElement;
 
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [MediaCardComponent, TestHostComponent, TextCutPipe],
       imports: [MatCardModule, RouterTestingModule, MatTooltipModule],
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestHostComponent);
     hostComponent = fixture.componentInstance;
     hostElement = fixture.debugElement.query(By.directive(MediaCardComponent));

@@ -1,11 +1,9 @@
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageEnlargerComponent } from './image-enlarger.component';
 import { DebugElement } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
-
-const testPath = 'https://picsum.photos/200';
-const testAlt = 'test alt';
+import { mockImgData } from 'src/testing';
 
 describe('ImageEnlargerComponent', () => {
   let fixture: ComponentFixture<ImageEnlargerComponent>;
@@ -14,20 +12,18 @@ describe('ImageEnlargerComponent', () => {
 
   let imgEl: DebugElement;
 
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [ImageEnlargerComponent],
       imports: [MatDialogModule],
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ImageEnlargerComponent);
     component = fixture.componentInstance;
     element = fixture.debugElement;
 
-    component.imgSrc = testPath;
-    component.alt = testAlt;
+    component.imgSrc = mockImgData.src;
+    component.alt = mockImgData.alt;
 
     fixture.detectChanges();
 
@@ -43,8 +39,8 @@ describe('ImageEnlargerComponent', () => {
   });
 
   it('should render img element with provided input properties', () => {
-    expect(imgEl.nativeElement.src).toBe(testPath);
-    expect(imgEl.nativeElement.alt).toBe(testAlt);
+    expect(imgEl.nativeElement.src).toBe(mockImgData.src);
+    expect(imgEl.nativeElement.alt).toBe(mockImgData.alt);
   });
 
   it('should call openModal by click on img element', () => {

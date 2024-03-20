@@ -12,6 +12,11 @@ export const mockFilters: IFilters = {
   include_adult: true,
 };
 
+export const mockImgData = {
+  src: 'https://picsum.photos/200',
+  alt: 'test alt',
+};
+
 export function expectError(err: HttpErrorResponse): void {
   expect(err.statusText).toBe(errorResponse.statusText);
   expect(err.status).toBe(errorResponse.status);
