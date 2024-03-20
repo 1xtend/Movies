@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AvatarComponent } from './avatar.component';
 import { MatCardModule } from '@angular/material/card';
 import { By } from '@angular/platform-browser';
@@ -12,14 +12,12 @@ describe('AvatarComponent', () => {
   let component: AvatarComponent;
   let element: DebugElement;
 
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [AvatarComponent],
       imports: [MatCardModule],
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AvatarComponent);
     component = fixture.componentInstance;
     element = fixture.debugElement;

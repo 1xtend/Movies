@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TimePipe } from './time.pipe';
 import { By } from '@angular/platform-browser';
+import { LazyImgDirective } from './lazy-img.directive';
+
+const testPath = 'https://picsum.photos/200';
 
 @Component({
-  template: ` <span class="time">{{ time | time }}</span> `,
+  template: ` <img [src]="testPath" alt="alt" appLazyImg class="img" /> `,
 })
-class HostComponent {
-  time = 126;
-}
+class HostComponent {}
 
-describe('TextCutPipe', () => {
+fdescribe('LazyImgDirective', () => {
   let fixture: ComponentFixture<HostComponent>;
   let component: HostComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TimePipe, HostComponent],
+      declarations: [HostComponent, LazyImgDirective],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HostComponent);
@@ -27,10 +27,8 @@ describe('TextCutPipe', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should transform number to time', () => {
-    const timeEl = fixture.debugElement.query(By.css('.time'));
-    expect(timeEl.nativeElement.textContent.trim()).toBe('');
-    fixture.detectChanges();
-    expect(timeEl.nativeElement.textContent.trim()).toBe('2h 6m');
+  it('should have lazy attribute if supports', () => {
+    const imgEl = fixture.debugElement.query(By.css('.img'));
+    expect(imgEl.nativeElement.getAttribute('loading')).toBe('lazy');
   });
 });
