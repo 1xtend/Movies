@@ -8,7 +8,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { sortBy } from '@app/shared/helpers/sort-by';
 import { ISortBy } from '@app/shared/models/sort-by.type';
 import { IFilters } from '@app/shared/models/filters.interface';
@@ -38,6 +38,7 @@ import {
 } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { MediaService } from '@app/shared/services/media/media.service';
+import { ILanguage } from '@app/shared/models/language.interface';
 
 @Component({
   selector: 'app-discover',
@@ -148,72 +149,7 @@ export class DiscoverComponent implements OnInit {
           const navigation = this.router.getCurrentNavigation();
 
           if (!navigation || navigation.trigger === 'popstate') {
-            this.filters = {
-              page: Number(queryParams.get('page')) || 1,
-              sort_by:
-                (queryParams.get('sort_by') as
-                  | MovieSortByType
-                  | TVSortByType) || 'popularity.desc',
-              with_genres: queryParams.get('with_genres') || undefined,
-              include_adult: JSON.parse(
-                queryParams.get('include_adult') || 'false'
-              ),
-              language: queryParams.get('language') || undefined,
-              'vote_average.gte':
-                Number(queryParams.get('vote_average.gte')) || undefined,
-              'vote_average.lte':
-                Number(queryParams.get('vote_average.lte')) || undefined,
-              first_air_date_year:
-                Number(queryParams.get('first_air_date_year')) || undefined,
-              primary_release_year:
-                Number(queryParams.get('primary_release_year')) || undefined,
-            };
-
-            this.mediaType = data['type'];
-
-            this.genreControl.setValue(
-              this.filters.with_genres
-                ? this.filters.with_genres.split(',')
-                : [],
-              { emitEvent: false }
-            );
-
-            this.sortByListSubject.next(sortBy[this.mediaType]);
-
-            this.sortByControl.setValue(
-              this.filters.sort_by ?? 'popularity.desc',
-              { emitEvent: false }
-            );
-
-            this.includeAdultControl.setValue(
-              this.filters.include_adult ?? false,
-              { emitEvent: false }
-            );
-
-            this.languageControl.setValue(this.filters.language ?? 'xx', {
-              emitEvent: false,
-            });
-
-            this.voteMinControl.setValue(
-              this.filters['vote_average.gte'] ?? 0,
-              { emitEvent: false }
-            );
-
-            this.voteMaxControl.setValue(
-              this.filters['vote_average.lte'] ?? 10,
-              { emitEvent: false }
-            );
-
-            this.yearControl.setValue(
-              (this.filters.primary_release_year ||
-                this.filters.first_air_date_year) ??
-                null,
-              { emitEvent: false }
-            );
-
-            this.titleService.setTitle(
-              `Discover ${this.mediaType === 'movie' ? 'Movies' : 'TV Series'}`
-            );
+            this.navigationChanges(queryParams, data);
           }
 
           return this.fetchMedia();
@@ -228,6 +164,65 @@ export class DiscoverComponent implements OnInit {
 
         this.sharedService.scrollToTop();
       });
+  }
+
+  private navigationChanges(queryParams: ParamMap, data: Data): void {
+    this.filters = {
+      page: Number(queryParams.get('page')) || 1,
+      sort_by:
+        (queryParams.get('sort_by') as MovieSortByType | TVSortByType) ||
+        'popularity.desc',
+      with_genres: queryParams.get('with_genres') || undefined,
+      include_adult: JSON.parse(queryParams.get('include_adult') || 'false'),
+      language: queryParams.get('language') || undefined,
+      'vote_average.gte':
+        Number(queryParams.get('vote_average.gte')) || undefined,
+      'vote_average.lte':
+        Number(queryParams.get('vote_average.lte')) || undefined,
+      first_air_date_year:
+        Number(queryParams.get('first_air_date_year')) || undefined,
+      primary_release_year:
+        Number(queryParams.get('primary_release_year')) || undefined,
+    };
+
+    this.mediaType = data['type'];
+
+    this.genreControl.setValue(
+      this.filters.with_genres ? this.filters.with_genres.split(',') : [],
+      { emitEvent: false }
+    );
+
+    this.sortByListSubject.next(sortBy[this.mediaType]);
+
+    this.sortByControl.setValue(this.filters.sort_by ?? 'popularity.desc', {
+      emitEvent: false,
+    });
+
+    this.includeAdultControl.setValue(this.filters.include_adult ?? false, {
+      emitEvent: false,
+    });
+
+    this.languageControl.setValue(this.filters.language ?? 'xx', {
+      emitEvent: false,
+    });
+
+    this.voteMinControl.setValue(this.filters['vote_average.gte'] ?? 0, {
+      emitEvent: false,
+    });
+
+    this.voteMaxControl.setValue(this.filters['vote_average.lte'] ?? 10, {
+      emitEvent: false,
+    });
+
+    this.yearControl.setValue(
+      (this.filters.primary_release_year || this.filters.first_air_date_year) ??
+        null,
+      { emitEvent: false }
+    );
+
+    this.titleService.setTitle(
+      `Discover ${this.mediaType === 'movie' ? 'Movies' : 'TV Series'}`
+    );
   }
 
   private filtersChanges(): void {
@@ -350,7 +345,7 @@ export class DiscoverComponent implements OnInit {
       });
   }
 
-  private fetchLanguages() {
+  private fetchLanguages(): Observable<ILanguage[]> {
     return this.sharedService.languages$.pipe(
       take(1),
       switchMap((languages) => {

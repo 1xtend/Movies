@@ -43,6 +43,7 @@
       <mat-form-field
         *ngIf="sharedService.languages$ | async as languages"
         class="discover-aside__item"
+        data-testid="languages"
       >
         <mat-label>Language</mat-label>
 
@@ -81,7 +82,11 @@
   </mat-accordion>
 
   <ng-container *ngIf="res$ | async as res">
-    <div class="discover__content" *ngIf="res.tvs && res.tvs.total_results > 0">
+    <div
+      class="discover__content"
+      *ngIf="res.tvs && res.tvs.total_results > 0"
+      data-testid="tvs"
+    >
       <div class="discover__grid">
         <app-media-card
           *ngFor="
@@ -111,6 +116,7 @@
     <div
       class="discover__content"
       *ngIf="res.movies && res.movies.total_results > 0"
+      data-testid="movies"
     >
       <div class="discover__grid">
         <app-media-card
@@ -139,7 +145,7 @@
     </div>
   </ng-container>
 
-  <mat-card *ngIf="noResult">
+  <mat-card *ngIf="noResult" data-testid="no-result">
     <mat-card-content>
       <mat-card-title>There are no results for this request</mat-card-title>
     </mat-card-content>
