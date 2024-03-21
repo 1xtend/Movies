@@ -5,10 +5,12 @@
     <span class="spacer"></span>
 
     <ng-container *ngIf="!isTablet">
-      <a routerLink="/discover/movie" mat-button>Movies</a>
-      <a routerLink="/discover/tv" routerLinkActive="mat-accent" mat-button>
-        TV Shows
-      </a>
+      <a routerLink="/discover/movie" mat-button data-testid="nav-link"
+        >Movies</a
+      >
+      <a routerLink="/discover/tv" mat-button data-testid="nav-link"
+        >TV Shows</a
+      >
     </ng-container>
 
     <button
@@ -16,6 +18,7 @@
       mat-icon-button
       (click)="toggleInput()"
       matTooltip="Search"
+      data-testid="search-button"
     >
       <mat-icon>search</mat-icon>
     </button>
@@ -24,12 +27,13 @@
       type="button"
       mat-icon-button
       (click)="toggleDrawer.emit()"
+      data-testid="menu-button"
       *ngIf="isTablet"
     >
       <mat-icon>menu</mat-icon>
     </button>
   </mat-toolbar-row>
-  <mat-toolbar-row *ngIf="show">
+  <mat-toolbar-row *ngIf="show" data-testid="search">
     <app-search></app-search>
   </mat-toolbar-row>
 </mat-toolbar>

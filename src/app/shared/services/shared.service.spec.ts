@@ -14,24 +14,6 @@ import { IFilters } from '../models/filters.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 
-const mockMediaRes = {
-  page: 1,
-  results: [],
-  total_pages: 1,
-  total_results: 1,
-};
-
-const mockNowPlayingMoviesRes: INowPlayingMoviesResponse = {
-  dates: {
-    maximum: '1',
-    minimum: '0',
-  },
-  page: 1,
-  results: [],
-  total_pages: 1,
-  total_results: 1,
-};
-
 describe('SharedService', () => {
   let service: SharedService;
   let controller: HttpTestingController;
