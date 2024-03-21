@@ -115,60 +115,6 @@ describe('SharedService', () => {
     tick();
   }));
 
-  it('setPopularMoviesSubject should set popularMovies$ to the provided value', fakeAsync(() => {
-    service.setPopularMoviesSubject(mockMediaRes);
-
-    service.popularMovies$.pipe(first()).subscribe((value) => {
-      expect(value).toEqual(mockMediaRes);
-    });
-    tick();
-  }));
-
-  it('setPopularTVsSubject should set popularTVs$ to the provided value', fakeAsync(() => {
-    service.setPopularTVsSubject(mockMediaRes);
-
-    service.popularTVs$.pipe(first()).subscribe((value) => {
-      expect(value).toEqual(mockMediaRes);
-    });
-    tick();
-  }));
-
-  it('setPopularPeopleSubject should set popularPeople$ to the provided value', fakeAsync(() => {
-    service.setPopularPeopleSubject(mockMediaRes);
-
-    service.popularPeople$.pipe(first()).subscribe((value) => {
-      expect(value).toEqual(mockMediaRes);
-    });
-    tick();
-  }));
-
-  it('setNowPlayingMoviesSubject should set nowPlayingMovies$ to the provided value', fakeAsync(() => {
-    service.setNowPlayingMoviesSubject(mockNowPlayingMoviesRes);
-
-    service.nowPlayingMovies$.pipe(first()).subscribe((value) => {
-      expect(value).toEqual(mockNowPlayingMoviesRes);
-    });
-    tick();
-  }));
-
-  it('setTopRatedMoviesSubject should set topRatedMovies$ to the provided value', fakeAsync(() => {
-    service.setTopRatedMoviesSubject(mockMediaRes);
-
-    service.topRatedMovies$.pipe(first()).subscribe((value) => {
-      expect(value).toEqual(mockMediaRes);
-    });
-    tick();
-  }));
-
-  it('setOnTheAirTVsSubject should set onTheAirTV$ to the provided value', fakeAsync(() => {
-    service.setOnTheAirTVsSubject(mockMediaRes);
-
-    service.onTheAirTV$.pipe(first()).subscribe((value) => {
-      expect(value).toEqual(mockMediaRes);
-    });
-    tick();
-  }));
-
   it('scrollToTop should call scrollToPosition', () => {
     service.scrollToTop();
 

@@ -5,7 +5,11 @@
   </h1>
 </section>
 
-<section class="media" *ngIf="popularMovies$ | async as movies">
+<section
+  class="media"
+  *ngIf="listsService.popularMovies$ | async as movies"
+  data-testid="popular-movies"
+>
   <h2 class="media__title">Popular movies</h2>
 
   <div class="media__slider" *ngIf="slides$ | async as slides">
@@ -55,7 +59,11 @@
   </div>
 </section>
 
-<section class="media" *ngIf="popularTVs$ | async as tvs">
+<section
+  class="media"
+  *ngIf="listsService.popularTVs$ | async as tvs"
+  data-testid="popular-tvs"
+>
   <h2 class="media__title">Popular TV Series</h2>
 
   <div class="media__slider" *ngIf="slides$ | async as slides">
@@ -101,7 +109,11 @@
     </button>
   </div>
 </section>
-<section class="media" *ngIf="popularPeople$ | async as people">
+<section
+  class="media"
+  *ngIf="listsService.popularPeople$ | async as people"
+  data-testid="popular-people"
+>
   <h2 class="media__title">Popular People</h2>
 
   <div class="media__slider" *ngIf="slides$ | async as slides">
@@ -165,7 +177,11 @@
   </h2>
 </section>
 
-<section class="media" *ngIf="nowPlayingMovies$ | async as movies">
+<section
+  class="media"
+  *ngIf="listsService.nowPlayingMovies$ | async as movies"
+  data-testid="now-playing-movies"
+>
   <h2 class="media__title">Now Playing Movies</h2>
 
   <div class="media__slider" *ngIf="slides$ | async as slides">
@@ -214,7 +230,11 @@
     </button>
   </div>
 </section>
-<section class="media" *ngIf="topRatedMovies$ | async as movies">
+<section
+  class="media"
+  *ngIf="listsService.topRatedMovies$ | async as movies"
+  data-testid="top-rated-movies"
+>
   <h2 class="media__title">Top Rated Movies</h2>
 
   <div class="media__slider" *ngIf="slides$ | async as slides">
@@ -263,7 +283,11 @@
     </button>
   </div>
 </section>
-<section class="media" *ngIf="onTheAirTVs$ | async as tvs">
+<section
+  class="media"
+  *ngIf="listsService.onTheAirTV$ | async as tvs"
+  data-testid="on-the-air-tvs"
+>
   <h2 class="media__title">On The Air TV Series</h2>
 
   <div class="media__slider" *ngIf="slides$ | async as slides">

@@ -6,15 +6,9 @@ import {
   DestroyRef,
   OnInit,
 } from '@angular/core';
-import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
-import {
-  IMoviesResponse,
-  INowPlayingMoviesResponse,
-} from '@app/shared/models/movie/movies-response.interface';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environment/environment';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
-import { IPeopleResponse } from '@app/shared/models/person/people-response.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 
@@ -25,14 +19,6 @@ import { Title } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-  popularMovies$?: Observable<IMoviesResponse>;
-  popularTVs$?: Observable<ITVsResponse>;
-  popularPeople$?: Observable<IPeopleResponse>;
-
-  nowPlayingMovies$?: Observable<INowPlayingMoviesResponse>;
-  topRatedMovies$?: Observable<IMoviesResponse>;
-  onTheAirTVs$?: Observable<ITVsResponse>;
-
   posterPath = environment.imagePaths.w500Poster;
   backdropPath = environment.imagePaths.w1280Backdrop;
   profilePath = environment.imagePaths.h632Profile;
@@ -47,20 +33,24 @@ export class HomeComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private destroyRef: DestroyRef,
     private titleService: Title,
-    private listsService: ListsService
+    public listsService: ListsService
   ) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('VMTV: Place for Movies and TV Series');
 
-    this.getPopularMovies();
-    this.getPopularTVs();
-    this.getPopularPeople();
-    this.getNowPlayingMovies();
-    this.getTopRatedMovies();
-    this.getOnTheAirTVs();
+    this.setMedia();
 
     this.breakpointChanges();
+  }
+
+  private setMedia(): void {
+    this.listsService.setPopularPeople();
+    this.listsService.setPopularMovies();
+    this.listsService.setPopularTVs();
+    this.listsService.setTopRatedMovies();
+    this.listsService.setOnTheAirTVs();
+    this.listsService.setNowPlayingMovies();
   }
 
   private breakpointChanges(): void {
@@ -89,119 +79,5 @@ export class HomeComponent implements OnInit {
           this.slidesSubject.next(6);
         }
       });
-  }
-
-  private getPopularMovies(): void {
-    this.popularMovies$ = this.sharedService.popularMovies$.pipe(
-      take(1),
-      switchMap((movies) => {
-        if (movies && movies.results.length) {
-          // Get saved movies
-          return of(movies);
-        }
-
-        // Get fetched movies
-        return this.listsService.getPopularMovies().pipe(
-          tap((movies) => {
-            this.sharedService.setPopularMoviesSubject(movies);
-          })
-        );
-      })
-    );
-  }
-
-  private getPopularTVs(): void {
-    this.popularTVs$ = this.sharedService.popularTVs$.pipe(
-      take(1),
-      switchMap((tvs) => {
-        if (tvs && tvs.results.length) {
-          // Get saved tv series
-          return of(tvs);
-        }
-
-        // Get fetched tv series
-        return this.listsService.getPopularTVs().pipe(
-          tap((tvs) => {
-            this.sharedService.setPopularTVsSubject(tvs);
-          })
-        );
-      })
-    );
-  }
-
-  private getPopularPeople(): void {
-    this.popularPeople$ = this.sharedService.popularPeople$.pipe(
-      take(1),
-      switchMap((people) => {
-        if (people && people.results.length) {
-          // Get saved people
-          return of(people);
-        }
-
-        // Get fetched people
-        return this.listsService.getPopularPeople().pipe(
-          tap((people) => {
-            this.sharedService.setPopularPeopleSubject(people);
-          })
-        );
-      })
-    );
-  }
-
-  private getNowPlayingMovies(): void {
-    this.nowPlayingMovies$ = this.sharedService.nowPlayingMovies$.pipe(
-      take(1),
-      switchMap((movies) => {
-        if (movies && movies.results.length) {
-          // Get saved movies
-          return of(movies);
-        }
-
-        // Get fetched movies
-        return this.listsService.getNowPlayingMovies().pipe(
-          tap((movies) => {
-            this.sharedService.setNowPlayingMoviesSubject(movies);
-          })
-        );
-      })
-    );
-  }
-
-  private getTopRatedMovies(): void {
-    this.topRatedMovies$ = this.sharedService.topRatedMovies$.pipe(
-      take(1),
-      switchMap((movies) => {
-        if (movies && movies.results.length) {
-          // Get saved movies
-          return of(movies);
-        }
-
-        // Get fetched movies
-        return this.listsService.getTopRatedMovies().pipe(
-          tap((movies) => {
-            this.sharedService.setTopRatedMoviesSubject(movies);
-          })
-        );
-      })
-    );
-  }
-
-  private getOnTheAirTVs(): void {
-    this.onTheAirTVs$ = this.sharedService.onTheAirTV$.pipe(
-      take(1),
-      switchMap((tvs) => {
-        if (tvs && tvs.results.length) {
-          // Get saved tv series
-          return of(tvs);
-        }
-
-        // Get fetched tv series
-        return this.listsService.getOnTheAirTV().pipe(
-          tap((tvs) => {
-            this.sharedService.setOnTheAirTVsSubject(tvs);
-          })
-        );
-      })
-    );
   }
 }

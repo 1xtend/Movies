@@ -105,7 +105,7 @@ describe('DiscoverComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render movies', fakeAsync(() => {
+  it('should render movies', () => {
     component.res$ = of(<{ movies: IMoviesResponse }>{
       movies: {
         page: 1,
@@ -123,9 +123,9 @@ describe('DiscoverComponent', () => {
     const tvsEl = fixture.debugElement.query(By.css('[data-testid="tvs"]'));
     expect(moviesEl).toBeTruthy();
     expect(tvsEl).toBeNull();
-  }));
+  });
 
-  it('should render tv series', fakeAsync(() => {
+  it('should render tv series', () => {
     component.res$ = of(<{ tvs: ITVsResponse }>{
       tvs: {
         page: 1,
@@ -143,7 +143,7 @@ describe('DiscoverComponent', () => {
     );
     expect(tvsEl).toBeTruthy();
     expect(moviesEl).toBeNull();
-  }));
+  });
 
   it('should render no result element if there is no result', () => {
     component.noResult = true;
