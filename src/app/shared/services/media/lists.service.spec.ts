@@ -3,9 +3,10 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { ListsService } from './lists.service';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { errorResponse, expectError } from 'src/testing';
 import { INowPlayingMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
+import { first } from 'rxjs';
 
 const mockMediaRes = {
   page: 1,
@@ -226,4 +227,88 @@ describe('ListsService', () => {
       request.error(new ProgressEvent('Error'), errorResponse);
     });
   });
+
+  it('setPopularMovies should fetch popular movies if they are undefined', fakeAsync(() => {
+    service.setPopularMovies();
+
+    const request = controller.expectOne('/movie/popular');
+    request.flush(mockMediaRes);
+
+    expect(request.request.method).toBe('GET');
+
+    service.popularMovies$.pipe(first()).subscribe((value) => {
+      expect(value).toEqual(mockMediaRes);
+    });
+    tick();
+  }));
+
+  it('setPopularTVs should fetch popular tv series if they are undefined', fakeAsync(() => {
+    service.setPopularTVs();
+
+    const request = controller.expectOne('/tv/popular');
+    request.flush(mockMediaRes);
+
+    expect(request.request.method).toBe('GET');
+
+    service.popularTVs$.pipe(first()).subscribe((value) => {
+      expect(value).toEqual(mockMediaRes);
+    });
+    tick();
+  }));
+
+  it('setPopularPeople should fetch popular people if they are undefined', fakeAsync(() => {
+    service.setPopularPeople();
+
+    const request = controller.expectOne('/person/popular');
+    request.flush(mockMediaRes);
+
+    expect(request.request.method).toBe('GET');
+
+    service.popularPeople$.pipe(first()).subscribe((value) => {
+      expect(value).toEqual(mockMediaRes);
+    });
+    tick();
+  }));
+
+  it('setNowPlayingMovies should fetch now playing movies if they are undefined', fakeAsync(() => {
+    service.setNowPlayingMovies();
+
+    const request = controller.expectOne('/movie/now_playing');
+    request.flush(mockNowPlayingMoviesRes);
+
+    expect(request.request.method).toBe('GET');
+
+    service.nowPlayingMovies$.pipe(first()).subscribe((value) => {
+      expect(value).toEqual(mockNowPlayingMoviesRes);
+    });
+    tick();
+  }));
+
+  it('setTopRatedMovies should fetch top rated movies if they are undefined', fakeAsync(() => {
+    service.setTopRatedMovies();
+
+    const request = controller.expectOne('/movie/top_rated');
+    request.flush(mockMediaRes);
+
+    expect(request.request.method).toBe('GET');
+
+    service.topRatedMovies$.pipe(first()).subscribe((value) => {
+      expect(value).toEqual(mockMediaRes);
+    });
+    tick();
+  }));
+
+  it('setOnTheAirTVs should fetch on the air tv series if they are undefined', fakeAsync(() => {
+    service.setOnTheAirTVs();
+
+    const request = controller.expectOne('/tv/on_the_air');
+    request.flush(mockMediaRes);
+
+    expect(request.request.method).toBe('GET');
+
+    service.onTheAirTV$.pipe(first()).subscribe((value) => {
+      expect(value).toEqual(mockMediaRes);
+    });
+    tick();
+  }));
 });

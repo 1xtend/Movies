@@ -94,8 +94,6 @@ describe('HomeComponent', () => {
       By.css('[data-testid="popular-movies"]')
     );
 
-    console.log(section.nativeElement);
-
     expect(section).toBeTruthy();
   });
 
@@ -103,8 +101,6 @@ describe('HomeComponent', () => {
     const section = fixture.debugElement.query(
       By.css('[data-testid="popular-tvs"]')
     );
-
-    console.log(section.nativeElement);
 
     expect(section).toBeTruthy();
   });
@@ -114,8 +110,6 @@ describe('HomeComponent', () => {
       By.css('[data-testid="popular-people"]')
     );
 
-    console.log(section.nativeElement);
-
     expect(section).toBeTruthy();
   });
 
@@ -123,8 +117,6 @@ describe('HomeComponent', () => {
     const section = fixture.debugElement.query(
       By.css('[data-testid="now-playing-movies"]')
     );
-
-    console.log(section.nativeElement);
 
     expect(section).toBeTruthy();
   });
@@ -134,8 +126,6 @@ describe('HomeComponent', () => {
       By.css('[data-testid="top-rated-movies"]')
     );
 
-    console.log(section.nativeElement);
-
     expect(section).toBeTruthy();
   });
 
@@ -143,8 +133,6 @@ describe('HomeComponent', () => {
     const section = fixture.debugElement.query(
       By.css('[data-testid="on-the-air-tvs"]')
     );
-
-    console.log(section.nativeElement);
 
     expect(section).toBeTruthy();
   });
