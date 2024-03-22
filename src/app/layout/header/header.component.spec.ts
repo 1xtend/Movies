@@ -2,8 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { RouterLink } from '@angular/router';
 
-describe('HeaderComponent', () => {
+fdescribe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let component: HeaderComponent;
 
@@ -11,6 +13,7 @@ describe('HeaderComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [HeaderComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
@@ -19,6 +22,17 @@ describe('HeaderComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have correct routerLinks', () => {
+    component.isTablet = false;
+    fixture.detectChanges();
+
+    const linkEls = fixture.debugElement.queryAll(By.directive(RouterLink));
+
+    expect(linkEls[0].attributes['routerLink']).toBe('/');
+    expect(linkEls[1].attributes['routerLink']).toBe('/discover/movie');
+    expect(linkEls[2].attributes['routerLink']).toBe('/discover/tv');
   });
 
   it('should open search toolbar on search button click', () => {
