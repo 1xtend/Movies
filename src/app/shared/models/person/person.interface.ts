@@ -17,7 +17,7 @@ export interface IDetailsPerson {
   birthday: string;
   deathday: null | string;
   gender: number;
-  homepage: null;
+  homepage: null | string;
   id: number;
   imdb_id: string;
   known_for_department: string;

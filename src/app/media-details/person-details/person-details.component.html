@@ -11,13 +11,14 @@
       <img
         [src]="'../../../assets/images/blank-image.jpg'"
         [alt]="person.name"
+        data-testid="no-image"
       />
     </ng-template>
   </div>
 
   <div class="info__content">
     <div class="info__group">
-      <h1 class="info__main-title">
+      <h1 class="info__main-title" data-testid="main-title">
         <a
           *ngIf="person.homepage; else noHomepage"
           [href]="person.homepage"
@@ -25,61 +26,62 @@
           rel="noreferrer noopener"
           class="info__main-title-link"
           matTooltip="Go to homepage"
+          data-testid="main-title-link"
         >
           {{ person.name }}
         </a>
 
-        <ng-template #noHomepage>{{ person.name }} </ng-template>
+        <ng-template #noHomepage>
+          <span data-testid="main-title-inner">{{ person.name }}</span>
+        </ng-template>
       </h1>
     </div>
 
     <div class="info__group" *ngIf="person.biography">
       <h2 class="info__title title">Biography</h2>
-      <p>{{ person.biography }}</p>
+      <p data-testid="biography">{{ person.biography }}</p>
     </div>
 
     <div class="info__group" *ngIf="person.also_known_as.length">
       <h2 class="info__title title">Also known as</h2>
-      <p>
-        <span *ngFor="let value of person.also_known_as">
-          {{
-            person.also_known_as.indexOf(value) ===
-            person.also_known_as.length - 1
-              ? value
-              : value + "; "
-          }}
-        </span>
+      <p data-testid="also-known-as">
+        <span *ngFor="let value of person.also_known_as">{{
+          person.also_known_as.indexOf(value) ===
+          person.also_known_as.length - 1
+            ? value
+            : value + "; "
+        }}</span>
       </p>
     </div>
 
     <ul class="info__group info-list">
       <li class="info-list__item" *ngIf="person.birthday">
         <h4 class="info-list__title">Birthday</h4>
-        <p class="info-list__text">
+        <p class="info-list__text" data-testid="birthday">
           {{ person.birthday | date : "dd/MM/y" }}
         </p>
       </li>
       <li class="info-list__item" *ngIf="person.deathday">
         <h4 class="info-list__title">Deathday</h4>
-        <p class="info-list__text">
+        <p class="info-list__text" data-testid="deathday">
           {{ person.deathday | date : "dd/MM/y" }}
         </p>
       </li>
       <li class="info-list__item" *ngIf="person.place_of_birth">
         <h4 class="info-list__title">Place of birth</h4>
-        <p class="info-list__text">
+        <p class="info-list__text" data-testid="place-of-birth">
           {{ person.place_of_birth }}
         </p>
       </li>
       <li class="info-list__item" *ngIf="person.gender">
         <h4 class="info-list__title">Gender</h4>
-        <p class="info-list__text">
+        <p class="info-list__text" data-testid="gender">
           {{ person.gender === 1 ? "Female" : "Male" }}
         </p>
       </li>
       <li class="info-list__item" *ngIf="person.known_for_department">
         <h4 class="info-list__title">Known for department</h4>
-        <p class="info-list__text">
+        <p class="info-list__text" data-testid="known-for-department">
           {{ person.known_for_department }}
         </p>
       </li>
@@ -87,7 +89,11 @@
   </div>
 </section>
 
-<section class="images" *ngIf="person.images && person.images.profiles.length">
+<section
+  class="images"
+  *ngIf="person.images && person.images.profiles.length"
+  data-testid="images"
+>
   <h2 class="images__title title">Images</h2>
 
   <div class="images__slider">
