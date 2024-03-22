@@ -8,13 +8,17 @@
     ></app-image-enlarger>
 
     <ng-template #noImage>
-      <img [src]="'../../../assets/images/blank-image.jpg'" [alt]="tv.name" />
+      <img
+        [src]="'../../../assets/images/blank-image.jpg'"
+        [alt]="tv.name"
+        data-testid="no-image"
+      />
     </ng-template>
   </div>
 
   <div class="info__content">
     <div class="info__group">
-      <h1 class="info__main-title">
+      <h1 class="info__main-title" data-testid="main-title">
         <a
           *ngIf="tv.homepage; else noHomepage"
           [href]="tv.homepage"
@@ -22,54 +26,60 @@
           rel="noreferrer noopener"
           class="info__main-title-link"
           matTooltip="Go to homepage"
+          data-testid="main-title-link"
         >
           {{ tv.name }}
         </a>
 
-        <ng-template #noHomepage>{{ tv.name }} </ng-template>
+        <ng-template #noHomepage>
+          <span data-testid="main-title-inner">{{ tv.name }}</span>
+        </ng-template>
 
-        <span class="info__year" *ngIf="tv.first_air_date && tv.last_air_date"
+        <span
+          class="info__year"
+          data-testid="main-title-year"
+          *ngIf="tv.first_air_date && tv.last_air_date"
           >({{ tv.first_air_date | date : "y" }}
           -
           {{ tv.last_air_date | date : "y" }})</span
         >
       </h1>
 
-      <i *ngIf="tv.tagline">{{ tv.tagline }}</i>
+      <i *ngIf="tv.tagline" data-testid="tagline">{{ tv.tagline }}</i>
     </div>
 
     <div class="info__group" *ngIf="tv.overview">
       <h2 class="info__title title">Overview</h2>
-      <p>{{ tv.overview }}</p>
+      <p data-testid="overview">{{ tv.overview }}</p>
     </div>
 
     <div class="info__group" *ngIf="tv.genres.length">
       <h2 class="info__title title">Genres</h2>
-      <p>
-        <span *ngFor="let genre of tv.genres">
-          {{
-            tv.genres.indexOf(genre) === tv.genres.length - 1
-              ? genre.name
-              : genre.name + ", "
-          }}
-        </span>
+      <p data-testid="genres">
+        <span *ngFor="let genre of tv.genres">{{
+          tv.genres.indexOf(genre) === tv.genres.length - 1
+            ? genre.name
+            : genre.name + ", "
+        }}</span>
       </p>
     </div>
 
     <ul class="info__group info-list">
       <li class="info-list__item" *ngIf="tv.first_air_date">
         <h4 class="info-list__title">First air date</h4>
-        <p class="info-list__text">
+        <p class="info-list__text" data-testid="first-air-date">
           {{ tv.first_air_date | date : "MM/dd/y" }}
         </p>
       </li>
       <li class="info-list__item" *ngIf="tv.last_air_date">
         <h4 class="info-list__title">Last air date</h4>
-        <p class="info-list__text">{{ tv.last_air_date | date : "MM/dd/y" }}</p>
+        <p class="info-list__text" data-testid="last-air-date">
+          {{ tv.last_air_date | date : "MM/dd/y" }}
+        </p>
       </li>
       <li class="info-list__item" *ngIf="tv.status">
         <h4 class="info-list__title">Status</h4>
-        <p class="info-list__text">{{ tv.status }}</p>
+        <p class="info-list__text" data-testid="status">{{ tv.status }}</p>
       </li>
       <li class="info-list__item" *ngIf="tv.number_of_episodes">
         <h4 class="info-list__title">Episodes</h4>
@@ -83,7 +93,11 @@
   </div>
 </section>
 
-<section class="similar" *ngIf="tv.similar && tv.similar.results.length">
+<section
+  class="similar"
+  *ngIf="tv.similar && tv.similar.total_results > 0"
+  data-testid="similar"
+>
   <h2 class="similar__title title">Similar</h2>
 
   <div class="similar__slider">
@@ -138,7 +152,10 @@
   </div>
 </section>
 
-<mat-accordion *ngIf="tv.reviews && tv.reviews.total_results > 0">
+<mat-accordion
+  *ngIf="tv.reviews && tv.reviews.total_results > 0"
+  data-testid="reviews"
+>
   <mat-expansion-panel (opened)="opened = true" (closed)="opened = false">
     <mat-expansion-panel-header>
       <mat-panel-title>{{ opened ? "Hide" : "Show" }} reviews</mat-panel-title>

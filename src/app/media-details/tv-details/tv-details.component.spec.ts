@@ -1,42 +1,47 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MovieDetailsComponent } from './movie-details.component';
 import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import { getElementById, mockImgData } from 'src/testing';
-import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
 import { By } from '@angular/platform-browser';
 import { TimePipe } from '@app/shared/pipes/time.pipe';
+import { TvDetailsComponent } from './tv-details.component';
+import {
+  IDetailsTV,
+  ILastEpisodeToAir,
+} from '@app/shared/models/tv/tv.interface';
 
-const mockMovieDetails: IDetailsMovie = {
+const mockTVDetails: IDetailsTV = {
   adult: true,
   backdrop_path: null,
-  budget: 1,
   genres: [],
   homepage: 'page',
   id: 1,
-  imdb_id: '123',
   original_language: 'English',
-  original_title: 'Bob',
   overview: 'Long text...',
   popularity: 9,
   poster_path: null,
-  release_date: '03.03.2003',
-  revenue: 100,
-  runtime: 126,
   spoken_languages: [],
   status: 'released',
   tagline: 'cool tagline',
-  title: 'Bob',
-  video: false,
   vote_average: 7,
   vote_count: 2,
   production_countries: [],
   production_companies: [],
-  belongs_to_collection: {
-    backdrop_path: null,
-    id: 1,
-    name: 'Collection',
-    poster_path: null,
-  },
+  created_by: [],
+  episode_run_time: [],
+  first_air_date: '01.01.1991',
+  in_production: true,
+  languages: [],
+  last_air_date: '04.04.2004',
+  last_episode_to_air: {} as ILastEpisodeToAir,
+  name: 'Bob',
+  networks: [],
+  next_episode_to_air: null,
+  number_of_episodes: 1,
+  number_of_seasons: 1,
+  origin_country: [],
+  original_name: 'Bob',
+  seasons: [],
+  type: 'tv show',
 };
 
 @Component({
@@ -44,21 +49,17 @@ const mockMovieDetails: IDetailsMovie = {
 })
 class ImageEnlargerMockComponent {}
 
-describe('MovieDetailsComponent', () => {
-  let fixture: ComponentFixture<MovieDetailsComponent>;
-  let component: MovieDetailsComponent;
+describe('TvDetailsComponent', () => {
+  let fixture: ComponentFixture<TvDetailsComponent>;
+  let component: TvDetailsComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        MovieDetailsComponent,
-        TimePipe,
-        ImageEnlargerMockComponent,
-      ],
+      declarations: [TvDetailsComponent, TimePipe, ImageEnlargerMockComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MovieDetailsComponent);
+    fixture = TestBed.createComponent(TvDetailsComponent);
     component = fixture.componentInstance;
   });
 
@@ -67,8 +68,8 @@ describe('MovieDetailsComponent', () => {
   });
 
   it('should render image enlarger if poster_path is provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       poster_path: mockImgData.src,
     };
     fixture.detectChanges();
@@ -80,8 +81,8 @@ describe('MovieDetailsComponent', () => {
   });
 
   it('should render noImage template if poster_path is not provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       poster_path: null,
     };
     fixture.detectChanges();
@@ -91,8 +92,8 @@ describe('MovieDetailsComponent', () => {
   });
 
   it('should render main title with link inside if homepage is provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       homepage: 'https://google.com/',
     };
     fixture.detectChanges();
@@ -100,13 +101,13 @@ describe('MovieDetailsComponent', () => {
     const titleEl = getElementById(fixture, 'main-title');
     const linkEl = getElementById(titleEl, 'main-title-link');
 
-    expect(linkEl.attributes['href']).toBe(component.movie.homepage);
-    expect(linkEl.nativeElement.textContent.trim()).toBe(component.movie.title);
+    expect(linkEl.attributes['href']).toBe(component.tv.homepage);
+    expect(linkEl.nativeElement.textContent.trim()).toBe(component.tv.name);
   });
 
   it('should render main title with provided title', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       homepage: '',
     };
     fixture.detectChanges();
@@ -114,27 +115,26 @@ describe('MovieDetailsComponent', () => {
     const titleEl = getElementById(fixture, 'main-title');
     const innerEl = getElementById(titleEl, 'main-title-inner');
 
-    expect(innerEl.nativeElement.textContent.trim()).toBe(
-      component.movie.title
-    );
+    expect(innerEl.nativeElement.textContent.trim()).toBe(component.tv.name);
   });
 
   it('should render main title with year span inside if release_date provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
-      release_date: '05.05.1995',
+    component.tv = {
+      ...mockTVDetails,
+      first_air_date: '05.05.1995',
+      last_air_date: '06.06.2006',
     };
     fixture.detectChanges();
 
     const titleEl = getElementById(fixture, 'main-title');
-    const innerEl = getElementById(titleEl, 'main-title-release-date');
+    const innerEl = getElementById(titleEl, 'main-title-year');
 
-    expect(innerEl.nativeElement.textContent.trim()).toBe('(1995)');
+    expect(innerEl.nativeElement.textContent.trim()).toBe('(1995 - 2006)');
   });
 
   it('should render tagline if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       tagline: 'Cool tagline',
     };
     fixture.detectChanges();
@@ -145,8 +145,8 @@ describe('MovieDetailsComponent', () => {
   });
 
   it('should render overview if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       overview: 'Long text',
     };
     fixture.detectChanges();
@@ -157,8 +157,8 @@ describe('MovieDetailsComponent', () => {
   });
 
   it('should render genres if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       genres: [
         { id: 1, name: 'horror' },
         { id: 2, name: 'fantasy' },
@@ -171,33 +171,33 @@ describe('MovieDetailsComponent', () => {
     expect(genresEl.nativeElement.textContent.trim()).toBe('horror, fantasy');
   });
 
-  it('should render release date if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
-      release_date: '01.01.2001',
+  it('should render first air date if provided', () => {
+    component.tv = {
+      ...mockTVDetails,
+      first_air_date: '01.01.2001',
     };
     fixture.detectChanges();
 
-    const releaseDateEl = getElementById(fixture, 'release-date');
+    const releaseDateEl = getElementById(fixture, 'first-air-date');
 
     expect(releaseDateEl.nativeElement.textContent.trim()).toBe('01/01/2001');
   });
 
-  it('should render runtime if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
-      runtime: 112,
+  it('should render last air date if provided', () => {
+    component.tv = {
+      ...mockTVDetails,
+      last_air_date: '02.02.2002',
     };
     fixture.detectChanges();
 
-    const runtimeEl = getElementById(fixture, 'runtime');
+    const releaseDateEl = getElementById(fixture, 'last-air-date');
 
-    expect(runtimeEl.nativeElement.textContent.trim()).toBe('1h 52m');
+    expect(releaseDateEl.nativeElement.textContent.trim()).toBe('02/02/2002');
   });
 
   it('should render status if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       status: 'released',
     };
     fixture.detectChanges();
@@ -207,57 +207,9 @@ describe('MovieDetailsComponent', () => {
     expect(statusEl.nativeElement.textContent.trim()).toBe('released');
   });
 
-  it('should render original title if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
-      original_title: 'long title',
-    };
-    fixture.detectChanges();
-
-    const originalTitleEl = getElementById(fixture, 'original-title');
-
-    expect(originalTitleEl.nativeElement.textContent.trim()).toBe('long title');
-  });
-
-  it('should render budget if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
-      budget: 200,
-    };
-    fixture.detectChanges();
-
-    const budgetEl = getElementById(fixture, 'budget');
-
-    expect(budgetEl.nativeElement.textContent.trim()).toBe('$200.00');
-  });
-
-  it('should render revenue if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
-      revenue: 300,
-    };
-    fixture.detectChanges();
-
-    const revenueEl = getElementById(fixture, 'revenue');
-
-    expect(revenueEl.nativeElement.textContent.trim()).toBe('$300.00');
-  });
-
-  it('should render revenue if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
-      revenue: 300,
-    };
-    fixture.detectChanges();
-
-    const revenueEl = getElementById(fixture, 'revenue');
-
-    expect(revenueEl.nativeElement.textContent.trim()).toBe('$300.00');
-  });
-
   it('should render similar section if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       similar: { page: 1, results: [], total_pages: 1, total_results: 1 },
     };
     fixture.detectChanges();
@@ -268,8 +220,8 @@ describe('MovieDetailsComponent', () => {
   });
 
   it('should render similar accordion if provided', () => {
-    component.movie = {
-      ...mockMovieDetails,
+    component.tv = {
+      ...mockTVDetails,
       reviews: { page: 1, results: [], total_pages: 1, total_results: 1 },
     };
     fixture.detectChanges();
