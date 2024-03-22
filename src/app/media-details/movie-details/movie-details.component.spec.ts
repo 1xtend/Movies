@@ -4,7 +4,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import { getElementById, mockImgData } from 'src/testing';
 import { IDetailsMovie } from '@app/shared/models/movie/movie.interface';
 import { By } from '@angular/platform-browser';
-import { ImageEnlargerComponent } from '@app/shared/components/image-enlarger/image-enlarger.component';
 import { TimePipe } from '@app/shared/pipes/time.pipe';
 
 const mockMovieDetails: IDetailsMovie = {
@@ -45,7 +44,7 @@ const mockMovieDetails: IDetailsMovie = {
 })
 class ImageEnlargerMockComponent {}
 
-fdescribe('MovieDetailsComponent', () => {
+describe('MovieDetailsComponent', () => {
   let fixture: ComponentFixture<MovieDetailsComponent>;
   let component: MovieDetailsComponent;
 

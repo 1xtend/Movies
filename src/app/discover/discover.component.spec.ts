@@ -27,6 +27,7 @@ import { SharedService } from '@app/shared/services/shared.service';
 import { ILanguage } from '@app/shared/models/language.interface';
 import { IMoviesResponse } from '@app/shared/models/movie/movies-response.interface';
 import { ITVsResponse } from '@app/shared/models/tv/tvs-response.interface';
+import { getElementById } from 'src/testing';
 
 const filters: IFilters = {
   page: 1,
@@ -117,10 +118,9 @@ describe('DiscoverComponent', () => {
 
     fixture.detectChanges();
 
-    const moviesEl = fixture.debugElement.query(
-      By.css('[data-testid="movies"]')
-    );
-    const tvsEl = fixture.debugElement.query(By.css('[data-testid="tvs"]'));
+    const moviesEl = getElementById(fixture, 'movies');
+    const tvsEl = getElementById(fixture, 'tvs');
+
     expect(moviesEl).toBeTruthy();
     expect(tvsEl).toBeNull();
   });
@@ -137,10 +137,9 @@ describe('DiscoverComponent', () => {
 
     fixture.detectChanges();
 
-    const tvsEl = fixture.debugElement.query(By.css('[data-testid="tvs"]'));
-    const moviesEl = fixture.debugElement.query(
-      By.css('[data-testid="movies"]')
-    );
+    const tvsEl = getElementById(fixture, 'tvs');
+    const moviesEl = getElementById(fixture, 'movies');
+
     expect(tvsEl).toBeTruthy();
     expect(moviesEl).toBeNull();
   });
@@ -148,9 +147,8 @@ describe('DiscoverComponent', () => {
   it('should render no result element if there is no result', () => {
     component.noResult = true;
     fixture.detectChanges();
-    const noResEl = fixture.debugElement.query(
-      By.css('[data-testid="no-result"]')
-    );
+    const noResEl = getElementById(fixture, 'no-result');
+
     expect(noResEl).toBeTruthy();
   });
 

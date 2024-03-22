@@ -4,6 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RouterLink } from '@angular/router';
+import { getElementById } from 'src/testing';
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
@@ -40,9 +41,7 @@ describe('HeaderComponent', () => {
 
     expect(component.show).toBeFalse();
 
-    const buttonEl = fixture.debugElement.query(
-      By.css('[data-testid="search-button"]')
-    );
+    const buttonEl = getElementById(fixture, 'search-button');
     expect(buttonEl).toBeTruthy();
 
     buttonEl.triggerEventHandler('click', null);
@@ -50,9 +49,7 @@ describe('HeaderComponent', () => {
 
     expect(component.show).toBeTrue();
 
-    const searchEl = fixture.debugElement.query(
-      By.css('[data-testid="search"]')
-    );
+    const searchEl = getElementById(fixture, 'search');
     expect(searchEl).toBeTruthy();
   });
 
@@ -62,9 +59,7 @@ describe('HeaderComponent', () => {
     component.isTablet = true;
     fixture.detectChanges();
 
-    const buttonEl = fixture.debugElement.query(
-      By.css('[data-testid="menu-button"]')
-    );
+    const buttonEl = getElementById(fixture, 'menu-button');
     expect(buttonEl).toBeTruthy();
 
     buttonEl.triggerEventHandler('click', null);
@@ -82,9 +77,7 @@ describe('HeaderComponent', () => {
     expect(linkEls[0]).toBeUndefined();
     expect(linkEls[1]).toBeUndefined();
 
-    const buttonEl = fixture.debugElement.query(
-      By.css('[data-testid="menu-button"]')
-    );
+    const buttonEl = getElementById(fixture, 'menu-button');
     expect(buttonEl).toBeTruthy();
   });
 });

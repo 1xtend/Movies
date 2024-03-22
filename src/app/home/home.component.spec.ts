@@ -8,6 +8,7 @@ import { SharedService } from '@app/shared/services/shared.service';
 import { By, Title } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ListsService } from '@app/shared/services/media/lists.service';
+import { getElementById } from 'src/testing';
 
 const mockMediaResponse = {
   page: 1,
@@ -90,49 +91,37 @@ describe('HomeComponent', () => {
   });
 
   it('should render popular movies section if they exist', () => {
-    const section = fixture.debugElement.query(
-      By.css('[data-testid="popular-movies"]')
-    );
+    const section = getElementById(fixture, 'popular-movies');
 
     expect(section).toBeTruthy();
   });
 
   it('should render popular tv series section if they exist', () => {
-    const section = fixture.debugElement.query(
-      By.css('[data-testid="popular-tvs"]')
-    );
+    const section = getElementById(fixture, 'popular-tvs');
 
     expect(section).toBeTruthy();
   });
 
   it('should render popular people section if they exist', () => {
-    const section = fixture.debugElement.query(
-      By.css('[data-testid="popular-people"]')
-    );
+    const section = getElementById(fixture, 'popular-people');
 
     expect(section).toBeTruthy();
   });
 
   it('should render now playing movies section if they exist', () => {
-    const section = fixture.debugElement.query(
-      By.css('[data-testid="now-playing-movies"]')
-    );
+    const section = getElementById(fixture, 'now-playing-movies');
 
     expect(section).toBeTruthy();
   });
 
   it('should render top rated movies section if they exist', () => {
-    const section = fixture.debugElement.query(
-      By.css('[data-testid="top-rated-movies"]')
-    );
+    const section = getElementById(fixture, 'top-rated-movies');
 
     expect(section).toBeTruthy();
   });
 
   it('should render on the air tv series section if they exist', () => {
-    const section = fixture.debugElement.query(
-      By.css('[data-testid="on-the-air-tvs"]')
-    );
+    const section = getElementById(fixture, 'on-the-air-tvs');
 
     expect(section).toBeTruthy();
   });
