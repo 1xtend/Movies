@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RouterLink } from '@angular/router';
 
-fdescribe('HeaderComponent', () => {
+describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let component: HeaderComponent;
 

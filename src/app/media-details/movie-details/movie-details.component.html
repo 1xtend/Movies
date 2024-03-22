@@ -5,19 +5,21 @@
       [imgSrc]="posterPath + movie.poster_path"
       [alt]="movie.title"
       [largeImgSrc]="original + movie.poster_path"
+      data-testid="enlarger"
     ></app-image-enlarger>
 
     <ng-template #noImage>
       <img
         [src]="'../../../assets/images/blank-image.jpg'"
         [alt]="movie.title"
+        data-testid="no-image"
       />
     </ng-template>
   </div>
 
   <div class="info__content">
     <div class="info__group">
-      <h1 class="info__main-title">
+      <h1 class="info__main-title" data-testid="main-title">
         <a
           *ngIf="movie.homepage; else noHomepage"
           [href]="movie.homepage"
@@ -25,64 +27,77 @@
           rel="noreferrer noopener"
           class="info__main-title-link"
           matTooltip="Go to homepage"
+          data-testid="main-title-link"
         >
           {{ movie.title }}
         </a>
 
-        <ng-template #noHomepage>{{ movie.title }} </ng-template>
+        <ng-template #noHomepage>
+          <span data-testid="main-title-inner">{{ movie.title }}</span>
+        </ng-template>
 
-        <span class="info__year" *ngIf="movie.release_date">
+        <span
+          class="info__year"
+          *ngIf="movie.release_date"
+          data-testid="main-title-release-date"
+        >
           ({{ movie.release_date | date : "y" }})
         </span>
       </h1>
 
-      <i *ngIf="movie.tagline">{{ movie.tagline }}</i>
+      <i *ngIf="movie.tagline" data-testid="tagline">{{ movie.tagline }}</i>
     </div>
 
     <div class="info__group" *ngIf="movie.overview">
       <h2 class="info__title title">Overview</h2>
-      <p>{{ movie.overview }}</p>
+      <p data-testid="overview">{{ movie.overview }}</p>
     </div>
 
     <div class="info__group" *ngIf="movie.genres.length">
       <h2 class="info__title title">Genres</h2>
-      <p>
-        <span *ngFor="let genre of movie.genres">
-          {{
-            movie.genres.indexOf(genre) === movie.genres.length - 1
-              ? genre.name
-              : genre.name + ", "
-          }}
-        </span>
+      <p data-testid="genres">
+        <span *ngFor="let genre of movie.genres">{{
+          movie.genres.indexOf(genre) === movie.genres.length - 1
+            ? genre.name
+            : genre.name + ", "
+        }}</span>
       </p>
     </div>
 
     <ul class="info__group info-list">
       <li class="info-list__item" *ngIf="movie.release_date">
         <h4 class="info-list__title">Release date</h4>
-        <p class="info-list__text">
+        <p class="info-list__text" data-testid="release-date">
           {{ movie.release_date | date : "MM/dd/y" }}
         </p>
       </li>
       <li class="info-list__item" *ngIf="movie.runtime">
         <h4 class="info-list__title">Runtime</h4>
-        <p class="info-list__text">{{ movie.runtime | time }}</p>
+        <p class="info-list__text" data-testid="runtime">
+          {{ movie.runtime | time }}
+        </p>
       </li>
       <li class="info-list__item" *ngIf="movie.status">
         <h4 class="info-list__title">Status</h4>
-        <p class="info-list__text">{{ movie.status }}</p>
+        <p class="info-list__text" data-testid="status">{{ movie.status }}</p>
       </li>
       <li class="info-list__item" *ngIf="movie.original_title">
         <h4 class="info-list__title">Original title</h4>
-        <p class="info-list__text">{{ movie.original_title }}</p>
+        <p class="info-list__text" data-testid="original-title">
+          {{ movie.original_title }}
+        </p>
       </li>
       <li class="info-list__item" *ngIf="movie.budget">
         <h4 class="info-list__title">Budget</h4>
-        <p class="info-list__text">{{ movie.budget | currency }}</p>
+        <p class="info-list__text" data-testid="budget">
+          {{ movie.budget | currency }}
+        </p>
       </li>
       <li class="info-list__item" *ngIf="movie.revenue">
         <h4 class="info-list__title">Revenue</h4>
-        <p class="info-list__text">{{ movie.revenue | currency }}</p>
+        <p class="info-list__text" data-testid="revenue">
+          {{ movie.revenue | currency }}
+        </p>
       </li>
     </ul>
   </div>
@@ -91,6 +106,7 @@
 <section
   class="similar"
   *ngIf="movie.similar && movie.similar.total_results > 0"
+  data-testid="similar"
 >
   <h2 class="similar__title title">Similar</h2>
 
@@ -146,7 +162,10 @@
   </div>
 </section>
 
-<mat-accordion *ngIf="movie.reviews && movie.reviews.total_results > 0">
+<mat-accordion
+  *ngIf="movie.reviews && movie.reviews.total_results > 0"
+  data-testid="reviews"
+>
   <mat-expansion-panel (opened)="opened = true" (closed)="opened = false">
     <mat-expansion-panel-header>
       <mat-panel-title>{{ opened ? "Hide" : "Show" }} reviews</mat-panel-title>

@@ -1,4 +1,7 @@
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { DebugElement } from '@angular/core';
+import { ComponentFixture } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { IFilters } from '@app/shared/models/filters.interface';
 import { MediaType } from '@app/shared/models/media.type';
 
@@ -32,4 +35,15 @@ export function getUrl(
   });
 
   return url + `/${type}?${params}`;
+}
+
+export function getElementById<T>(
+  element: ComponentFixture<T> | DebugElement,
+  id: string
+): DebugElement {
+  if (element instanceof ComponentFixture) {
+    return element.debugElement.query(By.css(`[data-testid="${id}"]`));
+  }
+
+  return element.query(By.css(`[data-testid="${id}"]`));
 }
