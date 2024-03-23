@@ -1,14 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AvatarComponent } from './avatar.component';
 import { MatCardModule } from '@angular/material/card';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { mockImgData } from 'src/testing';
+import { getElementById, mockImgData } from 'src/testing';
 
 describe('AvatarComponent', () => {
   let fixture: ComponentFixture<AvatarComponent>;
   let component: AvatarComponent;
-  let element: DebugElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,7 +15,6 @@ describe('AvatarComponent', () => {
 
     fixture = TestBed.createComponent(AvatarComponent);
     component = fixture.componentInstance;
-    element = fixture.debugElement;
 
     component.alt = mockImgData.alt;
   });
@@ -29,19 +25,20 @@ describe('AvatarComponent', () => {
 
   it('should render image if imagePath input is provided', () => {
     component.imagePath = mockImgData.src;
-
     fixture.detectChanges();
 
-    const imgEl = element.query(By.css('[data-testid="img"]'));
+    const imgEl = getElementById(fixture, 'img');
 
-    expect(imgEl.nativeElement.src).toBe(mockImgData.src);
+    expect(imgEl.attributes['src']).toBe(mockImgData.src);
   });
 
   it('should render #noAvatar template if imagePath property is not provided', () => {
     fixture.detectChanges();
 
-    const template = element.query(By.css('.letter'));
+    const noAvatarEl = getElementById(fixture, 'no-avatar');
+    const letterEl = getElementById(noAvatarEl, 'no-avatar-letter');
 
-    expect(template.nativeElement.textContent).toBe('T');
+    expect(noAvatarEl).toBeTruthy();
+    expect(letterEl.nativeElement.textContent.trim()).toBe('T');
   });
 });

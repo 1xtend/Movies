@@ -8,7 +8,14 @@
 />
 
 <ng-template #noAvatar>
-  <div class="no-avatar" mat-card-avatar appRandomBgColor>
-    <span class="letter">{{ alt.slice(0, 1) | uppercase }}</span>
+  <div
+    class="no-avatar"
+    mat-card-avatar
+    appRandomBgColor
+    data-testid="no-avatar"
+  >
+    <span class="letter" data-testid="no-avatar-letter">{{
+      alt.slice(0, 1) | uppercase
+    }}</span>
   </div>
 </ng-template>
