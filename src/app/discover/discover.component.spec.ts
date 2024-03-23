@@ -18,7 +18,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
-import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { IFilters } from '@app/shared/models/filters.interface';
 import { IGenre } from '@app/shared/models/genres.interface';
@@ -45,11 +44,11 @@ describe('DiscoverComponent', () => {
   let fixture: ComponentFixture<DiscoverComponent>;
   let component: DiscoverComponent;
 
-  let mockMediaService = jasmine.createSpyObj('mediaService', [
+  const mockMediaService = jasmine.createSpyObj('mediaService', [
     'getGenres',
     'getLanguages',
   ]);
-  let mockSharedService = {
+  const mockSharedService = {
     genres$: of({
       movie: <IGenre[]>[{ id: 1, name: 'horror' }],
       tv: undefined,

@@ -18,7 +18,7 @@ import {
   DestroyRef,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { MediaType } from '@app/shared/models/media.type';
 import { FormControl } from '@angular/forms';
 import { IFilters } from '@app/shared/models/filters.interface';
@@ -32,6 +32,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { SearchService } from '@app/shared/services/media/search.service';
 import { MediaService } from '@app/shared/services/media/media.service';
+import { ILanguage } from '@app/shared/models/language.interface';
 
 @Component({
   selector: 'app-search',
@@ -120,29 +121,7 @@ export class SearchComponent implements OnInit {
           const navigation = this.router.getCurrentNavigation();
 
           if (!navigation || navigation.trigger === 'popstate') {
-            this.filters = {
-              query: queryParams.get('query') || '',
-              page: Number(queryParams.get('page')) || 1,
-              include_adult: JSON.parse(
-                queryParams.get('include_adult') ?? 'false'
-              ),
-              language: queryParams.get('language') || undefined,
-            };
-
-            this.mediaType = data['type'];
-
-            this.mediaTypeControl.setValue(this.mediaType, {
-              emitEvent: false,
-            });
-
-            this.includeAdultControl.setValue(
-              this.filters.include_adult ?? false,
-              { emitEvent: false }
-            );
-
-            this.languageControl.setValue(this.filters.language ?? 'xx', {
-              emitEvent: false,
-            });
+            this.navigationChanges(queryParams, data);
           }
 
           return this.fetchMedia();
@@ -157,6 +136,29 @@ export class SearchComponent implements OnInit {
 
         this.sharedService.scrollToTop();
       });
+  }
+
+  private navigationChanges(queryParams: ParamMap, data: Data): void {
+    this.filters = {
+      query: queryParams.get('query') || '',
+      page: Number(queryParams.get('page')) || 1,
+      include_adult: JSON.parse(queryParams.get('include_adult') ?? 'false'),
+      language: queryParams.get('language') || undefined,
+    };
+
+    this.mediaType = data['type'];
+
+    this.mediaTypeControl.setValue(this.mediaType, {
+      emitEvent: false,
+    });
+
+    this.includeAdultControl.setValue(this.filters.include_adult ?? false, {
+      emitEvent: false,
+    });
+
+    this.languageControl.setValue(this.filters.language ?? 'xx', {
+      emitEvent: false,
+    });
   }
 
   private searchChanges(): void {
@@ -247,7 +249,7 @@ export class SearchComponent implements OnInit {
     });
   }
 
-  private fetchLanguages() {
+  private fetchLanguages(): Observable<ILanguage[]> {
     return this.sharedService.languages$.pipe(
       take(1),
       switchMap((languages) => {
