@@ -60,8 +60,6 @@ describe('ReviewCardComponent', () => {
   });
 
   it('should render avatar component', () => {
-    fixture.detectChanges();
-
     const avatarEl = fixture.debugElement.query(
       By.directive(AvatarMockComponent)
     );
@@ -70,8 +68,6 @@ describe('ReviewCardComponent', () => {
   });
 
   it('should render truncate-text component', () => {
-    fixture.detectChanges();
-
     const textEl = fixture.debugElement.query(
       By.directive(TruncateTextMockComponent)
     );
