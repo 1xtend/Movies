@@ -2,13 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImageEnlargerComponent } from './image-enlarger.component';
 import { DebugElement } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import { By } from '@angular/platform-browser';
-import { mockImgData } from 'src/testing';
+import { getElementById, mockImgData } from 'src/testing';
 
 describe('ImageEnlargerComponent', () => {
   let fixture: ComponentFixture<ImageEnlargerComponent>;
   let component: ImageEnlargerComponent;
-  let element: DebugElement;
 
   let imgEl: DebugElement;
 
@@ -20,31 +18,27 @@ describe('ImageEnlargerComponent', () => {
 
     fixture = TestBed.createComponent(ImageEnlargerComponent);
     component = fixture.componentInstance;
-    element = fixture.debugElement;
 
     component.imgSrc = mockImgData.src;
     component.alt = mockImgData.alt;
 
     fixture.detectChanges();
 
-    imgEl = element.query(By.css('[data-testid="img"]'));
+    imgEl = getElementById(fixture, 'img');
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render img element', () => {
+  it('should render correctly img element', () => {
     expect(imgEl).toBeTruthy();
-  });
-
-  it('should render img element with provided input properties', () => {
-    expect(imgEl.nativeElement.src).toBe(mockImgData.src);
-    expect(imgEl.nativeElement.alt).toBe(mockImgData.alt);
+    expect(imgEl.attributes['src']).toBe(mockImgData.src);
+    expect(imgEl.attributes['alt']).toBe(mockImgData.alt);
   });
 
   it('should call openModal by click on img element', () => {
-    const openModalSpy = spyOn(component, 'openModal').and.callThrough();
+    const openModalSpy = spyOn(component, 'openModal');
     imgEl.triggerEventHandler('click', null);
 
     fixture.detectChanges();
