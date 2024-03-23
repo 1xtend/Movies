@@ -9,7 +9,6 @@
       language: language && language !== 'xx' ? language : undefined
     }"
     class="card__image-link"
-    data-testid="router-link"
   >
     <img
       mat-card-image
@@ -34,7 +33,7 @@
       class="card__title"
       [style.fontSize.px]="titleSize"
       [matTooltip]="!textCut || title.length <= 30 ? '' : title"
-      data-testid="router-link"
+      data-testid="title"
       >{{ textCut ? (title | textCut : 0 : textCut) : title }}</a
     >
   </mat-card-content>
@@ -48,7 +47,6 @@
         language: language && language !== 'xx' ? language : undefined
       }"
       class="card__image-link"
-      data-testid="router-link"
     >
       <img
         mat-card-image
@@ -74,7 +72,7 @@
         *ngIf="title"
         [style.fontSize.px]="titleSize"
         [matTooltip]="!textCut || title.length <= 30 ? '' : title"
-        data-testid="router-link"
+        data-testid="title"
         >{{ textCut ? (title | textCut : 0 : textCut) : title }}</a
       >
 
