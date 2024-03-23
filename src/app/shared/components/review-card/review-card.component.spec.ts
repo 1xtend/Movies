@@ -20,7 +20,7 @@ class TruncateTextMockComponent {
   @Input() text: string = '';
 }
 
-fdescribe('ReviewCardComponent', () => {
+describe('ReviewCardComponent', () => {
   let fixture: ComponentFixture<ReviewCardComponent>;
   let component: ReviewCardComponent;
 
