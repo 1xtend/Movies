@@ -1,4 +1,4 @@
-<span class="snackbar" matSnackBarLabel>
+<span class="snackbar" matSnackBarLabel data-testid="message">
   {{ notificationService.message$ | async }}
 </span>
 <span class="actions" matSnackBarAction>
@@ -7,6 +7,7 @@
     mat-icon-button
     (click)="snackbarRef.dismissWithAction()"
     color="accent"
+    data-testid="close-button"
   >
     <mat-icon>close</mat-icon>
   </button>
