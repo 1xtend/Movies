@@ -1,10 +1,14 @@
-<p [innerHTML]="isOpened ? text : (text | textCut : this.start : this.end)"></p>
+<p
+  [innerHTML]="isOpened ? text : (text | textCut : this.start : this.end)"
+  data-testid="text"
+></p>
 
 <button
   *ngIf="text.length > end"
   type="button"
   class="button"
   (click)="toggleText()"
+  data-testid="text-button"
 >
   View {{ isOpened ? "less" : "full" }} text
 </button>
