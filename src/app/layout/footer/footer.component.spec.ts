@@ -3,7 +3,7 @@ import { FooterComponent } from './footer.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { By } from '@angular/platform-browser';
 
-fdescribe('FooterComponent', () => {
+describe('FooterComponent', () => {
   let fixture: ComponentFixture<FooterComponent>;
   let component: FooterComponent;
 
